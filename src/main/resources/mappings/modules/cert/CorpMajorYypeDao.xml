@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.cert.dao.CorpMajorYypeDao">
+    
+	<sql id="corpMajorYypeColumns">
+		a.certtypename AS "certtypename",
+		a.tradetypename AS "tradetypename",
+		a.majortypename AS "majortypename",
+		a.majortypeno AS "majortypeno"
+	</sql>
+	
+	<sql id="corpMajorYypeJoins">
+	</sql>
+    
+	<select id="get" resultType="CorpMajorYype">
+		SELECT 
+			<include refid="corpMajorYypeColumns"/>
+		FROM corpmajortype a
+		<include refid="corpMajorYypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CorpMajorYype">
+		SELECT 
+			<include refid="corpMajorYypeColumns"/>
+		FROM corpmajortype a
+		<include refid="corpMajorYypeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CorpMajorYype">
+		SELECT 
+			<include refid="corpMajorYypeColumns"/>
+		FROM corpmajortype a
+		<include refid="corpMajorYypeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO corpmajortype(
+			certtypename,
+			tradetypename,
+			majortypename,
+			majortypeno
+		) VALUES (
+			#{certtypename},
+			#{tradetypename},
+			#{majortypename},
+			#{majortypeno}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE corpmajortype SET 	
+			certtypename = #{certtypename},
+			tradetypename = #{tradetypename},
+			majortypename = #{majortypename},
+			majortypeno = #{majortypeno}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM corpmajortype
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

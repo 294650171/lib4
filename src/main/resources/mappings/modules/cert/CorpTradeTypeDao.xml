@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.cert.dao.CorpTradeTypeDao">
+    
+	<sql id="corpTradeTypeColumns">
+		a.certtypename AS "certtypename",
+		a.tradetypeno AS "tradetypeno",
+		a.tradetypename AS "tradetypename"
+	</sql>
+	
+	<sql id="corpTradeTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="CorpTradeType">
+		SELECT 
+			<include refid="corpTradeTypeColumns"/>
+		FROM corptradetype a
+		<include refid="corpTradeTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CorpTradeType">
+		SELECT 
+			<include refid="corpTradeTypeColumns"/>
+		FROM corptradetype a
+		<include refid="corpTradeTypeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CorpTradeType">
+		SELECT 
+			<include refid="corpTradeTypeColumns"/>
+		FROM corptradetype a
+		<include refid="corpTradeTypeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO corptradetype(
+			certtypename,
+			tradetypeno,
+			tradetypename
+		) VALUES (
+			#{certtypename},
+			#{tradetypeno},
+			#{tradetypename}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE corptradetype SET 	
+			certtypename = #{certtypename},
+			tradetypeno = #{tradetypeno},
+			tradetypename = #{tradetypename}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM corptradetype
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
