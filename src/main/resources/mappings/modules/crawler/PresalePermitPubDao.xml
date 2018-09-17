@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.crawler.dao.PresalePermitPubDao">
+    
+	<sql id="presalePermitPubColumns">
+		a.id AS "id",
+		a.corp_name AS "corpName",
+		a.commondity_hourse_name AS "commondityHourseName",
+		a.commondity_hourse_address AS "commondityHourseAddress",
+		a.commondity_hourse_type AS "commondityHourseType",
+		a.area AS "area",
+		a.area_str AS "areaStr",
+		a.license_no AS "licenseNo",
+		a.attachment AS "attachment",
+		a.publicity_date AS "publicityDate",
+		a.url AS "url",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="presalePermitPubJoins">
+	</sql>
+    
+	<select id="get" resultType="PresalePermitPub">
+		SELECT 
+			<include refid="presalePermitPubColumns"/>
+		FROM presale_permit_pub a
+		<include refid="presalePermitPubJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByLicenseNoAndNameURL" resultType="PresalePermitPub">
+		SELECT TOP 1
+		<include refid="presalePermitPubColumns"/>
+		FROM presale_permit_pub a
+		<include refid="presalePermitPubJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="licenseNo != null and licenseNo != ''">
+				AND a.license_no = #{licenseNo}
+			</if>
+			<if test="commondityHourseName != null and commondityHourseName != ''">
+				AND a.commondity_hourse_name = #{commondityHourseName}
+			</if>
+			<if test="url != null and url != ''">
+				AND a.url = #{url}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findList" resultType="PresalePermitPub">
+		SELECT 
+			<include refid="presalePermitPubColumns"/>
+		FROM presale_permit_pub a
+		<include refid="presalePermitPubJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="corpName != null and corpName != ''">
+				AND a.corp_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{corpName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{corpName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{corpName},'%')</if>
+			</if>
+			<if test="commondityHourseName != null and commondityHourseName != ''">
+				AND a.commondity_hourse_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{commondityHourseName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{commondityHourseName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{commondityHourseName},'%')</if>
+			</if>
+			<if test="commondityHourseAddress != null and commondityHourseAddress != ''">
+				AND a.commondity_hourse_address LIKE 
+					<if test="dbName == 'oracle'">'%'||#{commondityHourseAddress}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{commondityHourseAddress}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{commondityHourseAddress},'%')</if>
+			</if>
+			<if test="commondityHourseType != null and commondityHourseType != ''">
+				AND a.commondity_hourse_type = #{commondityHourseType}
+			</if>
+			<if test="area != null and area != ''">
+				AND a.area &gt;= #{area}
+			</if>
+			<if test="licenseNo != null and licenseNo != ''">
+				AND a.license_no LIKE 
+					<if test="dbName == 'oracle'">'%'||#{licenseNo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{licenseNo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{licenseNo},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PresalePermitPub">
+		SELECT 
+			<include refid="presalePermitPubColumns"/>
+		FROM presale_permit_pub a
+		<include refid="presalePermitPubJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO presale_permit_pub(
+			id,
+			corp_name,
+			commondity_hourse_name,
+			commondity_hourse_address,
+			commondity_hourse_type,
+			area,
+			area_str,
+			license_no,
+			attachment,
+			publicity_date,
+			url,
+			create_by,
+			update_by,
+			create_date,
+			update_date,
+			del_flag
+		) VALUES (
+			#{id},
+			#{corpName},
+			#{commondityHourseName},
+			#{commondityHourseAddress},
+			#{commondityHourseType},
+			#{area},
+			#{areaStr},
+			#{licenseNo},
+			#{attachment},
+			#{publicityDate},
+			#{url},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE presale_permit_pub SET 	
+			corp_name = #{corpName},
+			commondity_hourse_name = #{commondityHourseName},
+			commondity_hourse_address = #{commondityHourseAddress},
+			commondity_hourse_type = #{commondityHourseType},
+			area = #{area},
+			area_str = #{areaStr},
+			license_no = #{licenseNo},
+			attachment = #{attachment},
+			publicity_date = #{publicityDate},
+			url = #{url},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE presale_permit_pub SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.sys.dao.EmployeeDao">
+    
+	<sql id="employeeColumns">
+		a.userid AS "userid",
+		a.loginname AS "loginname",
+		a.loginpassword AS "loginpassword",
+		a.username AS "username",
+		a.usersex AS "usersex",
+		a.useridcardnumber AS "useridcardnumber",
+		a.useremail AS "useremail",
+		a.usertel AS "usertel",
+		a.usermobile AS "usermobile",
+		a.useraddress AS "useraddress",
+		a.userzipcode AS "userzipcode",
+		a.userregtime AS "userregtime",
+		a.userendtime AS "userendtime",
+		a.userfeetype AS "userfeetype",
+		a.usertype AS "usertype",
+		a.userprovince AS "userprovince",
+		a.usercity AS "usercity",
+		a.orgname AS "orgname",
+		a.orgunitname AS "orgunitname",
+		a.userfax AS "userfax",
+		a.certi_id AS "certiId",
+		a.dealman AS "dealman",
+		a.dealmantel AS "dealmantel",
+		a.userlogintype AS "userlogintype",
+		a.userstate AS "userstate",
+		a.updatedate AS "updatedate",
+		a.lastlogintime AS "lastlogintime",
+		a.loginerrorcount AS "loginerrorcount"
+	</sql>
+	
+	<sql id="employeeJoins">
+	</sql>
+    
+	<select id="get" resultType="Employee">
+		SELECT 
+			<include refid="employeeColumns"/>
+		FROM g_user a
+		<include refid="employeeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Employee">
+		SELECT 
+			<include refid="employeeColumns"/>
+		FROM g_user a
+		<include refid="employeeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Employee">
+		SELECT 
+			<include refid="employeeColumns"/>
+		FROM g_user a
+		<include refid="employeeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO g_user(
+			userid,
+			loginname,
+			loginpassword,
+			username,
+			usersex,
+			useridcardnumber,
+			useremail,
+			usertel,
+			usermobile,
+			useraddress,
+			userzipcode,
+			userregtime,
+			userendtime,
+			userfeetype,
+			usertype,
+			userprovince,
+			usercity,
+			orgname,
+			orgunitname,
+			userfax,
+			certi_id,
+			dealman,
+			dealmantel,
+			userlogintype,
+			userstate,
+			updatedate,
+			lastlogintime,
+			loginerrorcount
+		) VALUES (
+			#{userid},
+			#{loginname},
+			#{loginpassword},
+			#{username},
+			#{usersex},
+			#{useridcardnumber},
+			#{useremail},
+			#{usertel},
+			#{usermobile},
+			#{useraddress},
+			#{userzipcode},
+			#{userregtime},
+			#{userendtime},
+			#{userfeetype},
+			#{usertype},
+			#{userprovince},
+			#{usercity},
+			#{orgname},
+			#{orgunitname},
+			#{userfax},
+			#{certiId},
+			#{dealman},
+			#{dealmantel},
+			#{userlogintype},
+			#{userstate},
+			#{updatedate},
+			#{lastlogintime},
+			#{loginerrorcount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE g_user SET 	
+			userid = #{userid},
+			loginname = #{loginname},
+			loginpassword = #{loginpassword},
+			username = #{username},
+			usersex = #{usersex},
+			useridcardnumber = #{useridcardnumber},
+			useremail = #{useremail},
+			usertel = #{usertel},
+			usermobile = #{usermobile},
+			useraddress = #{useraddress},
+			userzipcode = #{userzipcode},
+			userregtime = #{userregtime},
+			userendtime = #{userendtime},
+			userfeetype = #{userfeetype},
+			usertype = #{usertype},
+			userprovince = #{userprovince},
+			usercity = #{usercity},
+			orgname = #{orgname},
+			orgunitname = #{orgunitname},
+			userfax = #{userfax},
+			certi_id = #{certiId},
+			dealman = #{dealman},
+			dealmantel = #{dealmantel},
+			userlogintype = #{userlogintype},
+			userstate = #{userstate},
+			updatedate = #{updatedate},
+			lastlogintime = #{lastlogintime},
+			loginerrorcount = #{loginerrorcount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM g_user
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
