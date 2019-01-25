@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccout;
+import cn.wuxi.js.lib4.modules.sys.security.UsernamePasswordToken;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
@@ -51,8 +53,9 @@ public class User extends DataEntity<User> {
 	private String oldLoginIp;	// 上次登陆IP
 	private Date oldLoginDate;	// 上次登陆日期
 	
-	private String isSysUser; // 0: login with employee no; 1: sysuser
-	
+	private String isSysUser; // 0: login with employee no; 1: sysuser; 2: corp basic account
+
+	private CorpBasicAccout corpBasicAccount;
 	
 	private Role role;	// 根据角色查询用户条件
 	
@@ -328,7 +331,19 @@ public class User extends DataEntity<User> {
 	public static boolean isAdmin(String id){
 		return id != null && "1".equals(id);
 	}
-	
+
+	public boolean isCorpAccount(){
+		return UsernamePasswordToken.USER_TYPE_CORP.equalsIgnoreCase(userType);
+	}
+
+	public CorpBasicAccout getCorpBasicAccount() {
+		return corpBasicAccount;
+	}
+
+	public void setCorpBasicAccount(CorpBasicAccout corpBasicAccount) {
+		this.corpBasicAccount = corpBasicAccount;
+	}
+
 	@Override
 	public String toString() {
 		return id;

@@ -3,15 +3,14 @@
  */
 package cn.wuxi.js.lib4.modules.cert.service;
 
-import java.util.List;
-
+import cn.wuxi.js.lib4.common.persistence.Page;
+import cn.wuxi.js.lib4.common.service.CrudService;
+import cn.wuxi.js.lib4.modules.cert.dao.CorpCertDao;
+import cn.wuxi.js.lib4.modules.cert.entity.CorpCert;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.wuxi.js.lib4.common.persistence.Page;
-import cn.wuxi.js.lib4.common.service.CrudService;
-import cn.wuxi.js.lib4.modules.cert.entity.CorpCert;
-import cn.wuxi.js.lib4.modules.cert.dao.CorpCertDao;
+import java.util.List;
 
 /**
  * corp_certService
@@ -21,6 +20,9 @@ import cn.wuxi.js.lib4.modules.cert.dao.CorpCertDao;
 @Service
 @Transactional(readOnly = true)
 public class CorpCertService extends CrudService<CorpCertDao, CorpCert> {
+
+
+
 
 	public CorpCert get(String id) {
 		return super.get(id);
@@ -37,6 +39,7 @@ public class CorpCertService extends CrudService<CorpCertDao, CorpCert> {
 	@Transactional(readOnly = false)
 	public void save(CorpCert corpCert) {
 		super.save(corpCert);
+
 	}
 	
 	@Transactional(readOnly = false)

@@ -137,6 +137,38 @@ public class MohurdCorpCrawler {
 		logger.info("爬取" + success + "/" + total + " 企业，总耗时"
 				+ (endTime - startTime) / 1000l / 60l + "分钟");
 	}
+
+
+	/**
+	 * 针对证书过期的资质进行重新同步
+	 */
+	public void startCrawlerExpiredCert(boolean withStaffFlag) {
+		corpCertList = corpCertMappingMapper.selectAll(null);
+		List<CorpEntity> corps = corpMapper.getSurveyAndDesignExpired();
+
+		logger.info("计划获取企业数:" + corps.size());
+		long startTime = System.currentTimeMillis();
+
+		total = corps.size();
+
+		for (CorpEntity corp : corps) {
+			logger.info("开始获取企业:" + corp.getQymc());
+
+			try {
+				start(withStaffFlag,corp.getQymc());
+				// 防止被防火墙阻挡，90秒获取一次
+				Thread.sleep(30000);
+//				Thread.sleep(60000);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.error("error : " + e.getMessage());
+			}
+		}
+
+		long endTime = System.currentTimeMillis();
+		logger.info("爬取" + success + "/" + total + " 企业，总耗时"
+				+ (endTime - startTime) / 1000l / 60l + "分钟");
+	}
 	
 	
 	/**
@@ -386,13 +418,20 @@ public class MohurdCorpCrawler {
 		if(savedCert.getCertName() != null){
 			int pos = savedCert.getCertName().trim().length();
 			if(pos > 2){
-				String level = savedCert.getCertName().trim().substring(pos - 2, pos);
+				String level = null;
+				if(savedCert.getCertName().endsWith("甲（Ⅰ）级")){
+					level = "甲（Ⅰ）级";
+				}else if(savedCert.getCertName().endsWith("甲（Ⅱ）级")){
+					level = "甲（Ⅱ）级";
+				}else {
+					level = savedCert.getCertName().trim().substring(pos - 2, pos);
+				}
+
 				if(level.contains("级"))  {
 					savedCert.setCertLevel(level);
 				}else{
 					savedCert.setCertLevel("");
 				}
-				
 			}
 		}
 

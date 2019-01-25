@@ -5,15 +5,15 @@ package cn.wuxi.js.lib4.modules.corp.dao;
 
 import cn.wuxi.js.lib4.common.persistence.CrudDao;
 import cn.wuxi.js.lib4.common.persistence.annotation.MyBatisDao;
-import cn.wuxi.js.lib4.modules.corp.entity.UeppQyjbxx;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccout;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * 企业基本信息DAO接口
- * @author huangzhengyu
- * @version 2018-07-06
+ * 企业基本帐号DAO接口
+ * @author huang.zhengyu
+ * @version 2019-01-17
  */
 @MyBatisDao
-public interface UeppQyjbxxDao extends CrudDao<UeppQyjbxx> {
-	void selfSave(UeppQyjbxx bean);
+public interface CorpBasicAccoutDao extends CrudDao<CorpBasicAccout> {
+    CorpBasicAccout findByTyshxydm(@Param("tyshxydm") String tyshxydm);
 }

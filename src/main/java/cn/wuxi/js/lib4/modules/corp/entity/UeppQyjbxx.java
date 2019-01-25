@@ -71,6 +71,8 @@ public class UeppQyjbxx extends DataEntity<UeppQyjbxx> {
 	private String sgy;		// sgy
 	private String tyshxydm;		// tyshxydm
 	private String needupdateflag;		// needupdateflag
+
+	private String photo;
 	
 	public UeppQyjbxx() {
 		super();
@@ -554,5 +556,12 @@ public class UeppQyjbxx extends DataEntity<UeppQyjbxx> {
 	public void setNeedupdateflag(String needupdateflag) {
 		this.needupdateflag = needupdateflag;
 	}
-	
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 }

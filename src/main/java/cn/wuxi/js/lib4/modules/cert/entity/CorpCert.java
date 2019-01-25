@@ -3,7 +3,11 @@
  */
 package cn.wuxi.js.lib4.modules.cert.entity;
 
+import cn.wuxi.js.lib4.common.utils.StringUtils;
 import org.hibernate.validator.constraints.Length;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -35,6 +39,10 @@ public class CorpCert extends DataEntity<CorpCert> {
 	private Date createTime;		// create_time
 	private Date updateTime;		// update_time
 	private String tag;		// tag
+
+	private String photo;
+	private String tyshxydm;
+	private String qymc;
 	
 	public CorpCert() {
 		super();
@@ -201,5 +209,44 @@ public class CorpCert extends DataEntity<CorpCert> {
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
-	
+
+	public String getTyshxydm() {
+		return tyshxydm;
+	}
+
+	public void setTyshxydm(String tyshxydm) {
+		this.tyshxydm = tyshxydm;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+	public String getPhotoName(){
+		String result = null;
+		if(StringUtils.isNotEmpty(this.photo)){
+			result =  this.photo.substring(this.photo.lastIndexOf("/") + 1);
+		}
+		if(result != null){
+			try {
+				result = URLDecoder.decode(result,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+
+	}
+
+	public String getQymc() {
+		return qymc;
+	}
+
+	public void setQymc(String qymc) {
+		this.qymc = qymc;
+	}
 }

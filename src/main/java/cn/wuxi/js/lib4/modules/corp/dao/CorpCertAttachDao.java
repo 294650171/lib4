@@ -5,15 +5,15 @@ package cn.wuxi.js.lib4.modules.corp.dao;
 
 import cn.wuxi.js.lib4.common.persistence.CrudDao;
 import cn.wuxi.js.lib4.common.persistence.annotation.MyBatisDao;
-import cn.wuxi.js.lib4.modules.corp.entity.UeppQyjbxx;
-import org.apache.ibatis.annotations.Param;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpCertAttach;
 
 /**
- * 企业基本信息DAO接口
- * @author huangzhengyu
- * @version 2018-07-06
+ * 企业证照DAO接口
+ * @author aaronhuang
+ * @version 2019-01-24
  */
 @MyBatisDao
-public interface UeppQyjbxxDao extends CrudDao<UeppQyjbxx> {
-	void selfSave(UeppQyjbxx bean);
+public interface CorpCertAttachDao extends CrudDao<CorpCertAttach> {
+
+
 }

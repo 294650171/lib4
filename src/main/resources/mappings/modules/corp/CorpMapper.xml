@@ -43,6 +43,24 @@
        WHERE c.cert_type_id in (1,2) AND ( CityID != '320200' OR CityID is null)
        AND qy.qyID not in (SELECT corp_id FROM CorpRegStaff)
     </select>
+
+    <select id="getSurveyAndDesignExpired" resultMap="BaseResultMap"  >
+        SELECT qy.qyID
+        ,qy.qymc
+        ,qy.zzjgdm
+        ,qy.yyzzzch
+        ,qy.tyshxydm
+        ,qy.xgr
+        ,qy.tag
+        ,qy.DataState
+        FROM WJSJZX.dbo.UEPP_Qyjbxx qy
+        WHERE qy.qyID IN (
+            SELECT corp_id
+            FROM [WJSJZX].[dbo].[Corp_Cert]
+            WHERE DATEADD(day, -7, valid_date) &lt; GETDATE()
+            GROUP BY corp_id
+        )
+    </select>
     
     <select id="getPeixun" resultType="java.lang.String"  >
        SELECT name FROM peixun

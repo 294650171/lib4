@@ -56,8 +56,8 @@ public class StructureDeclarationCrawler {
      */
     public void start() {
 
-        int endPage = 20;
-
+//        int endPage = 20;
+        int endPage = 1;
         long startTime = System.currentTimeMillis();
 
         String url = null;

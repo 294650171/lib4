@@ -24,6 +24,9 @@ public interface CorpMapper {
 	
 	//新增企业部分
 	List<CorpEntity> getSurveyAndDesignAdd();
+
+	//有资质过期的企业
+	List<CorpEntity> getSurveyAndDesignExpired();
 	
 	//培训企业名单
 	List<String> getPeixun();

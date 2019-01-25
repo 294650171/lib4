@@ -217,7 +217,7 @@ public class ProcessInstanceHighlightsResource {
 	 * 
 	 * @param activity
 	 * @param hisActInstList
-	 * @param isExclusive if true only return one flowId(Such as exclusiveGateway, BoundaryEvent On Task)
+	 * @param isExclusive if true only return one flowId(Such as exclusiveGateway, BoundaryEvent On StructureDeclarationCrawlerTask)
 	 * @return
 	 */
 	private List<String> getHighlightedFlows(List<PvmTransition> pvmTransitionList, LinkedList<HistoricActivityInstance> hisActInstList,

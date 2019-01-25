@@ -38,11 +38,15 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
 		if (password==null){
 			password = "";
 		}
+		String userType = request.getParameter("type");
+		if(StringUtils.isBlank(userType)){
+			userType = UsernamePasswordToken.USER_TYPE_ADMIN;
+		}
 		boolean rememberMe = isRememberMe(request);
 		String host = StringUtils.getRemoteAddr((HttpServletRequest)request);
 		String captcha = getCaptcha(request);
 		boolean mobile = isMobileLogin(request);
-		return new UsernamePasswordToken(username, password.toCharArray(), rememberMe, host, captcha, mobile);
+		return new UsernamePasswordToken(username, password.toCharArray(), rememberMe, host, captcha, mobile,userType);
 	}
 	
 	/**

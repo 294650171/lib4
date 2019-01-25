@@ -56,10 +56,12 @@
 		a.zjy AS "zjy",
 		a.sgy AS "sgy",
 		a.tyshxydm AS "tyshxydm",
-		a.needupdateflag AS "needupdateflag"
+		a.needupdateflag AS "needupdateflag",
+		b.url AS "photo"
 	</sql>
 	
 	<sql id="ueppQyjbxxJoins">
+		LEFT JOIN  WJSJZX.dbo.corp_cert_attach b ON a.qyID = b.zzjgdm and b.cert_type=1
 	</sql>
     
 	<select id="get" resultType="UeppQyjbxx">
@@ -279,6 +281,16 @@
 			sgy = #{sgy},
 			tyshxydm = #{tyshxydm},
 			needupdateflag = #{needupdateflag}
+		WHERE qyid = #{qyid}
+	</update>
+
+	<update id="selfSave">
+		UPDATE WJSJZX.dbo.uepp_qyjbxx SET
+		qymc = #{qymc},
+		province = #{province},
+		city = #{city},
+		county = #{county},
+		zcdd = #{zcdd}
 		WHERE qyid = #{qyid}
 	</update>
 	

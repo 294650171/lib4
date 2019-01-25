@@ -16,7 +16,7 @@
 		</if>
 		<if test="dbName == 'mssql'">
 			SELECT t.name AS name,b.value AS comments 
-			FROM lib4.sys.objects t LEFT JOIN lib4.sys.extended_properties b ON b.major_id=t.object_id and b.minor_id=0 and b.class=1 AND b.name='MS_Description'
+			FROM WJSJZX.sys.objects t LEFT JOIN WJSJZX.sys.extended_properties b ON b.major_id=t.object_id and b.minor_id=0 and b.class=1 AND b.name='MS_Description'
 			WHERE t.type='U'
 			<if test="name != null and name != ''">
 				AND t.name = (#{name})
@@ -68,8 +68,8 @@
 					CASE WHEN t.DATA_TYPE IN ('varchar','char','nvarchar','nchar') THEN '('+CONVERT(VARCHAR,t.CHARACTER_MAXIMUM_LENGTH)+')'
 						WHEN t.DATA_TYPE IN ('numeric','decimal') THEN '('+CONVERT(VARCHAR,t.NUMERIC_PRECISION_RADIX)+','+CONVERT(VARCHAR,ISNULL(t.NUMERIC_SCALE, 0))+')'
 					ELSE '' END) AS jdbcType 
-			FROM lib4.INFORMATION_SCHEMA.COLUMNS t INNER JOIN lib4.sys.sysobjects o ON t.TABLE_NAME=o.name AND SCHEMA_NAME(o.uid)=t.TABLE_SCHEMA
-				LEFT JOIN lib4.sys.extended_properties g ON o.id = g.major_id
+			FROM WJSJZX.INFORMATION_SCHEMA.COLUMNS t INNER JOIN WJSJZX.sys.sysobjects o ON t.TABLE_NAME=o.name AND SCHEMA_NAME(o.uid)=t.TABLE_SCHEMA
+				LEFT JOIN WJSJZX.sys.extended_properties g ON o.id = g.major_id
 					AND t.ORDINAL_POSITION = g.minor_id AND g.name='MS_Description'
 			WHERE t.TABLE_SCHEMA = (SCHEMA_NAME())
 			<if test="name != null and name != ''">

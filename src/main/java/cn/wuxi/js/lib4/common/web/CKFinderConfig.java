@@ -11,9 +11,11 @@ import cn.wuxi.js.lib4.common.utils.FileUtils;
 import cn.wuxi.js.lib4.modules.sys.security.SystemAuthorizingRealm.Principal;
 import cn.wuxi.js.lib4.modules.sys.utils.UserUtils;
 
+import com.ckfinder.connector.ServletContextFactory;
 import com.ckfinder.connector.configuration.Configuration;
 import com.ckfinder.connector.data.AccessControlLevel;
 import com.ckfinder.connector.utils.AccessControlUtil;
+import org.apache.shiro.SecurityUtils;
 
 /**
  * CKFinder配置
@@ -51,10 +53,10 @@ public class CKFinderConfig extends Configuration {
 //		}
 		AccessControlUtil.getInstance(this).loadACLConfig();
 		try {
-//			Principal principal = (Principal)SecurityUtils.getSubject().getPrincipal();
-//			this.baseURL = ServletContextFactory.getServletContext().getContextPath()+"/userfiles/"+principal+"/";
-			this.baseURL = FileUtils.path(Servlets.getRequest().getContextPath() + Global.USERFILES_BASE_URL);
-			this.baseDir = FileUtils.path(Global.getUserfilesBaseDir() + Global.USERFILES_BASE_URL);
+//			Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
+//			this.baseURL = ServletContextFactory.getServletContext().getContextPath()+"/userfiles/"+principal.getLoginName()+"/";
+			this.baseURL = FileUtils.path(Servlets.getRequest().getContextPath() + Global.USERFILES_BASE_URL + principal +"/");
+			this.baseDir = FileUtils.path(Global.getUserfilesBaseDir() + Global.USERFILES_BASE_URL + principal +"/");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

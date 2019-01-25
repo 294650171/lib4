@@ -54,7 +54,8 @@ public class PresalePermitCrawler {
 
     public void start() {
 
-        int endPage = 20;
+//        int endPage = 20;
+        int endPage = 1;
 
         long startTime = System.currentTimeMillis();
 
@@ -267,6 +268,9 @@ public class PresalePermitCrawler {
         try {
             Elements pEls = doc.select("div#Zoom p");
 
+            if(pEls == null || pEls.isEmpty()){
+                pEls = doc.select("div#Zoom div");
+            }
             for(Element p: pEls){
                 String str = p.text().trim();
                 logger.info("----" + str);
@@ -279,7 +283,7 @@ public class PresalePermitCrawler {
                 }else if(str.startsWith("商品房屋使用性质：")){
                     item.setCommondityHourseType(str.substring(str.indexOf(SPLIT) + 1));
                 }else if(str.startsWith("上市预售建筑面积：") || str.startsWith("上市预（销）售建筑面积：")
-                    || str.startsWith("许可预售建筑面积：")){
+                        || str.startsWith("许可预售建筑面积：")){
                     item.setAreaStr(str.substring(str.indexOf(SPLIT) + 1));
                     item.setArea(extract_area(item.getAreaStr()));
                 }else if(str.startsWith("许可证号：")){
@@ -295,6 +299,7 @@ public class PresalePermitCrawler {
                 String pubDateStr = pubDateEl.text();
                 item.setPublicityDate(DateUtils.parseDate(pubDateStr,"yyyy-MM-dd"));
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,6 +5,9 @@ package cn.wuxi.js.lib4.modules.sys.utils;
 
 import java.util.List;
 
+import cn.wuxi.js.lib4.modules.corp.dao.CorpBasicAccoutDao;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccout;
+import cn.wuxi.js.lib4.modules.sys.security.UsernamePasswordToken;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.InvalidSessionException;
@@ -43,6 +46,7 @@ public class UserUtils {
 	private static MenuDao menuDao = SpringContextHolder.getBean(MenuDao.class);
 	private static AreaDao areaDao = SpringContextHolder.getBean(AreaDao.class);
 	private static OfficeDao officeDao = SpringContextHolder.getBean(OfficeDao.class);
+	private static CorpBasicAccoutDao corpBasicAccoutDao = SpringContextHolder.getBean(CorpBasicAccoutDao.class);
 	
 	public static final int EmployeeIDLen = 5;
 
@@ -107,15 +111,11 @@ public class UserUtils {
 				if(user.getIsSysUser().equals("1")){
 					user.setRoleList(roleDao.findList(new Role(user)));
 				}else{
-					String roleId = "2";
-					/*
-					Employee employee = user.getEmployee();
-					
-					roleId = employee.getRoleId();
-					
-					user.setRoleList(roleDao.findList(new Role(roleId)));
-					*/
-					//debug
+//					String roleId = "2";
+					Role role = new Role();
+					role.setEnname("corp_basic_accout");
+					user.setRoleList(roleDao.findList(role));
+
 					
 				}
 			}
@@ -128,9 +128,9 @@ public class UserUtils {
 	
 	public static User getNoneSysUser(String userName){
 		
-		String userNameEx = expandUsername(userName);
+//		String userNameEx = expandUsername(userName);
 		
-		User user = getExistingNoneSysUser(userNameEx);
+		User user = getExistingNoneSysUser(userName);
 		
 		if(user==null){
 			//if not exists, get from temployee_synch
@@ -160,30 +160,23 @@ public class UserUtils {
 	public static User getExistingNoneSysUser(String userName){
 		
 		User user = null;
-		
-		/*
-		Employee employee = null;
-		
-		if(employee == null){
-			employee = employeerDao.get(userName);
+		CorpBasicAccout corp = null;
+		if(corp == null){
+			corp = corpBasicAccoutDao.findByTyshxydm(userName);
 		}
-		
-		if(employee!=null){
-			
+		if(corp!=null){
 			user = new User();
+			user.setId(corp.getTyshxydm());
+			user.setLoginName(corp.getTyshxydm());
+			user.setPassword(corp.getPassword());
+			user.setNo(corp.getId());
+			user.setName(corp.getName());
+			user.setUserType(UsernamePasswordToken.USER_TYPE_CORP);
 			
-			user.setId(employee.getId());
-			user.setLoginName(employee.getId());
-			user.setPassword(employee.getPassword());
-			user.setNo(employee.getId());
-			user.setName(employee.getPsnname());
-			user.setUserType("");
-			
-			user.setEmployee(employee);
+			user.setCorpBasicAccount(corp);
 			
 			user.setIsSysUser("0");
 		}
-		*/
 		
 		return user;		
 	}
@@ -279,6 +272,10 @@ public class UserUtils {
 			User user = getUser();
 			if (user.isAdmin()){
 				menuList = menuDao.findAllList(new Menu());
+			}else if(user.isCorpAccount()){
+				Role r = new Role();
+				r.setId("a8b2a30dad94413189b803f325289028");
+				menuList = menuDao.findByRoleId(r);
 			}else{
 				Menu m = new Menu();
 				m.setUserId(user.getId());

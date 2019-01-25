@@ -3,38 +3,12 @@
  */
 package cn.wuxi.js.lib4.modules.sys.security;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-
-import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
-import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.Permission;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.PrincipalCollection;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import cn.wuxi.js.lib4.modules.sys.security.CustomCredentialsMatcher;
 import cn.wuxi.js.lib4.common.config.Global;
 import cn.wuxi.js.lib4.common.servlet.ValidateCodeServlet;
-
 import cn.wuxi.js.lib4.common.utils.SpringContextHolder;
 import cn.wuxi.js.lib4.common.web.Servlets;
-
-
+import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccout;
+import cn.wuxi.js.lib4.modules.corp.service.CorpBasicAccoutService;
 import cn.wuxi.js.lib4.modules.sys.entity.Menu;
 import cn.wuxi.js.lib4.modules.sys.entity.Role;
 import cn.wuxi.js.lib4.modules.sys.entity.User;
@@ -42,6 +16,27 @@ import cn.wuxi.js.lib4.modules.sys.service.SystemService;
 import cn.wuxi.js.lib4.modules.sys.utils.LogUtils;
 import cn.wuxi.js.lib4.modules.sys.utils.UserUtils;
 import cn.wuxi.js.lib4.modules.sys.web.LoginController;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 系统安全认证实现类
@@ -55,7 +50,9 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private SystemService systemService;
-	
+
+	@Autowired
+	private CorpBasicAccoutService corpBasicAccoutService;
 	//private EmployeeService employeeService;
 	
 	public SystemAuthorizingRealm() {
@@ -68,46 +65,74 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-		
+
 		int activeSessionSize = getSystemService().getSessionDao().getActiveSessions(false).size();
-		if (logger.isDebugEnabled()){
+		if (logger.isDebugEnabled()) {
 			logger.debug("login submit, active session size: {}, username: {}", activeSessionSize, token.getUsername());
 		}
-		
+
 		// 校验登录验证码
-		if (LoginController.isValidateCodeLogin(token.getUsername(), false, false)){
+		if (LoginController.isValidateCodeLogin(token.getUsername(), false, false)) {
 			Session session = UserUtils.getSession();
-			String code = (String)session.getAttribute(ValidateCodeServlet.VALIDATE_CODE);
-			if (token.getCaptcha() == null || !token.getCaptcha().toUpperCase().equals(code)){
+			String code = (String) session.getAttribute(ValidateCodeServlet.VALIDATE_CODE);
+			if (token.getCaptcha() == null || !token.getCaptcha().toUpperCase().equals(code)) {
 				throw new AuthenticationException("msg:验证码错误, 请重试.");
 			}
 		}
-		
-		// 校验用户名密码
-		User user = UserUtils.getByLoginName(token.getUsername());
-		if (user != null) {
-			
-			if (Global.NO.equals(user.getLoginFlag())){
-				throw new AuthenticationException("msg:该已帐号禁止登录.");
-			}
-			
-			StringBuffer buffer = new StringBuffer();
-			for(char ch: token.getPassword()){
-				buffer.append(ch);
-			}
-			
-			logger.debug("user.getId(): {}, user.getLoginName(): {}, user.getPassword(): {}, token.getPassword(): {}",
-					user.getId(), user.getLoginName(),user.getPassword(), buffer.toString());
-			
-			if(!user.getPassword().equals(buffer.toString())){
-				throw new AuthenticationException("msg:密码错误.");
+		if (UsernamePasswordToken.USER_TYPE_CORP.equals(token.getUserType())) {
+			// 校验用户名密码
+			CorpBasicAccout corp = corpBasicAccoutService.findByTyshxydm(token.getUsername());
+			User user = getEnterpriceUser(corp);
+			if (user != null) {
+
+				StringBuffer buffer = new StringBuffer();
+				for (char ch : token.getPassword()) {
+					buffer.append(ch);
+				}
+
+				logger.debug("user.getId(): {}, user.getLoginName(): {}, user.getPassword(): {}, token.getPassword(): {}",
+						user.getId(), user.getLoginName(), user.getPassword(), buffer.toString());
+
+				if (!user.getPassword().equals(buffer.toString())) {
+					throw new AuthenticationException("msg:密码错误.");
+				}
+
+				return new SimpleAuthenticationInfo(new Principal(user, token.isMobileLogin()),
+						user.getPassword(), getName());
+			}else {
+				return null;
 			}
 
-			return new SimpleAuthenticationInfo(new Principal(user, token.isMobileLogin()), 
-					user.getPassword(), getName());
 		} else {
-			return null;
+			// 校验用户名密码
+			User user = UserUtils.getByLoginName(token.getUsername());
+			if (user != null) {
+
+				if (Global.NO.equals(user.getLoginFlag())) {
+					throw new AuthenticationException("msg:该已帐号禁止登录.");
+				}
+
+				StringBuffer buffer = new StringBuffer();
+				for (char ch : token.getPassword()) {
+					buffer.append(ch);
+				}
+
+				logger.debug("user.getId(): {}, user.getLoginName(): {}, user.getPassword(): {}, token.getPassword(): {}",
+						user.getId(), user.getLoginName(), user.getPassword(), buffer.toString());
+
+				if (!user.getPassword().equals(buffer.toString())) {
+					throw new AuthenticationException("msg:密码错误.");
+				}
+
+				return new SimpleAuthenticationInfo(new Principal(user, token.isMobileLogin()),
+						user.getPassword(), getName());
+			} else {
+				return null;
+			}
 		}
+
+
+
 	}
 	
 	/**
@@ -125,6 +150,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
         if (info == null) {
             info = doGetAuthorizationInfo(principals);
             if (info != null) {
+
             	UserUtils.putCache(UserUtils.CACHE_AUTH_INFO, info);
             }
         }
@@ -158,7 +184,6 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		//User user = getSystemService().getUserByLoginName(principal.getLoginName());
 		
 		User user = UserUtils.getByLoginName(principal.getLoginName());
-		
 		if (user != null) {
 			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 			List<Menu> list = UserUtils.getMenuList();
@@ -278,7 +303,23 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		}
 		return systemService;
 	}
-	
+
+	private User getEnterpriceUser(CorpBasicAccout account){
+		User user = null;
+		if(account != null){
+			user = new User();
+//			user.setId("b0487beaed0744d9aa33f7efdb6d8a0a");
+			user.setId(account.getTyshxydm());
+			user.setUserType(UsernamePasswordToken.USER_TYPE_CORP);
+			user.setLoginName(account.getTyshxydm());
+			user.setName(account.getName());
+			user.setPassword(account.getPassword());
+			user.setCorpBasicAccount(account);
+		}
+		return user;
+	}
+
+
 	/**
 	 * 授权用户信息
 	 */

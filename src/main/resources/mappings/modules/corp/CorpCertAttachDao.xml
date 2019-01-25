@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.corp.dao.CorpCertAttachDao">
+    
+	<sql id="corpCertAttachColumns">
+		a.id AS "id",
+		a.tyshxydm AS "tyshxydm",
+		a.zzjgdm AS "zzjgdm",
+		a.cert_type AS "certType",
+		a.cert_no AS "certNo",
+		a.name AS "name",
+		a.url AS "url",
+		a.suffix AS "suffix",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="corpCertAttachJoins">
+	</sql>
+    
+	<select id="get" resultType="CorpCertAttach">
+		SELECT 
+			<include refid="corpCertAttachColumns"/>
+		FROM [WJSJZX].[dbo].[corp_cert_attach] a
+		<include refid="corpCertAttachJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CorpCertAttach">
+		SELECT 
+			<include refid="corpCertAttachColumns"/>
+		FROM [WJSJZX].[dbo].[corp_cert_attach] a
+		<include refid="corpCertAttachJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="tyshxydm != null and tyshxydm != ''">
+				AND a.tyshxydm = #{tyshxydm}
+			</if>
+			<if test="zzjgdm != null and zzjgdm != ''">
+				AND a.zzjgdm = #{zzjgdm}
+			</if>
+			<if test="certType != null and certType != ''">
+				AND a.cert_type = #{certType}
+			</if>
+			<if test="certNo != null and certNo != ''">
+				AND a.cert_no = #{certNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CorpCertAttach">
+		SELECT 
+			<include refid="corpCertAttachColumns"/>
+		FROM [WJSJZX].[dbo].[corp_cert_attach] a
+		<include refid="corpCertAttachJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO [WJSJZX].[dbo].[corp_cert_attach](
+			tyshxydm,
+			zzjgdm,
+			cert_type,
+			cert_no,
+			name,
+			url,
+			suffix,
+			create_by,
+			update_by,
+			create_date,
+			update_date,
+			del_flag,
+			remarks
+		) VALUES (
+			#{tyshxydm},
+			#{zzjgdm},
+			#{certType},
+			#{certNo},
+			#{name},
+			#{url},
+			#{suffix},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{delFlag},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE [WJSJZX].[dbo].[corp_cert_attach] SET
+			tyshxydm = #{tyshxydm},
+			zzjgdm = #{zzjgdm},
+			cert_type = #{certType},
+			cert_no = #{certNo},
+			name = #{name},
+			url = #{url},
+			suffix = #{suffix},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE [WJSJZX].[dbo].[corp_cert_attach] SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
