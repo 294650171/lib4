@@ -22,7 +22,7 @@
         					"qymc" : qymc
         				},
         				success : function(data) {
-        					top.$.jBox.tip("任务完成:" + data.msg + "&nbps;&nbps;,请手动刷新！");
+        					top.$.jBox.tip("任务完成:" + data.msg + " ,请手动刷新！");
         					//location = '${pageContext.request.contextPath}' + data;
         					//location.reload();
         				},

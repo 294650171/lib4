@@ -3,9 +3,13 @@
  */
 package cn.wuxi.js.lib4.modules.corp.entity;
 
+import cn.wuxi.js.lib4.common.utils.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
 import cn.wuxi.js.lib4.common.persistence.DataEntity;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * 企业证照Entity
@@ -92,5 +96,20 @@ public class CorpCertAttach extends DataEntity<CorpCertAttach> {
 
 	public void setZzjgdm(String zzjgdm) {
 		this.zzjgdm = zzjgdm;
+	}
+
+	public String getPhotoName(){
+		String result = null;
+
+		if(StringUtils.isNotEmpty(this.name)){
+			try {
+				result = URLDecoder.decode(this.name,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+
 	}
 }

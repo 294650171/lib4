@@ -6,6 +6,10 @@ package cn.wuxi.js.lib4.modules.corp.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.wuxi.js.lib4.common.utils.CorpUtils;
+import cn.wuxi.js.lib4.modules.cert.entity.CorpCert;
+import cn.wuxi.js.lib4.modules.sys.entity.User;
+import cn.wuxi.js.lib4.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +45,14 @@ public class CorpCertAttachController extends BaseController {
 			entity = corpCertAttachService.get(id);
 		}
 		if (entity == null){
-			entity = new CorpCertAttach();
+			User user = UserUtils.getUser();
+			if (StringUtils.isNotBlank(user.getLoginName())){
+				String qyid = CorpUtils.getZzjgdm(user.getLoginName());
+				entity = new CorpCertAttach();
+				entity.setZzjgdm(qyid);
+			}else {
+				entity = new CorpCertAttach();
+			}
 		}
 		return entity;
 	}
@@ -49,6 +60,14 @@ public class CorpCertAttachController extends BaseController {
 	@RequiresPermissions("corp:corpCertAttach:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(CorpCertAttach corpCertAttach, HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		String qyid = null;
+		User user = UserUtils.getUser();
+		if (StringUtils.isNotBlank(user.getLoginName())){
+			qyid = CorpUtils.getZzjgdm(user.getLoginName());
+			corpCertAttach.setZzjgdm(qyid);
+		}
+
 		Page<CorpCertAttach> page = corpCertAttachService.findPage(new Page<CorpCertAttach>(request, response), corpCertAttach); 
 		model.addAttribute("page", page);
 		return "modules/corp/corpCertAttachList";
@@ -59,6 +78,22 @@ public class CorpCertAttachController extends BaseController {
 	public String form(CorpCertAttach corpCertAttach, Model model) {
 		model.addAttribute("corpCertAttach", corpCertAttach);
 		return "modules/corp/corpCertAttachForm";
+	}
+
+	@RequiresPermissions("corp:corpCertAttach:view")
+	@RequestMapping(value = "photoView")
+	public String photoView(CorpCertAttach corpCertAttach, HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		String qyid = null;
+		User user = UserUtils.getUser();
+		if (StringUtils.isNotBlank(user.getLoginName())){
+			qyid = CorpUtils.getZzjgdm(user.getLoginName());
+			corpCertAttach.setZzjgdm(qyid);
+		}
+
+		Page<CorpCertAttach> page = corpCertAttachService.findPage(new Page<CorpCertAttach>(request, response), corpCertAttach);
+		model.addAttribute("page", page);
+		return "modules/corp/corpCertAttachPhotoView";
 	}
 
 	@RequiresPermissions("corp:corpCertAttach:edit")

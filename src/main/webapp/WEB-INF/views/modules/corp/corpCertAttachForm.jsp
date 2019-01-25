@@ -32,45 +32,41 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="corpCertAttach" action="${ctx}/corp/corpCertAttach/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
-		<div class="control-group">
-			<label class="control-label">统一社会信用代码：</label>
-			<div class="controls">
-				<form:input path="tyshxydm" htmlEscape="false" maxlength="50" class="input-xlarge "/>
-			</div>
-		</div>
+		<form:hidden path="tyshxydm"/>
+		<form:hidden path="zzjgdm"/>
+		<sys:message content="${message}"/>
 		<div class="control-group">
 			<label class="control-label">证照类型：</label>
 			<div class="controls">
-				<form:input path="certType" htmlEscape="false" class="input-xlarge  digits"/>
+			    <form:select path="certType" class="input-large ">
+			        <form:option value="">请选择</form:option>
+			        <form:option value="1">营业执照</form:option>
+			        <form:option value="2">资质证书</form:option>
+			    </form:select>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">证照号码：</label>
 			<div class="controls">
-				<form:input path="certNo" htmlEscape="false" maxlength="50" class="input-xlarge "/>
+				<form:input path="certNo" htmlEscape="false" maxlength="50" class="input-xlarge"/>
 			</div>
 		</div>
-		<div class="control-group">
+		<!--<div class="control-group">
 			<label class="control-label">名称：</label>
 			<div class="controls">
 				<form:input path="name" htmlEscape="false" maxlength="200" class="input-xlarge "/>
 			</div>
-		</div>
+		</div>-->
 		<div class="control-group">
-			<label class="control-label">url：</label>
+			<label class="control-label">资质证书附件：</label>
 			<div class="controls">
-				<form:input path="url" htmlEscape="false" maxlength="1000" class="input-xlarge "/>
+				<form:hidden id="nameImage" path="url" htmlEscape="false" maxlength="255" class="input-xlarge"/>
+                <sys:ckfinder input="nameImage" type="images" uploadPath="/photo" selectMultiple="false" maxWidth="600" maxHeight="600" />
 			</div>
 		</div>
+
 		<div class="control-group">
-			<label class="control-label">prefix：</label>
-			<div class="controls">
-				<form:input path="prefix" htmlEscape="false" maxlength="10" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">remarks：</label>
+			<label class="control-label">备注：</label>
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="200" class="input-xxlarge "/>
 			</div>

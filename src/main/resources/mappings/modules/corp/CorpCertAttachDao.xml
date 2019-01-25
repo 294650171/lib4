@@ -47,7 +47,7 @@
 				AND a.tyshxydm = #{tyshxydm}
 			</if>
 			<if test="zzjgdm != null and zzjgdm != ''">
-				AND a.zzjgdm = #{zzjgdm}
+				AND a.zzjgdm= #{zzjgdm}
 			</if>
 			<if test="certType != null and certType != ''">
 				AND a.cert_type = #{certType}
@@ -61,7 +61,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.cert_type ASC,a.cert_no ASC
 			</otherwise>
 		</choose>
 	</select>
