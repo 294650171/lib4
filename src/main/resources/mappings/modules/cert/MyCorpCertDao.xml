@@ -34,7 +34,7 @@
 			<include refid="corpCertColumns"/>
 		FROM WJSJZX.dbo.corp_cert a
 		<include refid="corpCertJoins"/>
-		WHERE a.id = #{id}
+		WHERE (a.STATUS IS NULL OR a.STATUS = 0) AND a.id = #{id}
 	</select>
 	
 	<select id="findList" resultType="CorpCert">
@@ -43,7 +43,7 @@
 		FROM WJSJZX.dbo.corp_cert a
 		<include refid="corpCertJoins"/>
 		<where>
-			
+			(a.STATUS IS NULL OR a.STATUS = 0)
 			<if test="corpId != null and corpId != ''">
 				AND a.corp_id = #{corpId}
 			</if>
@@ -63,7 +63,7 @@
 		FROM WJSJZX.dbo.corp_cert a
 		<include refid="corpCertJoins"/>
 		<where>
-			
+			(a.STATUS IS NULL OR a.STATUS = 0)
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

@@ -25,6 +25,7 @@
 		<task:scheduled ref="presalePermitCrawlerTask" method="execute" cron="0 0 22 * * ?" />
 		<task:scheduled ref="structureDeclarationCrawlerTask" method="execute" cron="0 0 23 * * ?" />
 		<task:scheduled ref="expiredCertSynchTask" method="execute" cron="0 15 0 ? * 7" />
+		<task:scheduled ref="corpSynchTask" method="execute" cron="0 */2 * * * ?" />
 
 	</task:scheduled-tasks>
 
