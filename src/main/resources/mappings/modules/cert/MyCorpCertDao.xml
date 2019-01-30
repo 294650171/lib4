@@ -43,7 +43,7 @@
 		FROM WJSJZX.dbo.corp_cert a
 		<include refid="corpCertJoins"/>
 		<where>
-			(a.STATUS IS NULL OR a.STATUS = 0)
+			(a.STATUS IS NULL OR a.STATUS = 0) AND a.valid_date >= GETDATE()
 			<if test="corpId != null and corpId != ''">
 				AND a.corp_id = #{corpId}
 			</if>
