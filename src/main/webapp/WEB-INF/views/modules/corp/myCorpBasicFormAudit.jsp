@@ -5,44 +5,53 @@
 <title>基本信息</title>
 <meta name="decorator" content="default" />
 <script type="text/javascript">
-	$(document).ready(
-			function() {
-				//$("#name").focus();
-				$("#inputForm")
-						.validate(
-								{
-									submitHandler : function(form) {
-										loading('正在提交，请稍等...');
-										form.submit();
-									},
-									errorContainer : "#messageBox",
-									errorPlacement : function(error, element) {
-										$("#messageBox").text("输入有误，请先更正。");
-										if (element.is(":checkbox")
-												|| element.is(":radio")
-												|| element.parent().is(
-														".input-append")) {
-											error.appendTo(element.parent()
-													.parent());
-										} else {
-											error.insertAfter(element);
-										}
-									}
-								});
-			});
+	$(document).ready( function() {  });
 </script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/mycorp/basicinfo/form">基本信息</a></li>
-		<li ><a href="${ctx}/mycorp/basicinfo/history">修改历史记录</a></li>
+		<li class="active"><a href="#">基本信息</a></li>
 	</ul>
 	<br />
 	<form:form id="inputForm" modelAttribute="bean"
-		action="${ctx}/mycorp/basicinfo/save" method="post"
+		action="${ctx}/mycorp/basicinfo/audit" method="post"
 		class="form-horizontal">
 		<form:hidden path="qyid" />
-		<sys:message content="${message}" />
+        <form:hidden path="id"/>
+        <form:hidden path="act.taskId"/>
+		<form:hidden path="act.taskName"/>
+		<form:hidden path="act.taskDefKey"/>
+		<form:hidden path="act.procInsId"/>
+        <form:hidden path="act.procDefId"/>
+        <form:hidden id="flag" path="act.flag"/>
+		<sys:message content="${message}"/>
+
+        <!-- 流程信息-->
+        <div class="container-fluid">
+            <div class="row-fluid">
+        					<div class="col-xs-12">
+        						<div class="control-group">
+        							<label class="control-label">审批意见：</label>
+        							<div class="controls">
+        								<form:textarea path="act.comment" rows="2" maxlength="20" cssStyle="width:600px"/>
+        							</div>
+        						</div>
+        					</div>
+
+        					<div class="col-xs-12">
+        						<div class="control-group">
+        							<center>
+
+        				<input id="btnSubmit" class="btn btn-primary" type="submit" value="同 意" onclick="$('#flag').val('true')"/>&nbsp;
+                        <input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#flag').val('false')"/>&nbsp;
+
+        			    <input id="btnCancel" class="btn" type="button" value=" 返  回 " onclick="history.go(-1)"/>
+        							</center>
+        						</div>
+        					</div>
+        				</div>
+            <act:histoicFlow procInsId="${bean.act.procInsId}"/>
+        </div>
 
 		<div class="container-fluid">
 			<div class="row-fluid">
@@ -274,22 +283,6 @@
         					</div>
         			</div>
         		</div>
-
-		<div class="form-actions">
-            <c:if test="${canSubmit}">
-			<input id="btnSubmit" class="btn btn-primary" type="submit"
-					value="提 交" />&nbsp;
-		    </c:if>
-
-
-
-			<!-- <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)" /> -->
-
-		</div>
-		<c:if test="${!canSubmit}"> <act:histoicFlow procInsId="${procInsId}" />
-		<input id="btnCancel" class="btn btn-primary" type="button" value="撤 销" onclick="return confirmx('确认要撤销该企业基本信息的修改吗？', '${ctx}/mycorp/basicinfo/delete?qyid=${bean.qyid}&procInsId=${procInsId}')" />
-		</c:if>
-
 	</form:form>
 </body>
 </html>

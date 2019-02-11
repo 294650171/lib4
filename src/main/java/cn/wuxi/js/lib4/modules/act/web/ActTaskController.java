@@ -1,6 +1,4 @@
-/**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
- */
+
 package cn.wuxi.js.lib4.modules.act.web;
 
 import java.io.InputStream;
@@ -10,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +27,20 @@ import cn.wuxi.js.lib4.modules.act.service.ActTaskService;
 import cn.wuxi.js.lib4.modules.act.utils.ActUtils;
 import cn.wuxi.js.lib4.modules.sys.utils.UserUtils;
 
-/**
- * 流程个人任务相关Controller
- * @author ThinkGem
- * @version 2013-11-03
- */
 @Controller
 @RequestMapping(value = "${adminPath}/act/task")
 public class ActTaskController extends BaseController {
 
 	@Autowired
 	private ActTaskService actTaskService;
-	
+
 	/**
 	 * 获取待办列表
-	 * @param procDefKey 流程定义标识
+	 * @param act
+	 * @param response
+	 * @param model
 	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = {"todo", ""})
 	public String todoList(Act act, HttpServletResponse response, Model model) throws Exception {
@@ -53,7 +51,7 @@ public class ActTaskController extends BaseController {
 		}
 		return "modules/act/actTaskTodoList";
 	}
-	
+
 	/**
 	 * 获取已办任务
 	 * @param page
@@ -85,20 +83,20 @@ public class ActTaskController extends BaseController {
 		}
 		return "modules/act/actTaskHistoricFlow";
 	}
-	
+
 	/**
 	 * 获取流程列表
 	 * @param category 流程分类
 	 */
 	@RequestMapping(value = "process")
 	public String processList(String category, HttpServletRequest request, HttpServletResponse response, Model model) {
-	    Page<Object[]> page = new Page<Object[]>(request, response);
-	    page = actTaskService.processList(page, category);
+		Page<Object[]> page = new Page<Object[]>(request, response);
+		page = actTaskService.processList(page, category);
 		model.addAttribute("page", page);
 		model.addAttribute("category", category);
 		return "modules/act/actTaskProcessList";
 	}
-	
+
 	/**
 	 * 获取流程表单
 	 * @param taskId	任务ID
@@ -109,23 +107,33 @@ public class ActTaskController extends BaseController {
 	 */
 	@RequestMapping(value = "form")
 	public String form(Act act, HttpServletRequest request, Model model){
-		
+
 		// 获取流程XML上的表单KEY
 		String formKey = actTaskService.getFormKey(act.getProcDefId(), act.getTaskDefKey());
 
 		// 获取流程实例对象
 		if (act.getProcInsId() != null){
-			act.setProcIns(actTaskService.getProcIns(act.getProcInsId()));
+//			act.setProcIns(actTaskService.getProcIns(act.getProcInsId()));
+
+			//处理已办任务的业务表跟业务主键信息
+			ProcessInstance procIns = actTaskService.getProcIns(act.getProcInsId());
+			if(procIns != null && procIns.getBusinessKey() != null){
+				act.setProcIns(procIns);
+			} else {
+				HistoricProcessInstance hisProcIns = actTaskService.getHisProcIns(act.getProcInsId());
+				if(hisProcIns != null && !StringUtils.isEmpty(hisProcIns.getBusinessKey()))
+					act.setBusinessKey(hisProcIns.getBusinessKey());
+			}
 		}
-		
+		logger.info("-->" + ActUtils.getFormUrl(formKey, act));
 		return "redirect:" + ActUtils.getFormUrl(formKey, act);
-		
+
 //		// 传递参数到视图
 //		model.addAttribute("act", act);
 //		model.addAttribute("formUrl", formUrl);
 //		return "modules/act/actTaskForm";
 	}
-	
+
 	/**
 	 * 启动流程
 	 * @param procDefKey 流程定义KEY
@@ -150,7 +158,7 @@ public class ActTaskController extends BaseController {
 		actTaskService.claim(act.getTaskId(), userId);
 		return "true";//adminPath + "/act/task";
 	}
-	
+
 	/**
 	 * 完成任务
 	 * @param taskId 任务ID
@@ -159,7 +167,7 @@ public class ActTaskController extends BaseController {
 	 * @param vars 任务流程变量，如下
 	 * 		vars.keys=flag,pass
 	 * 		vars.values=1,true
-	 * 		vars.types=S,B  @see cn.wuxi.js.lib4.modules.act.utils.PropertyType
+	 * 		vars.types=S,B  @see net.wxmetro.project.modules.act.utils.PropertyType
 	 */
 	@RequestMapping(value = "complete")
 	@ResponseBody
@@ -167,14 +175,14 @@ public class ActTaskController extends BaseController {
 		actTaskService.complete(act.getTaskId(), act.getProcInsId(), act.getComment(), act.getVars().getVariableMap());
 		return "true";//adminPath + "/act/task";
 	}
-	
+
 	/**
 	 * 读取带跟踪的图片
 	 */
 	@RequestMapping(value = "trace/photo/{procDefId}/{execId}")
 	public void tracePhoto(@PathVariable("procDefId") String procDefId, @PathVariable("execId") String execId, HttpServletResponse response) throws Exception {
 		InputStream imageStream = actTaskService.tracePhoto(procDefId, execId);
-		
+
 		// 输出资源内容到相应对象
 		byte[] b = new byte[1024];
 		int len;
@@ -182,10 +190,10 @@ public class ActTaskController extends BaseController {
 			response.getOutputStream().write(b, 0, len);
 		}
 	}
-	
+
 	/**
 	 * 输出跟踪流程信息
-	 * 
+	 *
 	 * @param processInstanceId
 	 * @return
 	 * @throws Exception
@@ -199,64 +207,64 @@ public class ActTaskController extends BaseController {
 
 	/**
 	 * 显示流程图
-	 
-	@RequestMapping(value = "processPic")
-	public void processPic(String procDefId, HttpServletResponse response) throws Exception {
-		ProcessDefinition procDef = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId).singleResult();
-		String diagramResourceName = procDef.getDiagramResourceName();
-		InputStream imageStream = repositoryService.getResourceAsStream(procDef.getDeploymentId(), diagramResourceName);
-		byte[] b = new byte[1024];
-		int len = -1;
-		while ((len = imageStream.read(b, 0, 1024)) != -1) {
-			response.getOutputStream().write(b, 0, len);
-		}
-	}*/
-	
+
+	 @RequestMapping(value = "processPic")
+	 public void processPic(String procDefId, HttpServletResponse response) throws Exception {
+	 ProcessDefinition procDef = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId).singleResult();
+	 String diagramResourceName = procDef.getDiagramResourceName();
+	 InputStream imageStream = repositoryService.getResourceAsStream(procDef.getDeploymentId(), diagramResourceName);
+	 byte[] b = new byte[1024];
+	 int len = -1;
+	 while ((len = imageStream.read(b, 0, 1024)) != -1) {
+	 response.getOutputStream().write(b, 0, len);
+	 }
+	 }*/
+
 	/**
 	 * 获取跟踪信息
-	 
-	@RequestMapping(value = "processMap")
-	public String processMap(String procDefId, String proInstId, Model model)
-			throws Exception {
-		List<ActivityImpl> actImpls = new ArrayList<ActivityImpl>();
-		ProcessDefinition processDefinition = repositoryService
-				.createProcessDefinitionQuery().processDefinitionId(procDefId)
-				.singleResult();
-		ProcessDefinitionImpl pdImpl = (ProcessDefinitionImpl) processDefinition;
-		String processDefinitionId = pdImpl.getId();// 流程标识
-		ProcessDefinitionEntity def = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
-				.getDeployedProcessDefinition(processDefinitionId);
-		List<ActivityImpl> activitiList = def.getActivities();// 获得当前任务的所有节点
-		List<String> activeActivityIds = runtimeService.getActiveActivityIds(proInstId);
-		for (String activeId : activeActivityIds) {
-			for (ActivityImpl activityImpl : activitiList) {
-				String id = activityImpl.getId();
-				if (activityImpl.isScope()) {
-					if (activityImpl.getActivities().size() > 1) {
-						List<ActivityImpl> subAcList = activityImpl
-								.getActivities();
-						for (ActivityImpl subActImpl : subAcList) {
-							String subid = subActImpl.getId();
-							System.out.println("subImpl:" + subid);
-							if (activeId.equals(subid)) {// 获得执行到那个节点
-								actImpls.add(subActImpl);
-								break;
-							}
-						}
-					}
-				}
-				if (activeId.equals(id)) {// 获得执行到那个节点
-					actImpls.add(activityImpl);
-					System.out.println(id);
-				}
-			}
-		}
-		model.addAttribute("procDefId", procDefId);
-		model.addAttribute("proInstId", proInstId);
-		model.addAttribute("actImpls", actImpls);
-		return "modules/act/actTaskMap";
-	}*/
-	
+
+	 @RequestMapping(value = "processMap")
+	 public String processMap(String procDefId, String proInstId, Model model)
+	 throws Exception {
+	 List<ActivityImpl> actImpls = new ArrayList<ActivityImpl>();
+	 ProcessDefinition processDefinition = repositoryService
+	 .createProcessDefinitionQuery().processDefinitionId(procDefId)
+	 .singleResult();
+	 ProcessDefinitionImpl pdImpl = (ProcessDefinitionImpl) processDefinition;
+	 String processDefinitionId = pdImpl.getId();// 流程标识
+	 ProcessDefinitionEntity def = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+	 .getDeployedProcessDefinition(processDefinitionId);
+	 List<ActivityImpl> activitiList = def.getActivities();// 获得当前任务的所有节点
+	 List<String> activeActivityIds = runtimeService.getActiveActivityIds(proInstId);
+	 for (String activeId : activeActivityIds) {
+	 for (ActivityImpl activityImpl : activitiList) {
+	 String id = activityImpl.getId();
+	 if (activityImpl.isScope()) {
+	 if (activityImpl.getActivities().size() > 1) {
+	 List<ActivityImpl> subAcList = activityImpl
+	 .getActivities();
+	 for (ActivityImpl subActImpl : subAcList) {
+	 String subid = subActImpl.getId();
+	 System.out.println("subImpl:" + subid);
+	 if (activeId.equals(subid)) {// 获得执行到那个节点
+	 actImpls.add(subActImpl);
+	 break;
+	 }
+	 }
+	 }
+	 }
+	 if (activeId.equals(id)) {// 获得执行到那个节点
+	 actImpls.add(activityImpl);
+	 System.out.println(id);
+	 }
+	 }
+	 }
+	 model.addAttribute("procDefId", procDefId);
+	 model.addAttribute("proInstId", proInstId);
+	 model.addAttribute("actImpls", actImpls);
+	 return "modules/act/actTaskMap";
+	 }*/
+
 	/**
 	 * 删除任务
 	 * @param taskId 流程实例ID

@@ -154,6 +154,14 @@ public class Act extends BaseEntity<Act> {
 		}
 	}
 
+	//通过字符串设置 BusinessTable 和BusinessKey
+	public void setBusinessKey(String keys) {
+		System.out.println("setBusinessKey :" + keys);
+		String[] ss = keys.split(":");
+		setBusinessTable(ss[0]);
+		setBusinessId(ss[1]);
+	}
+
 //	public String getProcExecUrl() {
 //		return procExecUrl;
 //	}

@@ -16,4 +16,5 @@ import org.apache.ibatis.annotations.Param;
 @MyBatisDao
 public interface UeppQyjbxxDao extends CrudDao<UeppQyjbxx> {
 	void selfSave(UeppQyjbxx bean);
+
 }

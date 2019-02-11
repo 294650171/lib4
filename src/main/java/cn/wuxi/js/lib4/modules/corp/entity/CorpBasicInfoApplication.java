@@ -1,5 +1,5 @@
 /**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
+ * Copyright &copy; 2019-2021 <a href="http://www.qlmsoft.cn/">QLMSoft</a> All rights reserved.
  */
 package cn.wuxi.js.lib4.modules.corp.entity;
 
@@ -11,18 +11,23 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import cn.wuxi.js.lib4.common.persistence.DataEntity;
 
 /**
- * 企业基本信息Entity
- * @author huangzhengyu
- * @version 2018-07-06
+ * 企业基本信息修改申请表Entity
+ * @author aaronhuang
+ * @version 2019-01-31
  */
-public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
+public class CorpBasicInfoApplication extends ActEntity<CorpBasicInfoApplication> {
 	
 	private static final long serialVersionUID = 1L;
+
+	public static final String DATASTATE_TODO = "0";//待审核
+	public static final String DATASTATE_PASS = "1";//通过
+	public static final String DATASTATE_REJECT = "2"; //驳回
+
 	private String qyid;		// qyid
 	private String userid;		// userid
-	private String qymc;		// qymc
-	private String zzjgdm;		// zzjgdm
-	private String yyzzzch;		// yyzzzch
+	private String qymc;		// 企业名称
+	private String zzjgdm;		// 组织机构代码
+	private String yyzzzch;		// 营业执照注册号
 	private String khyh;		// khyh
 	private String yhzh;		// yhzh
 	private String sfsyq;		// sfsyq
@@ -32,28 +37,28 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 	private String sylxid;		// sylxid
 	private String sylx;		// sylx
 	private String provinceid;		// provinceid
-	private String province;		// province
+	private String province;		// 省
 	private String cityid;		// cityid
-	private String city;		// city
+	private String city;		// 市
 	private String countyid;		// countyid
-	private String county;		// county
+	private String county;		// 区/县
 	private String zcdd;		// zcdd
 	private String jjxzid;		// jjxzid
-	private String jjxz;		// jjxz
-	private String zczb;		// zczb
+	private String jjxz;		// 企业经济性质
+	private String zczb;		// 注册资本(万元)
 	private String zyfw;		// zyfw
 	private String jyfw;		// jyfw
-	private Date clrq;		// clrq
+	private Date clrq;		// 成立日期
 	private String qyjj;		// qyjj
-	private String xxdd;		// xxdd
+	private String xxdd;		// 详细地点
 	private String yzbm;		// yzbm
 	private String cz;		// cz
-	private String email;		// email
+	private String email;		// 邮箱
 	private String webaddress;		// webaddress
-	private String lxr;		// lxr
-	private String lxdh;		// lxdh
-	private String fddbrRyid;		// fddbr_ryid
-	private String fddbr;		// fddbr
+	private String lxr;		// 企业联系人
+	private String lxdh;		// 企业联系电话
+	private String fddbrRyid;		// 法人代表身份证
+	private String fddbr;		// 法人代表
 	private String qyfzrRyid;		// qyfzr_ryid
 	private String qyfzr;		// qyfzr
 	private String cwfzrRyid;		// cwfzr_ryid
@@ -63,23 +68,24 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 	private String aqfzrRyid;		// aqfzr_ryid
 	private String aqfzr;		// aqfzr
 	private String datastate;		// datastate
-	private String tag;		// tag
+	private String tag;		// 来源标识
 	private String xgr;		// xgr
 	private Date xgrqsj;		// xgrqsj
 	private String xmjlzs;		// xmjlzs
 	private String aqy;		// aqy
 	private String zjy;		// zjy
 	private String sgy;		// sgy
-	private String tyshxydm;		// tyshxydm
-	private String needupdateflag;		// needupdateflag
+	private String tyshxydm;		// 统一社会信用代码
+	private String procInsId;		// proc_ins_id
+
 
 	private String photo;
-	
-	public UeppQyjbxx() {
+
+	public CorpBasicInfoApplication() {
 		super();
 	}
 
-	public UeppQyjbxx(String id){
+	public CorpBasicInfoApplication(String id){
 		super(id);
 	}
 
@@ -101,7 +107,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.userid = userid;
 	}
 	
-	@Length(min=0, max=100, message="qymc长度必须介于 0 和 100 之间")
+	@Length(min=0, max=100, message="企业名称长度必须介于 0 和 100 之间")
 	public String getQymc() {
 		return qymc;
 	}
@@ -110,7 +116,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.qymc = qymc;
 	}
 	
-	@Length(min=0, max=50, message="zzjgdm长度必须介于 0 和 50 之间")
+	@Length(min=0, max=50, message="组织机构代码长度必须介于 0 和 50 之间")
 	public String getZzjgdm() {
 		return zzjgdm;
 	}
@@ -119,7 +125,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.zzjgdm = zzjgdm;
 	}
 	
-	@Length(min=0, max=50, message="yyzzzch长度必须介于 0 和 50 之间")
+	@Length(min=0, max=50, message="营业执照注册号长度必须介于 0 和 50 之间")
 	public String getYyzzzch() {
 		return yyzzzch;
 	}
@@ -205,7 +211,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.provinceid = provinceid;
 	}
 	
-	@Length(min=0, max=20, message="province长度必须介于 0 和 20 之间")
+	@Length(min=0, max=20, message="省长度必须介于 0 和 20 之间")
 	public String getProvince() {
 		return province;
 	}
@@ -223,7 +229,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.cityid = cityid;
 	}
 	
-	@Length(min=0, max=20, message="city长度必须介于 0 和 20 之间")
+	@Length(min=0, max=20, message="市长度必须介于 0 和 20 之间")
 	public String getCity() {
 		return city;
 	}
@@ -241,7 +247,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.countyid = countyid;
 	}
 	
-	@Length(min=0, max=20, message="county长度必须介于 0 和 20 之间")
+	@Length(min=0, max=20, message="区/县长度必须介于 0 和 20 之间")
 	public String getCounty() {
 		return county;
 	}
@@ -267,7 +273,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.jjxzid = jjxzid;
 	}
 	
-	@Length(min=0, max=50, message="jjxz长度必须介于 0 和 50 之间")
+	@Length(min=0, max=50, message="企业经济性质长度必须介于 0 和 50 之间")
 	public String getJjxz() {
 		return jjxz;
 	}
@@ -276,7 +282,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.jjxz = jjxz;
 	}
 	
-	@Length(min=0, max=50, message="zczb长度必须介于 0 和 50 之间")
+	@Length(min=0, max=50, message="注册资本(万元)长度必须介于 0 和 50 之间")
 	public String getZczb() {
 		return zczb;
 	}
@@ -321,7 +327,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.qyjj = qyjj;
 	}
 	
-	@Length(min=0, max=200, message="xxdd长度必须介于 0 和 200 之间")
+	@Length(min=0, max=200, message="详细地点长度必须介于 0 和 200 之间")
 	public String getXxdd() {
 		return xxdd;
 	}
@@ -348,7 +354,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.cz = cz;
 	}
 	
-	@Length(min=0, max=100, message="email长度必须介于 0 和 100 之间")
+	@Length(min=0, max=100, message="邮箱长度必须介于 0 和 100 之间")
 	public String getEmail() {
 		return email;
 	}
@@ -366,7 +372,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.webaddress = webaddress;
 	}
 	
-	@Length(min=0, max=50, message="lxr长度必须介于 0 和 50 之间")
+	@Length(min=0, max=50, message="企业联系人长度必须介于 0 和 50 之间")
 	public String getLxr() {
 		return lxr;
 	}
@@ -375,7 +381,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.lxr = lxr;
 	}
 	
-	@Length(min=0, max=50, message="lxdh长度必须介于 0 和 50 之间")
+	@Length(min=0, max=50, message="企业联系电话长度必须介于 0 和 50 之间")
 	public String getLxdh() {
 		return lxdh;
 	}
@@ -384,7 +390,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.lxdh = lxdh;
 	}
 	
-	@Length(min=0, max=100, message="fddbr_ryid长度必须介于 0 和 100 之间")
+	@Length(min=0, max=100, message="法人代表身份证长度必须介于 0 和 100 之间")
 	public String getFddbrRyid() {
 		return fddbrRyid;
 	}
@@ -393,7 +399,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.fddbrRyid = fddbrRyid;
 	}
 	
-	@Length(min=0, max=25, message="fddbr长度必须介于 0 和 25 之间")
+	@Length(min=0, max=25, message="法人代表长度必须介于 0 和 25 之间")
 	public String getFddbr() {
 		return fddbr;
 	}
@@ -482,7 +488,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.datastate = datastate;
 	}
 	
-	@Length(min=0, max=50, message="tag长度必须介于 0 和 50 之间")
+	@Length(min=0, max=50, message="来源标识长度必须介于 0 和 50 之间")
 	public String getTag() {
 		return tag;
 	}
@@ -541,7 +547,7 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.sgy = sgy;
 	}
 	
-	@Length(min=0, max=50, message="tyshxydm长度必须介于 0 和 50 之间")
+	@Length(min=0, max=50, message="统一社会信用代码长度必须介于 0 和 50 之间")
 	public String getTyshxydm() {
 		return tyshxydm;
 	}
@@ -550,12 +556,13 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 		this.tyshxydm = tyshxydm;
 	}
 	
-	public String getNeedupdateflag() {
-		return needupdateflag;
+	@Length(min=0, max=50, message="proc_ins_id长度必须介于 0 和 50 之间")
+	public String getProcInsId() {
+		return procInsId;
 	}
 
-	public void setNeedupdateflag(String needupdateflag) {
-		this.needupdateflag = needupdateflag;
+	public void setProcInsId(String procInsId) {
+		this.procInsId = procInsId;
 	}
 
 	public String getPhoto() {

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.corp.dao.CorpBasicInfoApplicationDao">
+    
+	<sql id="corpBasicInfoApplicationColumns">
+		a.id AS "id",
+		a.qyid AS "qyid",
+		a.userid AS "userid",
+		a.qymc AS "qymc",
+		a.zzjgdm AS "zzjgdm",
+		a.yyzzzch AS "yyzzzch",
+		a.khyh AS "khyh",
+		a.yhzh AS "yhzh",
+		a.sfsyq AS "sfsyq",
+		a.gcjsry_zs AS "gcjsryZs",
+		a.gcjsry_gjzcrs AS "gcjsryGjzcrs",
+		a.gcjsry_zjzcrs AS "gcjsryZjzcrs",
+		a.sylxid AS "sylxid",
+		a.sylx AS "sylx",
+		a.provinceid AS "provinceid",
+		a.province AS "province",
+		a.cityid AS "cityid",
+		a.city AS "city",
+		a.countyid AS "countyid",
+		a.county AS "county",
+		a.zcdd AS "zcdd",
+		a.jjxzid AS "jjxzid",
+		a.jjxz AS "jjxz",
+		a.zczb AS "zczb",
+		a.zyfw AS "zyfw",
+		a.jyfw AS "jyfw",
+		a.clrq AS "clrq",
+		a.qyjj AS "qyjj",
+		a.xxdd AS "xxdd",
+		a.yzbm AS "yzbm",
+		a.cz AS "cz",
+		a.email AS "email",
+		a.webaddress AS "webaddress",
+		a.lxr AS "lxr",
+		a.lxdh AS "lxdh",
+		a.fddbr_ryid AS "fddbrRyid",
+		a.fddbr AS "fddbr",
+		a.qyfzr_ryid AS "qyfzrRyid",
+		a.qyfzr AS "qyfzr",
+		a.cwfzr_ryid AS "cwfzrRyid",
+		a.cwfzr AS "cwfzr",
+		a.jsfzr_ryid AS "jsfzrRyid",
+		a.jsfzr AS "jsfzr",
+		a.aqfzr_ryid AS "aqfzrRyid",
+		a.aqfzr AS "aqfzr",
+		a.datastate AS "datastate",
+		a.tag AS "tag",
+		a.xgr AS "xgr",
+		a.xgrqsj AS "xgrqsj",
+		a.xmjlzs AS "xmjlzs",
+		a.aqy AS "aqy",
+		a.zjy AS "zjy",
+		a.sgy AS "sgy",
+		a.tyshxydm AS "tyshxydm",
+		a.proc_ins_id AS "procInsId"
+	</sql>
+	
+	<sql id="corpBasicInfoApplicationJoins">
+	</sql>
+    
+	<select id="get" resultType="CorpBasicInfoApplication">
+		SELECT 
+			<include refid="corpBasicInfoApplicationColumns"/>
+		FROM WJSJZX.dbo.corp_basic_info_application a
+		<include refid="corpBasicInfoApplicationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CorpBasicInfoApplication">
+		SELECT 
+			<include refid="corpBasicInfoApplicationColumns"/>
+		FROM WJSJZX.dbo.corp_basic_info_application a
+		<include refid="corpBasicInfoApplicationJoins"/>
+		<where>
+			<if test="tyshxydm != null and tyshxydm != ''">
+				AND a.tyshxydm = #{tyshxydm}
+			</if>
+			<if test="qyid != null and qyid != ''">
+				AND a.qyID= #{qyid}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id= #{procInsId}
+			</if>
+			<if test="datastate != null and datastate != ''">
+				AND a.DataState= #{datastate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CorpBasicInfoApplication">
+		SELECT 
+			<include refid="corpBasicInfoApplicationColumns"/>
+		FROM WJSJZX.dbo.corp_basic_info_application a
+		<include refid="corpBasicInfoApplicationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO WJSJZX.dbo.corp_basic_info_application(
+			qyid,
+			qymc,
+			zzjgdm,
+			yyzzzch,
+			khyh,
+			yhzh,
+			sfsyq,
+			gcjsry_zs,
+			gcjsry_gjzcrs,
+			gcjsry_zjzcrs,
+			sylxid,
+			sylx,
+			provinceid,
+			province,
+			cityid,
+			city,
+			countyid,
+			county,
+			zcdd,
+			jjxzid,
+			jjxz,
+			zczb,
+			zyfw,
+			jyfw,
+			clrq,
+			qyjj,
+			xxdd,
+			yzbm,
+			cz,
+			email,
+			webaddress,
+			lxr,
+			lxdh,
+			fddbr_ryid,
+			fddbr,
+			qyfzr_ryid,
+			qyfzr,
+			cwfzr_ryid,
+			cwfzr,
+			jsfzr_ryid,
+			jsfzr,
+			aqfzr_ryid,
+			aqfzr,
+			datastate,
+			tag,
+			xgr,
+			xgrqsj,
+			xmjlzs,
+			aqy,
+			zjy,
+			sgy,
+			tyshxydm,
+			proc_ins_id
+		) VALUES (
+			#{qyid},
+			#{qymc},
+			#{zzjgdm},
+			#{yyzzzch},
+			#{khyh},
+			#{yhzh},
+			#{sfsyq},
+			#{gcjsryZs},
+			#{gcjsryGjzcrs},
+			#{gcjsryZjzcrs},
+			#{sylxid},
+			#{sylx},
+			#{provinceid},
+			#{province},
+			#{cityid},
+			#{city},
+			#{countyid},
+			#{county},
+			#{zcdd},
+			#{jjxzid},
+			#{jjxz},
+			#{zczb},
+			#{zyfw},
+			#{jyfw},
+			#{clrq},
+			#{qyjj},
+			#{xxdd},
+			#{yzbm},
+			#{cz},
+			#{email},
+			#{webaddress},
+			#{lxr},
+			#{lxdh},
+			#{fddbrRyid},
+			#{fddbr},
+			#{qyfzrRyid},
+			#{qyfzr},
+			#{cwfzrRyid},
+			#{cwfzr},
+			#{jsfzrRyid},
+			#{jsfzr},
+			#{aqfzrRyid},
+			#{aqfzr},
+			#{datastate},
+			#{tag},
+			#{xgr},
+			#{xgrqsj},
+			#{xmjlzs},
+			#{aqy},
+			#{zjy},
+			#{sgy},
+			#{tyshxydm},
+			#{procInsId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE WJSJZX.dbo.corp_basic_info_application SET
+			qymc = #{qymc},
+			zzjgdm = #{zzjgdm},
+			yyzzzch = #{yyzzzch},
+			khyh = #{khyh},
+			yhzh = #{yhzh},
+			sfsyq = #{sfsyq},
+			gcjsry_zs = #{gcjsryZs},
+			gcjsry_gjzcrs = #{gcjsryGjzcrs},
+			gcjsry_zjzcrs = #{gcjsryZjzcrs},
+			sylxid = #{sylxid},
+			sylx = #{sylx},
+			provinceid = #{provinceid},
+			province = #{province},
+			cityid = #{cityid},
+			city = #{city},
+			countyid = #{countyid},
+			county = #{county},
+			zcdd = #{zcdd},
+			jjxzid = #{jjxzid},
+			jjxz = #{jjxz},
+			zczb = #{zczb},
+			zyfw = #{zyfw},
+			jyfw = #{jyfw},
+			clrq = #{clrq},
+			qyjj = #{qyjj},
+			xxdd = #{xxdd},
+			yzbm = #{yzbm},
+			cz = #{cz},
+			email = #{email},
+			webaddress = #{webaddress},
+			lxr = #{lxr},
+			lxdh = #{lxdh},
+			fddbr_ryid = #{fddbrRyid},
+			fddbr = #{fddbr},
+			qyfzr_ryid = #{qyfzrRyid},
+			qyfzr = #{qyfzr},
+			cwfzr_ryid = #{cwfzrRyid},
+			cwfzr = #{cwfzr},
+			jsfzr_ryid = #{jsfzrRyid},
+			jsfzr = #{jsfzr},
+			aqfzr_ryid = #{aqfzrRyid},
+			aqfzr = #{aqfzr},
+			datastate = #{datastate},
+			tag = #{tag},
+			xgr = #{xgr},
+			xgrqsj = #{xgrqsj},
+			xmjlzs = #{xmjlzs},
+			aqy = #{aqy},
+			zjy = #{zjy},
+			sgy = #{sgy},
+			tyshxydm = #{tyshxydm},
+			proc_ins_id = #{procInsId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM WJSJZX.dbo.corp_basic_info_application
+		WHERE qyID = #{qyid}
+	</update>
+	<update id="deleteByProcInsId">
+		DELETE FROM WJSJZX.dbo.corp_basic_info_application
+		WHERE qyID = #{qyid} AND proc_ins_id = #{procInsId} AND DataState = '0'
+	</update>
+
+	<update id="updateStatus">
+		UPDATE WJSJZX.dbo.corp_basic_info_application SET
+		datastate = #{datastate}
+		WHERE id = #{id}
+	</update>
+
+
+</mapper>
