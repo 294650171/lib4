@@ -12,7 +12,7 @@ import cn.wuxi.js.lib4.common.persistence.DataEntity;
  * @author huang.zhengyu
  * @version 2019-01-17
  */
-public class CorpBasicAccout extends DataEntity<CorpBasicAccout> {
+public class CorpBasicAccount extends DataEntity<CorpBasicAccount> {
 	
 	private static final long serialVersionUID = 1L;
 	private String tyshxydm;		// tyshxydm
@@ -21,11 +21,11 @@ public class CorpBasicAccout extends DataEntity<CorpBasicAccout> {
 	private String cellphone;		// cellphone
 	private String password;		// password
 	
-	public CorpBasicAccout() {
+	public CorpBasicAccount() {
 		super();
 	}
 
-	public CorpBasicAccout(String id){
+	public CorpBasicAccount(String id){
 		super(id);
 	}
 

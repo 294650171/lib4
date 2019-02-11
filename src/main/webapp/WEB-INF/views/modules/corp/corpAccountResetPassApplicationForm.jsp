@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>企业基本帐号管理</title>
+	<title>企业密码找回申请管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -27,51 +27,56 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/corp/corpBasicAccout/">企业基本帐号列表</a></li>
-		<li class="active"><a href="${ctx}/corp/corpBasicAccout/form?id=${corpBasicAccout.id}">企业基本帐号<shiro:hasPermission name="corp:corpBasicAccout:edit">${not empty corpBasicAccout.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="corp:corpBasicAccout:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/corp/corpAccountResetPassApplication/">企业密码找回申请列表</a></li>
+		<li class="active"><a href="${ctx}/corp/corpAccountResetPassApplication/form?id=${corpAccountResetPassApplication.id}">企业密码找回申请<shiro:hasPermission name="corp:corpAccountResetPassApplication:edit">${not empty corpAccountResetPassApplication.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="corp:corpAccountResetPassApplication:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="corpBasicAccout" action="${ctx}/corp/corpBasicAccout/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="corpAccountResetPassApplication" action="${ctx}/corp/corpAccountResetPassApplication/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">tyshxydm：</label>
+			<label class="control-label">统一社会信用代码：</label>
 			<div class="controls">
 				<form:input path="tyshxydm" htmlEscape="false" maxlength="50" class="input-xlarge "/>
-
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">zzjgdm：</label>
+			<label class="control-label">组织机构代码：</label>
 			<div class="controls">
 				<form:input path="zzjgdm" htmlEscape="false" maxlength="50" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">name：</label>
+			<label class="control-label">企业名称：</label>
 			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="50" class="input-xlarge "/>
+				<form:input path="name" htmlEscape="false" maxlength="100" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">cellphone：</label>
+			<label class="control-label">联系人手机号码：</label>
 			<div class="controls">
 				<form:input path="cellphone" htmlEscape="false" maxlength="100" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">password：</label>
+			<label class="control-label">附件URL：</label>
 			<div class="controls">
-				<form:input path="password" htmlEscape="false" maxlength="100" class="input-xlarge "/>
+				<form:input path="url" htmlEscape="false" maxlength="1000" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">remarks：</label>
+			<label class="control-label">备注：</label>
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="200" class="input-xxlarge "/>
 			</div>
 		</div>
+		<div class="control-group">
+			<label class="control-label">proc_ins_id：</label>
+			<div class="controls">
+				<form:input path="procInsId" htmlEscape="false" maxlength="50" class="input-xlarge "/>
+			</div>
+		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="corp:corpBasicAccout:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="corp:corpAccountResetPassApplication:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

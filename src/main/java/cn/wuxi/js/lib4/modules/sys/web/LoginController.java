@@ -231,4 +231,16 @@ public class LoginController extends BaseController{
 		}
 		return loginFailNum >= 3;
 	}
+
+
+	@RequestMapping(value = "${adminPath}/login/register")
+	public String register(HttpServletRequest request, HttpServletResponse response) {
+		return "sysRegister";
+	}
+
+	@RequestMapping(value = "${adminPath}/login/forgetpassword")
+	public String forgetpassword(HttpServletRequest request, HttpServletResponse response) {
+		return "sysForgetPassword";
+	}
+
 }

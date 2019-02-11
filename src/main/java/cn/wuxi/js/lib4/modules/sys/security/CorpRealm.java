@@ -1,7 +1,7 @@
 package cn.wuxi.js.lib4.modules.sys.security;
 
-import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccout;
-import cn.wuxi.js.lib4.modules.corp.service.CorpBasicAccoutService;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccount;
+import cn.wuxi.js.lib4.modules.corp.service.CorpBasicAccountService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -26,7 +26,7 @@ public class CorpRealm extends AuthorizingRealm {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private CorpBasicAccoutService corpBasicAccoutService;
+    private CorpBasicAccountService corpBasicAccoutService;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -40,7 +40,7 @@ public class CorpRealm extends AuthorizingRealm {
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 
         // 校验用户名密码
-        CorpBasicAccout user = corpBasicAccoutService.findByTyshxydm(token.getUsername());
+        CorpBasicAccount user = corpBasicAccoutService.findByTyshxydm(token.getUsername());
         if (user != null) {
 
             StringBuffer buffer = new StringBuffer();
@@ -75,7 +75,7 @@ public class CorpRealm extends AuthorizingRealm {
         private boolean mobileLogin; // 是否手机登录
 
 
-        public Principal(CorpBasicAccout user, boolean mobileLogin) {
+        public Principal(CorpBasicAccount user, boolean mobileLogin) {
             this.id = user.getId();
             this.tyshxydm = user.getTyshxydm();
             this.name = user.getName();

@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>${fns:getConfig('productName')} 登录</title>
+	<title>${fns:getConfig('productName')} 企业注册</title>
 	<meta name="decorator" content="blank"/>
 	<style type="text/css">
       html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}.form-signin-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:36px;margin-bottom:20px;color:#0663a2;}
@@ -40,15 +40,8 @@
 				}
 			});
 
-			$("#registerBtn").click(function(){
-                window.location.href = "${ctx}/login/register";
-			});
 		});
-		// 如果在框架或在对话框中，则弹出提示并跳转到首页
-		if(self.frameElement && self.frameElement.tagName == "IFRAME" || $('#left').length > 0 || $('.jbox').length > 0){
-			alert('未登录或登录超时。请重新登录，谢谢！');
-			top.location = "${ctx}";
-		}
+
 	</script>
 </head>
 
@@ -60,41 +53,17 @@
 			<label id="loginError" class="error">${message}</label>
 		</div>
 	</div>
-	<h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>
-
+    企业注册
 	<form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/login?type=admin"><strong>用户登录</strong></a></li>
-		<!--<li><a href="${ctx}/login?type=corp"><strong>企业登录</strong></a></li>-->
-	</ul>
 
-	    <input type="hidden" id="type" name="type" value="admin">
 
 		<label class="input-label" for="username">登录名</label>
 		<input type="text" id="username" name="username" class="input-block-level required" value="${username}">
 		<label class="input-label" for="password">密码</label>
 		<input type="password" id="password" name="password" class="input-block-level required">
-		<c:if test="${isValidateCodeLogin}"><div class="validateCode">
-			<label class="input-label mid" for="validateCode">验证码</label>
-			<sys:validateCode name="validateCode" inputCssStyle="margin-bottom:0;"/>
-		</div></c:if><%--
-		<label for="mobile" title="手机登录"><input type="checkbox" id="mobileLogin" name="mobileLogin" ${mobileLogin ? 'checked' : ''}/></label> --%>
-        <div style="height:32px;">
-		<label for="rememberMe" title="下次不需要再登录">
-		<input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="${ctx}/login/forgetpassword">忘记密码?</a>
-        </div>
-		<input class="btn btn-large btn-primary btn-block" type="submit" value="登 录"/>&nbsp;&nbsp;
-		<input class="btn btn-large btn-success btn-block" type="button" value="注 册" id="registerBtn"/>&nbsp;&nbsp;
-        <!--
-		<div id="themeSwitch" class="dropdown">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>
-			<ul class="dropdown-menu">
-			  <c:forEach items="${fns:getDictList('theme')}" var="dict"><li><a href="#" onclick="location='${pageContext.request.contextPath}/theme/${dict.value}?url='+location.href">${dict.label}</a></li></c:forEach>
-			</ul>-->
-			<!--[if lte IE 6]><script type="text/javascript">$('#themeSwitch').hide();</script><![endif]-->
-		<!--</div>-->
+
+		<input class="btn btn-large btn-success btn-block" type="submit" value="注 册" id="registerBtn"/>&nbsp;&nbsp;
+
 	</form>
 	<div class="footer">
 		<a href="" target="_blank"></a>&nbsp;提供技术支持 ${fns:getConfig('version')}

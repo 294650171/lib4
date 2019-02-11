@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.corp.dao.CorpAccountResetPassApplicationDao">
+    
+	<sql id="corpAccountResetPassApplicationColumns">
+		a.id AS "id",
+		a.tyshxydm AS "tyshxydm",
+		a.zzjgdm AS "zzjgdm",
+		a.name AS "name",
+		a.cellphone AS "cellphone",
+		a.url AS "url",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.remarks AS "remarks",
+		a.proc_ins_id AS "procInsId"
+	</sql>
+	
+	<sql id="corpAccountResetPassApplicationJoins">
+	</sql>
+    
+	<select id="get" resultType="CorpAccountResetPassApplication">
+		SELECT 
+			<include refid="corpAccountResetPassApplicationColumns"/>
+		FROM corp_account_resetpass_application a
+		<include refid="corpAccountResetPassApplicationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CorpAccountResetPassApplication">
+		SELECT 
+			<include refid="corpAccountResetPassApplicationColumns"/>
+		FROM corp_account_resetpass_application a
+		<include refid="corpAccountResetPassApplicationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CorpAccountResetPassApplication">
+		SELECT 
+			<include refid="corpAccountResetPassApplicationColumns"/>
+		FROM corp_account_resetpass_application a
+		<include refid="corpAccountResetPassApplicationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO corp_account_resetpass_application(
+			id,
+			tyshxydm,
+			zzjgdm,
+			name,
+			cellphone,
+			url,
+			create_by,
+			update_by,
+			create_date,
+			update_date,
+			del_flag,
+			remarks,
+			proc_ins_id
+		) VALUES (
+			#{id},
+			#{tyshxydm},
+			#{zzjgdm},
+			#{name},
+			#{cellphone},
+			#{url},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{delFlag},
+			#{remarks},
+			#{procInsId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE corp_account_resetpass_application SET
+			tyshxydm = #{tyshxydm},
+			zzjgdm = #{zzjgdm},
+			name = #{name},
+			cellphone = #{cellphone},
+			url = #{url},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE corp_account_resetpass_application SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

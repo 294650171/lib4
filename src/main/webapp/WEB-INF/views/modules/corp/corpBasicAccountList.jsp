@@ -18,10 +18,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/corp/corpBasicAccout/">企业基本帐号列表</a></li>
-		<shiro:hasPermission name="corp:corpBasicAccout:edit"><li><a href="${ctx}/corp/corpBasicAccout/form">企业基本帐号添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/corp/corpBasicAccount/">企业基本帐号列表</a></li>
+		<shiro:hasPermission name="corp:corpBasicAccount:edit"><li><a href="${ctx}/corp/corpBasicAccount/form">企业基本帐号添加</a></li></shiro:hasPermission>
 	</ul>
-	<form:form id="searchForm" modelAttribute="corpBasicAccout" action="${ctx}/corp/corpBasicAccout/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="corpBasicAccount" action="${ctx}/corp/corpBasicAccount/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -39,24 +39,24 @@
 				<th>name</th>
 				<th>update_date</th>
 				<th>remarks</th>
-				<shiro:hasPermission name="corp:corpBasicAccout:edit"><th>操作</th></shiro:hasPermission>
+				<shiro:hasPermission name="corp:corpBasicAccount:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
 		<tbody>
-		<c:forEach items="${page.list}" var="corpBasicAccout">
+		<c:forEach items="${page.list}" var="corpBasicAccount">
 			<tr>
-				<td><a href="${ctx}/corp/corpBasicAccout/form?id=${corpBasicAccout.id}">
-					${corpBasicAccout.name}
+				<td><a href="${ctx}/corp/corpBasicAccount/form?id=${corpBasicAccount.id}">
+					${corpBasicAccount.name}
 				</a></td>
 				<td>
-					<fmt:formatDate value="${corpBasicAccout.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<fmt:formatDate value="${corpBasicAccount.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					${corpBasicAccout.remarks}
+					${corpBasicAccount.remarks}
 				</td>
-				<shiro:hasPermission name="corp:corpBasicAccout:edit"><td>
-    				<a href="${ctx}/corp/corpBasicAccout/form?id=${corpBasicAccout.id}">修改</a>
-					<a href="${ctx}/corp/corpBasicAccout/delete?id=${corpBasicAccout.id}" onclick="return confirmx('确认要删除该企业基本帐号吗？', this.href)">删除</a>
+				<shiro:hasPermission name="corp:corpBasicAccount:edit"><td>
+    				<a href="${ctx}/corp/corpBasicAccount/form?id=${corpBasicAccount.id}">修改</a>
+					<a href="${ctx}/corp/corpBasicAccount/delete?id=${corpBasicAccount.id}" onclick="return confirmx('确认要删除该企业基本帐号吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

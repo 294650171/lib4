@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccout;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccount;
 import cn.wuxi.js.lib4.modules.sys.security.UsernamePasswordToken;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -55,7 +55,7 @@ public class User extends DataEntity<User> {
 	
 	private String isSysUser; // 0: login with employee no; 1: sysuser; 2: corp basic account
 
-	private CorpBasicAccout corpBasicAccount;
+	private CorpBasicAccount corpBasicAccount;
 	
 	private Role role;	// 根据角色查询用户条件
 	
@@ -336,11 +336,11 @@ public class User extends DataEntity<User> {
 		return UsernamePasswordToken.USER_TYPE_CORP.equalsIgnoreCase(userType);
 	}
 
-	public CorpBasicAccout getCorpBasicAccount() {
+	public CorpBasicAccount getCorpBasicAccount() {
 		return corpBasicAccount;
 	}
 
-	public void setCorpBasicAccount(CorpBasicAccout corpBasicAccount) {
+	public void setCorpBasicAccount(CorpBasicAccount corpBasicAccount) {
 		this.corpBasicAccount = corpBasicAccount;
 	}
 

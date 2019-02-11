@@ -5,8 +5,8 @@ package cn.wuxi.js.lib4.modules.sys.utils;
 
 import java.util.List;
 
-import cn.wuxi.js.lib4.modules.corp.dao.CorpBasicAccoutDao;
-import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccout;
+import cn.wuxi.js.lib4.modules.corp.dao.CorpBasicAccountDao;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccount;
 import cn.wuxi.js.lib4.modules.sys.security.UsernamePasswordToken;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
@@ -46,7 +46,7 @@ public class UserUtils {
 	private static MenuDao menuDao = SpringContextHolder.getBean(MenuDao.class);
 	private static AreaDao areaDao = SpringContextHolder.getBean(AreaDao.class);
 	private static OfficeDao officeDao = SpringContextHolder.getBean(OfficeDao.class);
-	private static CorpBasicAccoutDao corpBasicAccoutDao = SpringContextHolder.getBean(CorpBasicAccoutDao.class);
+	private static CorpBasicAccountDao corpBasicAccoutDao = SpringContextHolder.getBean(CorpBasicAccountDao.class);
 	
 	public static final int EmployeeIDLen = 5;
 
@@ -113,7 +113,7 @@ public class UserUtils {
 				}else{
 //					String roleId = "2";
 					Role role = new Role();
-					role.setEnname("corp_basic_accout");
+					role.setEnname("corp_basic_account");
 					user.setRoleList(roleDao.findList(role));
 
 					
@@ -160,7 +160,7 @@ public class UserUtils {
 	public static User getExistingNoneSysUser(String userName){
 		
 		User user = null;
-		CorpBasicAccout corp = null;
+		CorpBasicAccount corp = null;
 		if(corp == null){
 			corp = corpBasicAccoutDao.findByTyshxydm(userName);
 		}

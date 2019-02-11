@@ -7,8 +7,8 @@ import cn.wuxi.js.lib4.common.config.Global;
 import cn.wuxi.js.lib4.common.servlet.ValidateCodeServlet;
 import cn.wuxi.js.lib4.common.utils.SpringContextHolder;
 import cn.wuxi.js.lib4.common.web.Servlets;
-import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccout;
-import cn.wuxi.js.lib4.modules.corp.service.CorpBasicAccoutService;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccount;
+import cn.wuxi.js.lib4.modules.corp.service.CorpBasicAccountService;
 import cn.wuxi.js.lib4.modules.sys.entity.Menu;
 import cn.wuxi.js.lib4.modules.sys.entity.Role;
 import cn.wuxi.js.lib4.modules.sys.entity.User;
@@ -52,7 +52,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	private SystemService systemService;
 
 	@Autowired
-	private CorpBasicAccoutService corpBasicAccoutService;
+	private CorpBasicAccountService corpBasicAccoutService;
 	//private EmployeeService employeeService;
 	
 	public SystemAuthorizingRealm() {
@@ -81,7 +81,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		}
 		if (UsernamePasswordToken.USER_TYPE_CORP.equals(token.getUserType())) {
 			// 校验用户名密码
-			CorpBasicAccout corp = corpBasicAccoutService.findByTyshxydm(token.getUsername());
+			CorpBasicAccount corp = corpBasicAccoutService.findByTyshxydm(token.getUsername());
 			User user = getEnterpriceUser(corp);
 			if (user != null) {
 
@@ -304,7 +304,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		return systemService;
 	}
 
-	private User getEnterpriceUser(CorpBasicAccout account){
+	private User getEnterpriceUser(CorpBasicAccount account){
 		User user = null;
 		if(account != null){
 			user = new User();

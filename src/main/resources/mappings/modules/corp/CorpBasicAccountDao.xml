@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.wuxi.js.lib4.modules.corp.dao.CorpBasicAccoutDao">
+<mapper namespace="cn.wuxi.js.lib4.modules.corp.dao.CorpBasicAccountDao">
     
-	<sql id="corpBasicAccoutColumns">
+	<sql id="corpBasicAccountColumns">
 		a.id AS "id",
 		a.tyshxydm AS "tyshxydm",
 		a.zzjgdm AS "zzjgdm",
@@ -17,24 +17,24 @@
 		a.remarks AS "remarks"
 	</sql>
 	
-	<sql id="corpBasicAccoutJoins">
+	<sql id="corpBasicAccountJoins">
 	</sql>
     
-	<select id="get" resultType="CorpBasicAccout">
+	<select id="get" resultType="CorpBasicAccount">
 		SELECT 
-			<include refid="corpBasicAccoutColumns"/>
-		FROM [WJSJZX].[dbo].[corp_basic_accout] a
-		<include refid="corpBasicAccoutJoins"/>
+			<include refid="corpBasicAccountColumns"/>
+		FROM [WJSJZX].[dbo].[corp_basic_account] a
+		<include refid="corpBasicAccountJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="CorpBasicAccout">
+	<select id="findList" resultType="CorpBasicAccount">
 		SELECT 
-			<include refid="corpBasicAccoutColumns"/>
-		FROM [WJSJZX].[dbo].[corp_basic_accout] a
-		<include refid="corpBasicAccoutJoins"/>
+			<include refid="corpBasicAccountColumns"/>
+		FROM [WJSJZX].[dbo].[corp_basic_account] a
+		<include refid="corpBasicAccountJoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
+			(a.del_flag = #{DEL_FLAG_NORMAL} or a.del_flag is null)
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
 					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
@@ -52,11 +52,11 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="CorpBasicAccout">
+	<select id="findAllList" resultType="CorpBasicAccount">
 		SELECT 
-			<include refid="corpBasicAccoutColumns"/>
-		FROM [WJSJZX].[dbo].[corp_basic_accout] a
-		<include refid="corpBasicAccoutJoins"/>
+			<include refid="corpBasicAccountColumns"/>
+		FROM [WJSJZX].[dbo].[corp_basic_account] a
+		<include refid="corpBasicAccountJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
@@ -70,16 +70,16 @@
 		</choose>
 	</select>
 
-	<select id="findByTyshxydm" resultType="CorpBasicAccout">
+	<select id="findByTyshxydm" resultType="CorpBasicAccount">
 		SELECT
-		<include refid="corpBasicAccoutColumns"/>
-		FROM [WJSJZX].[dbo].[corp_basic_accout] a
-		<include refid="corpBasicAccoutJoins"/>
+		<include refid="corpBasicAccountColumns"/>
+		FROM [WJSJZX].[dbo].[corp_basic_account] a
+		<include refid="corpBasicAccountJoins"/>
 		WHERE a.tyshxydm = #{tyshxydm}
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO [WJSJZX].[dbo].[corp_basic_accout](
+		INSERT INTO [WJSJZX].[dbo].[corp_basic_account](
 			tyshxydm,
 			zzjgdm,
 			name,
@@ -107,7 +107,7 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE [WJSJZX].[dbo].[corp_basic_accout] SET 	
+		UPDATE [WJSJZX].[dbo].[corp_basic_account] SET
 			tyshxydm = #{tyshxydm},
 			zzjgdm = #{zzjgdm},
 			name = #{name},
@@ -120,7 +120,7 @@
 	</update>
 	
 	<update id="delete">
-		UPDATE [WJSJZX].[dbo].[corp_basic_accout] SET 
+		UPDATE [WJSJZX].[dbo].[corp_basic_account] SET
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>

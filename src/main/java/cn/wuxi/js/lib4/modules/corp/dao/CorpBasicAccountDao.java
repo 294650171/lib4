@@ -5,7 +5,7 @@ package cn.wuxi.js.lib4.modules.corp.dao;
 
 import cn.wuxi.js.lib4.common.persistence.CrudDao;
 import cn.wuxi.js.lib4.common.persistence.annotation.MyBatisDao;
-import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccout;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccount;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -14,6 +14,6 @@ import org.apache.ibatis.annotations.Param;
  * @version 2019-01-17
  */
 @MyBatisDao
-public interface CorpBasicAccoutDao extends CrudDao<CorpBasicAccout> {
-    CorpBasicAccout findByTyshxydm(@Param("tyshxydm") String tyshxydm);
+public interface CorpBasicAccountDao extends CrudDao<CorpBasicAccount> {
+    CorpBasicAccount findByTyshxydm(@Param("tyshxydm") String tyshxydm);
 }

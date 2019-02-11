@@ -1,6 +1,4 @@
-/**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
- */
+
 package cn.wuxi.js.lib4.modules.corp.entity;
 
 import cn.wuxi.js.lib4.common.utils.StringUtils;
