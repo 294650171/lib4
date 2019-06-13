@@ -61,7 +61,7 @@
 	<repositories>
 	
 		<repository>
-			<id>jeesite-repos</id>
+			<id>4lib-repos</id>
 			<name>Jeesite Repository</name>
 			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
 		</repository>
@@ -72,7 +72,7 @@
 	<pluginRepositories> 
 	
 		<pluginRepository>
-			<id>jeesite-repos</id>
+			<id>4lib-repos</id>
 			<name>Jeesite Repository</name>
 			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
 		</pluginRepository>
@@ -728,10 +728,10 @@
 						</goals>
 						<configuration>
 							<classesDirectory>${project.outputDirectory}</classesDirectory>
-							<finalName>jeesite</finalName>
+							<finalName>4lib</finalName>
 							<outputDirectory>${project.build.directory}/${project.artifactId}/WEB-INF/lib</outputDirectory>
 							<includes>
-					        	<include>com/thinkgem/jeesite/**</include>
+					        	<include>com/thinkgem/4lib/**</include>
 					       	</includes>
 						</configuration>
 					</execution>
@@ -754,7 +754,7 @@
 				<configuration>
 			        <obfuscate>true</obfuscate>
 			    	<options>
-                        <option>-injars ${project.build.directory}/${project.artifactId}/WEB-INF/lib/jeesite.jar</option>
+                        <option>-injars ${project.build.directory}/${project.artifactId}/WEB-INF/lib/4lib.jar</option>
                     </options>
                     <outjar>${project.artifactId}/WEB-INF/lib/jeesite_out.jar</outjar>
                     <outputDirectory>${project.build.directory}</outputDirectory>
@@ -786,7 +786,7 @@
 				<version>2.4</version>
 				<configuration>
 					<packagingExcludes>
-						<!-- WEB-INF/classes/com/thinkgem/jeesite/** -->
+						<!-- WEB-INF/classes/com/thinkgem/4lib/** -->
 						WEB-INF/classes/org/apache/ibatis/**,
 						WEB-INF/classes/org/mybatis/spring/**
 					</packagingExcludes>
@@ -957,7 +957,7 @@
 								<!-- oracle
 								<property name="dbunit.datatype" value="org.dbunit.ext.oracle.Oracle10DataTypeFactory" /> -->
 								
-								<property file="src/main/resources/jeesite.properties" />
+								<property file="src/main/resources/lib4.properties" />
 								<sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}" 
 									onerror="continue" encoding="${project.build.sourceEncoding}">
 									<classpath refid="maven.test.classpath" />

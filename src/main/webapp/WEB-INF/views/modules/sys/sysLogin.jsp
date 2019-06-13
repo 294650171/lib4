@@ -86,7 +86,7 @@
         <a href="${ctx}/login/forgetpassword">忘记密码?</a>
         </div>
 		<input class="btn btn-large btn-primary btn-block" type="submit" value="登 录"/>&nbsp;&nbsp;
-		<input class="btn btn-large btn-success btn-block" type="button" value="注 册" id="registerBtn"/>&nbsp;&nbsp;
+		<!--<input class="btn btn-large btn-success btn-block" type="button" value="注 册" id="registerBtn"/>&nbsp;&nbsp;-->
         <!--
 		<div id="themeSwitch" class="dropdown">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>

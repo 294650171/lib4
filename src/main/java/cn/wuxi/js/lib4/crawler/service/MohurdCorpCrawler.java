@@ -1,5 +1,7 @@
 package cn.wuxi.js.lib4.crawler.service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -8,6 +10,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import cn.wuxi.js.lib4.crawler.mohurd.bean.BaseCorpVO;
+import cn.wuxi.js.lib4.crawler.mohurd.bean.CorpCaVO;
+import cn.wuxi.js.lib4.crawler.mohurd.bean.CorpDetailVO;
+import cn.wuxi.js.lib4.crawler.mohurd.bean.RegStaffs;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
@@ -28,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
 import cn.wuxi.js.lib4.crawler.entity.CorpCert;
@@ -47,10 +55,6 @@ import cn.wuxi.js.lib4.crawler.mapper.QyjbxxMapper;
 import cn.wuxi.js.lib4.crawler.mapper.QyzsMapper;
 import cn.wuxi.js.lib4.crawler.mapper.QyzzmxMapper;
 import cn.wuxi.js.lib4.crawler.mapper.UeppCodeMapper;
-import cn.wuxi.js.lib4.crawler.mohurd.bean.BaseCorpVO;
-import cn.wuxi.js.lib4.crawler.mohurd.bean.CorpCaVO;
-import cn.wuxi.js.lib4.crawler.mohurd.bean.CorpDetailVO;
-import cn.wuxi.js.lib4.crawler.mohurd.bean.RegStaffs;
 
 @Service
 public class MohurdCorpCrawler {
@@ -68,55 +72,58 @@ public class MohurdCorpCrawler {
 	public static final String TAG = "qlmsoft";
 	public static final String XGR = "crawler";
 	public static final String CERT_DATE_FORMAT = "yyyy-MM-dd";
-	
+
 	public CloseableHttpClient closeHttpClient = HttpClients.createDefault();
 
 	@Autowired
+	HttpConnectionManager connManager;
+
+	@Autowired
 	private CorpCertMapper certMapper;
-	
+
 	@Autowired
 	private CorpMapper corpMapper;
 	@Autowired
 	private QyjbxxMapper qyjbxxMapper;
-	
+
 	@Autowired
 	private QycsywMapper qycsywMapper;
-	
+
 	@Autowired
 	private QyzsMapper qyzsMapper;
-	
+
 	@Autowired
 	private QyzzmxMapper qyzzmxMapper;
-	
+
 	@Autowired
 	private UeppCodeMapper codeMapper;
-	
-	
+
+
 	@Autowired
 	private RegStaffProccesor startProc;
-	
+
 	@Autowired
 	private CorpCertMappingMapper corpCertMappingMapper;
-	
+
 	private List<CorpCertMapping> corpCertList = null;
-	
+
 	private int success = 0;
 	private int total = 0;
 
-	
+
 	/**
 	 * 爬取企业信息程序
 	 */
 	public void start(boolean withStaffFlag) {
-		
+
 		corpCertList = corpCertMappingMapper.selectAll(null);
-		
+
 		List<CorpEntity> corps = corpMapper.getSurveyAndDesignAdd();
 //		List<CorpEntity> corps = corpMapper.getSurveyAndDesignStaff();
-		
+
 		logger.info("计划获取企业数:" + corps.size());
 		long startTime = System.currentTimeMillis();
-		
+
 		total = corps.size();
 
 		for (CorpEntity corp : corps) {
@@ -137,7 +144,6 @@ public class MohurdCorpCrawler {
 		logger.info("爬取" + success + "/" + total + " 企业，总耗时"
 				+ (endTime - startTime) / 1000l / 60l + "分钟");
 	}
-
 
 	/**
 	 * 针对证书过期的资质进行重新同步
@@ -169,8 +175,8 @@ public class MohurdCorpCrawler {
 		logger.info("爬取" + success + "/" + total + " 企业，总耗时"
 				+ (endTime - startTime) / 1000l / 60l + "分钟");
 	}
-	
-	
+
+
 	/**
 	 * 爬取企业信息程序
 	 */
@@ -203,7 +209,7 @@ public class MohurdCorpCrawler {
 		logger.info("爬取" + success + "/" + total + " 企业，总耗时"
 				+ (endTime - startTime) / 1000l / 60l + "分钟");
 	}
-	
+
 	/**
 	 * 爬取企业信息程序
 	 */
@@ -229,7 +235,7 @@ public class MohurdCorpCrawler {
 					corpVO.setCorpID(zzjgdm);
 				}
 				logger.info("zzjgdm:" + zzjgdm);
-				
+
 				if (detailVO != null) {
 					Qyjbxx qy = qyjbxxMapper.selectByPrimaryKey(zzjgdm);
 					if (qy == null) {
@@ -253,34 +259,34 @@ public class MohurdCorpCrawler {
 
 				// 企业资质
 				List<CorpCaVO> caList = corpCaListReq(corpVO);
-				
+
 				/**
-				//企业的所有从事业务类型
-				QycsywExample example = new QycsywExample();
-				example.createCriteria().andQyidEqualTo(zzjgdm) ;
-				List<Qycsyw> csywlxList = qycsywMapper.selectByExample(example);
-				List<String> savedList = new ArrayList<String>();
-				
-				//企业的所有证书
-				QyzsExample zs = new QyzsExample();
-				zs.createCriteria().andQyidEqualTo(zzjgdm);
-				List<Qyzs> qyzsList = qyzsMapper.selectByExample(zs);
-				List<String> zsbhList = new ArrayList<String>();
-				
-				//企业的所有资质明细
-				QyzzmxExample zzmx = new QyzzmxExample();
-				zzmx.createCriteria().andQyidEqualTo(zzjgdm);
-				List<Qyzzmx> qyzzmxList = qyzzmxMapper
-						.selectByExample(zzmx);
-				*/
-				
-				
+				 //企业的所有从事业务类型
+				 QycsywExample example = new QycsywExample();
+				 example.createCriteria().andQyidEqualTo(zzjgdm) ;
+				 List<Qycsyw> csywlxList = qycsywMapper.selectByExample(example);
+				 List<String> savedList = new ArrayList<String>();
+
+				 //企业的所有证书
+				 QyzsExample zs = new QyzsExample();
+				 zs.createCriteria().andQyidEqualTo(zzjgdm);
+				 List<Qyzs> qyzsList = qyzsMapper.selectByExample(zs);
+				 List<String> zsbhList = new ArrayList<String>();
+
+				 //企业的所有资质明细
+				 QyzzmxExample zzmx = new QyzzmxExample();
+				 zzmx.createCriteria().andQyidEqualTo(zzjgdm);
+				 List<Qyzzmx> qyzzmxList = qyzzmxMapper
+				 .selectByExample(zzmx);
+				 */
+
+
 				//企业
 				CorpCertExample zs = new CorpCertExample();
 				zs.createCriteria().andCorpIdEqualTo(zzjgdm);
 				List<CorpCert> certList = certMapper.selectByExample(zs);
-			 
-				
+
+
 				if (caList != null && !caList.isEmpty()) {
 					for (CorpCaVO ca : caList) {
 
@@ -288,69 +294,69 @@ public class MohurdCorpCrawler {
 						success ++;
 						CorpCert toSaveCert = isCorpCertExist(certList, ca);
 						if (toSaveCert == null) {
-							CorpCert savedCert = new CorpCert(); 
-							transferToCert(zzjgdm, ca, savedCert); 
+							CorpCert savedCert = new CorpCert();
+							transferToCert(zzjgdm, ca, savedCert);
 							certMapper.insert(savedCert);
 							logger.info("新增企业证书:" + savedCert.toString());
 						} else {
-							transferToCert(zzjgdm, ca, toSaveCert); 
+							transferToCert(zzjgdm, ca, toSaveCert);
 							certMapper.updateByPrimaryKeySelective(toSaveCert);
 							logger.info("更新企业证书:" + toSaveCert.toString());
 						}
-						
-						
+
+
 						/**
-						// 更新企业从事业务类型
-						if (!isCsywlxExist(csywlxList, ca.getCsywlx()) && !savedList.contains(ca.getCsywlx())) {
-							savedList.add(ca.getCsywlx());
-							Qycsyw qycsyw = new Qycsyw();
-							qycsyw.setQyid(zzjgdm);
-							qycsyw.setCsywlx(ca.getCsywlx());
-							qycsyw.setTag(TAG);
-							qycsyw.setXgr(XGR);
-							qycsyw.setXgrqsj(new Date());
-							//qycsywMapper.insert(qycsyw);
-						}
+						 // 更新企业从事业务类型
+						 if (!isCsywlxExist(csywlxList, ca.getCsywlx()) && !savedList.contains(ca.getCsywlx())) {
+						 savedList.add(ca.getCsywlx());
+						 Qycsyw qycsyw = new Qycsyw();
+						 qycsyw.setQyid(zzjgdm);
+						 qycsyw.setCsywlx(ca.getCsywlx());
+						 qycsyw.setTag(TAG);
+						 qycsyw.setXgr(XGR);
+						 qycsyw.setXgrqsj(new Date());
+						 //qycsywMapper.insert(qycsyw);
+						 }
 
-						// 更新企业资质证书
-						if (!isZsExist(qyzsList, ca.getZsbh()) && !zsbhList.contains(ca.getZsbh())) {
-							zsbhList.add(ca.getZsbh());
-							Qyzs qyzs = new Qyzs(); 
-							qyzs.setZsjlid(qyzsMapper.queryQyzsID());
-							qyzs.setQyid(zzjgdm);
-							qyzs.setCsywlx(ca.getCsywlx());
-							qyzs.setCsywlxid(transferInfoToCode(ca.getCsywlx(),
-									"企业从事业务类型"));
-							qyzs.setZsbh(ca.getZsbh());
-							qyzs.setFzdw(ca.getFzdw());
-							try {
-								qyzs.setFzrq(DateUtils.parseDate(ca.getFzrq(),
-										"yyyy-MM-dd"));
-							} catch (ParseException e) {
-								logger.error(e.getMessage());
-								e.printStackTrace();
-							}
-							qyzs.setZslxid(0);
-							qyzs.setZslx("");
-							qyzs.setTag(TAG);
-							qyzs.setXgr(XGR);
-							qyzs.setXgrqsj(Calendar.getInstance().getTime());
-							//qyzsMapper.insert(qyzs);
-						}
+						 // 更新企业资质证书
+						 if (!isZsExist(qyzsList, ca.getZsbh()) && !zsbhList.contains(ca.getZsbh())) {
+						 zsbhList.add(ca.getZsbh());
+						 Qyzs qyzs = new Qyzs();
+						 qyzs.setZsjlid(qyzsMapper.queryQyzsID());
+						 qyzs.setQyid(zzjgdm);
+						 qyzs.setCsywlx(ca.getCsywlx());
+						 qyzs.setCsywlxid(transferInfoToCode(ca.getCsywlx(),
+						 "企业从事业务类型"));
+						 qyzs.setZsbh(ca.getZsbh());
+						 qyzs.setFzdw(ca.getFzdw());
+						 try {
+						 qyzs.setFzrq(DateUtils.parseDate(ca.getFzrq(),
+						 "yyyy-MM-dd"));
+						 } catch (ParseException e) {
+						 logger.error(e.getMessage());
+						 e.printStackTrace();
+						 }
+						 qyzs.setZslxid(0);
+						 qyzs.setZslx("");
+						 qyzs.setTag(TAG);
+						 qyzs.setXgr(XGR);
+						 qyzs.setXgrqsj(Calendar.getInstance().getTime());
+						 //qyzsMapper.insert(qyzs);
+						 }
 
-						// 更新企业资质明细
-						// TODO: 因为企业资质明细需要分解，以后在做
-						*/
-						
-						
+						 // 更新企业资质明细
+						 // TODO: 因为企业资质明细需要分解，以后在做
+						 */
+
+
 					}
 				}
-				 
+
 				// 企业注册人员
 				if(withStaffFlag){
 					RegStaffs staffs = startProc.regStaffListReq(corpVO);
 				}
-				
+
 			}
 		}
 
@@ -414,7 +420,7 @@ public class MohurdCorpCrawler {
 		}
 		savedCert.setUpdateTime(Calendar.getInstance().getTime());
 		savedCert.setTag(XGR);
-		
+
 		if(savedCert.getCertName() != null){
 			int pos = savedCert.getCertName().trim().length();
 			if(pos > 2){
@@ -432,6 +438,7 @@ public class MohurdCorpCrawler {
 				}else{
 					savedCert.setCertLevel("");
 				}
+
 			}
 		}
 
@@ -447,7 +454,7 @@ public class MohurdCorpCrawler {
 		}
 		if(matched != null){
 			savedCert.setTradeType(matched.getTradetypename());
-			
+
 			if(StringUtils.isEmpty(matched.getTradetypeno())){
 				if(!StringUtils.isEmpty(matched.getMajortypeno())){
 					savedCert.setTradeTypeId(Integer.parseInt(matched.getMajortypeno().substring(0, 6)));
@@ -455,25 +462,25 @@ public class MohurdCorpCrawler {
 			}else {
 				savedCert.setTradeTypeId(Integer.parseInt(matched.getTradetypeno()));
 			}
-			
+
 			if(!StringUtils.isEmpty(matched.getCerttypeno())){
 				savedCert.setCertTypeId(Integer.parseInt(matched.getCerttypeno()));
 			}
-			
+
 			savedCert.setMajorType(matched.getMajortypename());
-			
+
 			if(!StringUtils.isEmpty(matched.getMajortypeno())){
 				savedCert.setMajorTypeId(Integer.parseInt(matched.getMajortypeno()));
 			}
-			
+
 		}
-		
-		
-		
-		
+
+
+
+
 	}
 
-	
+
 	/**
 	 * 判断一个企业的资质是否存在
 	 * @param certList
@@ -554,7 +561,7 @@ public class MohurdCorpCrawler {
 
 	/**
 	 * 企业证书列表页面处理
-	 * 
+	 *
 	 * @param corpVO
 	 * @return
 	 */
@@ -570,8 +577,11 @@ public class MohurdCorpCrawler {
 			String html = EntityUtils.toString(httpResponse.getEntity(),
 					"UTF-8");
 
+//			File file = new File("E:\\2017\\codes\\qlmsoft\\crawler2\\crawler\\data_sample\\pageCert.html");
+//			String html =  FileUtils.readFileToString(file);
+
 			if (html != null) {
-				result = corpCaListResult(html);
+				result = corpCaListResult(corpVO.getCorpPageID(), html);
 			}
 
 		} catch (UnsupportedEncodingException e) {
@@ -595,25 +605,37 @@ public class MohurdCorpCrawler {
 
 	}
 
-	private List<CorpCaVO> corpCaListResult(String html) {
+	private List<CorpCaVO> corpCaListResult(String corpPageId, String html) {
 
 		List<CorpCaVO> result = new ArrayList<CorpCaVO>();
 		Document doc = Jsoup.parse(html);
+//		logger.info(html);
 
 		try {
-			Elements caTrs = doc.select("#catabled tr.row");
+			int pagingFormSize  = doc.select("form.pagingform").size();
+//			logger.info("pagingFormSize : " + pagingFormSize);
+			if(pagingFormSize > 0){
+				//has paging
+//				Element lastPageEl = doc.select("div.quotes a.nxt").first();
+//				int totalPage = Integer.parseInt(lastPageEl.attr("dt"));
+//				logger.info("totalPage : " + totalPage);
 
-			for (Element caTr : caTrs) {
-				CorpCaVO ca = new CorpCaVO();
-				Elements tds = caTr.getElementsByTag("td");
+				//处理第一页
+				abstractCertSinglePage(result, doc);
 
-				ca.setCsywlx(tds.get(1).html());
-				ca.setZsbh(tds.get(2).html());
-				ca.setZzmc(tds.get(3).html());
-				ca.setFzrq(tds.get(4).html());
-				ca.setZsyxzrq(tds.get(5).html());
-				ca.setFzdw(tds.get(6).html());
-				result.add(ca);
+				Thread.sleep(10000);
+
+				String pageUrl = CORP_CA_LIST_URL + corpPageId + "?$pg=2&_=" + System.currentTimeMillis();
+				logger.info("begin to crawler 2 page:" + pageUrl) ;
+				List<CorpCaVO> certInPage = certReqBySinglePage(pageUrl);
+				logger.info(" certInPage size : " + certInPage.size()) ;
+				if (certInPage != null && !certInPage.isEmpty()) {
+					result.addAll(certInPage);
+				}
+
+
+			}else {
+				abstractCertSinglePage(result, doc);
 			}
 
 		} catch (Exception e) {
@@ -621,6 +643,8 @@ public class MohurdCorpCrawler {
 			logger.error(e.getMessage());
 		}
 
+
+		logger.info("------------size------" + result.size());
 		if (result.isEmpty()) {
 			logger.info("no result");
 
@@ -634,9 +658,62 @@ public class MohurdCorpCrawler {
 
 	}
 
+
+	private List<CorpCaVO> certReqBySinglePage(String singlePageUrl) {
+		List<CorpCaVO> result = new ArrayList<CorpCaVO>();
+
+		CloseableHttpResponse httpResponse = null;
+		HttpGet httpget = new HttpGet(singlePageUrl);
+		try {
+			CloseableHttpClient httpClient = connManager.getHttpClient();
+			httpResponse = httpClient.execute(httpget);
+			String html = EntityUtils.toString(httpResponse.getEntity(),
+					"UTF-8");
+			if (html != null && !StringUtils.isEmpty(html)) {
+				Document doc = Jsoup.parse(html);
+				abstractCertSinglePage(result, doc);
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (httpResponse != null) {
+				try {
+					httpResponse.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+		return result;
+
+	}
+
+	private void abstractCertSinglePage(List<CorpCaVO> result, Document doc) {
+		Elements caTrs = doc.select("#catabled tr.row");
+		for (Element caTr : caTrs) {
+			CorpCaVO ca = new CorpCaVO();
+			Elements tds = caTr.getElementsByTag("td");
+
+			ca.setCsywlx(tds.get(1).html());
+			ca.setZsbh(tds.get(2).html());
+			ca.setZzmc(tds.get(3).html());
+			ca.setFzrq(tds.get(4).html());
+			ca.setZsyxzrq(tds.get(5).html());
+			ca.setFzdw(tds.get(6).html());
+			result.add(ca);
+		}
+	}
+
 	/**
 	 * 企业详细页面处理
-	 * 
+	 *
 	 * @param corpVO
 	 * @return
 	 */
@@ -678,7 +755,7 @@ public class MohurdCorpCrawler {
 
 	/**
 	 * 从住建部网站按名称查询企业
-	 * 
+	 *
 	 * @param corpName
 	 * @return
 	 */
@@ -736,7 +813,7 @@ public class MohurdCorpCrawler {
 
 	/**
 	 * 处理按企业名字查询结果
-	 * 
+	 *
 	 * @param corpName
 	 * @param html
 	 * @return
@@ -774,7 +851,7 @@ public class MohurdCorpCrawler {
 
 	/**
 	 * 处理企业详细页面结果
-	 * 
+	 *
 	 * @param corpName
 	 * @param html
 	 * @return
@@ -783,10 +860,10 @@ public class MohurdCorpCrawler {
 		CorpDetailVO result = null;
 		Document doc = Jsoup.parse(html);
 		try {
-			
+
 			Element zzjgdmEl = doc.select(
 					"div.query_info_box table.datas_table tr").get(0);
-			
+
 			Element fddbrEl = doc.select(
 					"div.query_info_box table.datas_table tr").get(1);
 
@@ -808,7 +885,7 @@ public class MohurdCorpCrawler {
 				String address = addressEl.getElementsByTag("td").get(0).html();
 				result.setXxdd(address);
 				result.setZcdd(address);
-				
+
 				if (zzjgdmEl != null && zzjgdmEl.html() != null
 						&& !StringUtils.isEmpty(zzjgdmEl)) {
 					String zzjgdmHtml =  zzjgdmEl.getElementsByTag("td").get(0).html();
@@ -834,7 +911,7 @@ public class MohurdCorpCrawler {
 
 	/**
 	 * 判断统一社会信用代码是否跟组织机构代码一致
-	 * 
+	 *
 	 * @param corpCreditCode
 	 * @param qyID
 	 * @return
@@ -843,6 +920,10 @@ public class MohurdCorpCrawler {
 		String zzjgdm = corpCreditCode.substring(8, 16) + "-"
 				+ corpCreditCode.substring(16, 17);
 		return qyID.equals(zzjgdm);
+	}
+
+	public CorpEntity getCorpByZzjgdm(String qyID){
+		return corpMapper.getCorpByZzjgdm(qyID);
 	}
 
 }

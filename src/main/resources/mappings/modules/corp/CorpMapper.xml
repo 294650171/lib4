@@ -74,4 +74,10 @@
        UPDATE  WJSJZX.dbo.UEPP_Qyjbxx  SET xgr=#{xgr} WHERE  qyID = #{qyID}
     </update>
 
+    <select id="getCorpByZzjgdm" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+        SELECT DISTINCT <include refid="columns" />
+        FROM UEPP_Qyjbxx j
+        WHERE j.qyID = #{qyID}
+    </select>
+
 </mapper>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.wuxi.js.lib4.common.persistence.annotation.MyBatisDao;
 import cn.wuxi.js.lib4.crawler.entity.CorpEntity;
+import org.apache.ibatis.annotations.Param;
 
 @MyBatisDao
 public interface CorpMapper {
@@ -30,5 +31,7 @@ public interface CorpMapper {
 	
 	//培训企业名单
 	List<String> getPeixun();
+
+	CorpEntity getCorpByZzjgdm(@Param(value = "qyID") String qyID);
 
 }

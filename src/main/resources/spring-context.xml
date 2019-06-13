@@ -15,10 +15,10 @@
 	<description>Spring Configuration</description>
 	
     <!-- 加载配置属性文件 -->
-	<context:property-placeholder ignore-unresolvable="true" location="classpath:jeesite.properties" />
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:lib4.properties" />
 	
 	<!-- 加载应用属性实例，可通过  @Value("#{APP_PROP['jdbc.driver']}") String jdbcDriver 方式引用 -->
-    <util:properties id="APP_PROP" location="classpath:jeesite.properties" local-override="true"/>
+    <util:properties id="APP_PROP" location="classpath:lib4.properties" local-override="true"/>
 	
 	<!-- 使用Annotation自动注册Bean，解决事物失效问题：在主容器中不扫描@Controller注解，在SpringMvc中只扫描@Controller注解。  -->
 	<context:component-scan base-package="cn.wuxi.js.lib4"><!-- base-package 如果多个，用“,”分隔 -->
@@ -100,7 +100,7 @@
 	</bean>
 	
 	<!-- 数据源配置, 使用应用服务器的数据库连接池 
-	<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/jeesite" />-->
+	<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/4lib" />-->
 
 	<!-- 数据源配置, 不使用连接池 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
