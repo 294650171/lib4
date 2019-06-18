@@ -22,6 +22,7 @@
 				${adminPath}/** = user
 				/act/editor/** = user
 				/ReportServer/** = user
+				/b/corp/resetPasswordApply/** = anon
 			</value>
 		</constructor-arg>
 	</bean>

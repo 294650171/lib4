@@ -81,6 +81,9 @@
 			<if test="qyid != null and qyid != ''">
 				AND a.qyid = #{qyid}
 			</if>
+			<if test="yyzzzch != null and yyzzzch != ''">
+				AND a.yyzzzch = #{yyzzzch}
+			</if>			
 			<if test="qymc != null and qymc != ''">
 				AND a.qymc = #{qymc}
 			</if>

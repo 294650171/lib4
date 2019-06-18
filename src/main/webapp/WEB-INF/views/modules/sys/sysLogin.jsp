@@ -83,7 +83,7 @@
 		<label for="rememberMe" title="下次不需要再登录">
 		<input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="${ctx}/login/forgetpassword">忘记密码?</a>
+        <a href="/lib4/b/corp/resetPasswordApply/form" target="_blank">忘记密码?</a>
         </div>
 		<input class="btn btn-large btn-primary btn-block" type="submit" value="登 录"/>&nbsp;&nbsp;
 		<!--<input class="btn btn-large btn-success btn-block" type="button" value="注 册" id="registerBtn"/>&nbsp;&nbsp;-->

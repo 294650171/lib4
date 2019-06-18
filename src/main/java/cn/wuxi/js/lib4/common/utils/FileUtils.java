@@ -965,4 +965,13 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 		}
 		return fileName.substring(0, fileName.lastIndexOf("."));
 	}
+	
+	public static boolean prepareDir(String dir){
+		boolean flag = true;
+		File file = new File(dir);
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		return flag;
+	}
 }

@@ -240,7 +240,7 @@ public class LoginController extends BaseController{
 
 	@RequestMapping(value = "${adminPath}/login/forgetpassword")
 	public String forgetpassword(HttpServletRequest request, HttpServletResponse response) {
-		return "sysForgetPassword";
+		return "redirect:"+Global.getAdminPath()+"/corp/resetPasswordApply/form?repage";
 	}
 
 }
