@@ -5,11 +5,15 @@ package cn.wuxi.js.lib4.modules.corp.service;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Maps;
 
 import cn.wuxi.js.lib4.common.config.Global;
 import cn.wuxi.js.lib4.common.persistence.Page;
@@ -22,6 +26,8 @@ import cn.wuxi.js.lib4.modules.notify.DbMessageSender;
 import cn.wuxi.js.lib4.modules.notify.MessageSender;
 import cn.wuxi.js.lib4.modules.sys.dao.GUserDao;
 import cn.wuxi.js.lib4.modules.sys.entity.GUser;
+import cn.wuxi.js.lib4.modules.act.service.ActTaskService;
+import cn.wuxi.js.lib4.modules.act.utils.ActUtils;
 import cn.wuxi.js.lib4.modules.corp.dao.ResetPasswordApplyDao;
 
 /**
@@ -32,6 +38,12 @@ import cn.wuxi.js.lib4.modules.corp.dao.ResetPasswordApplyDao;
 @Service
 @Transactional(readOnly = true)
 public class ResetPasswordApplyService extends CrudService<ResetPasswordApplyDao, ResetPasswordApply> {
+	
+	public static final String APPROVE_USER_KEY = "userid";
+	public static final String INITIATOR_USER_KEY = "applyuserid";
+	
+	@Autowired
+	private ActTaskService actTaskService;
 	
 	@Autowired
 	private GUserDao gUserDao;
@@ -50,7 +62,21 @@ public class ResetPasswordApplyService extends CrudService<ResetPasswordApplyDao
 	
 	@Transactional(readOnly = false)
 	public void save(ResetPasswordApply resetPasswordApply) {
+		
 		super.save(resetPasswordApply);
+		
+		// 启动流程
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put(APPROVE_USER_KEY, Global.getConfig("admin.account"));
+		variables.put(INITIATOR_USER_KEY, resetPasswordApply.getEntityCode());
+
+		String title = "密码重置申请，"+resetPasswordApply.getEntityName() + "(" + resetPasswordApply.getEntityCode() + ")";
+
+		String procInsId = actTaskService.startProcess(ActUtils.PD_RESET_PASS_APPLY[0], ActUtils.PD_RESET_PASS_APPLY[1], resetPasswordApply.getId(), title,variables);
+		
+		//resetPasswordApply.setProcInsId(procInsId);
+		
+		//dao.updateProcInsId(resetPasswordApply);
 	}
 	
 	@Transactional(readOnly = false)
@@ -60,12 +86,30 @@ public class ResetPasswordApplyService extends CrudService<ResetPasswordApplyDao
 	
 	@Transactional(readOnly = false)
 	public void approve(ResetPasswordApply resetPasswordApply) {
+		String approveFlag = resetPasswordApply.getAct().getFlag();
+
+		String status = ("true".equals(approveFlag) ? Global.STATUS_APPROVED: Global.STATUS_REJECTED);
+
+		resetPasswordApply.getAct().setComment(("true".equals(approveFlag) ? "[同意] " : "[驳回] ") + resetPasswordApply.getAct().getComment());
+		resetPasswordApply.preUpdate();
+
+
+		Map<String, Object> vars = Maps.newHashMap();
+		
+		logger.debug("act:{}", resetPasswordApply.getAct().toString());
+	
+		actTaskService.complete(resetPasswordApply.getAct().getTaskId(), resetPasswordApply.getAct().getProcInsId(), resetPasswordApply.getAct().getComment(), vars);
+
+		//CorpBasicInfoApplication entity = this.get(bean.getId());
+		
+		resetPasswordApply.setApproveOpinion(resetPasswordApply.getAct().getComment());
+		
 		dao.approve(resetPasswordApply);
 		
 		String temp = "";
 		MessageFormat mf;
 		String msg = "";
-		if(ResetPasswordApply.STATUS_APPROVED.equals(resetPasswordApply.getStatus())){
+		if(Global.STATUS_APPROVED.equals(resetPasswordApply.getStatus())){
 			//reset password
 			String randomnPass = Util.getRandomStr(6);
 			GUser entity = new GUser();
@@ -91,7 +135,7 @@ public class ResetPasswordApplyService extends CrudService<ResetPasswordApplyDao
 			msg = mf.format(mailParams);
 			this.mailNotify(resetPasswordApply, msg);
 			
-		}else if(ResetPasswordApply.STATUS_REJECTED.equals(resetPasswordApply.getStatus())){
+		}else if(Global.STATUS_REJECTED.equals(resetPasswordApply.getStatus())){
 			String link = Global.getConfig("resetPassFormLink")+resetPasswordApply.getId();
 			//msg
 			temp = Global.getConfig("resetPassFailMsgNotify");

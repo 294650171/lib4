@@ -3,7 +3,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<%@ taglib prefix="fns" uri="/WEB-INF/tlds/fns.tld" %>
 <%@ taglib prefix="sys" tagdir="/WEB-INF/tags/sys" %>
+
+<c:set var="ctx" value="${pageContext.request.contextPath}${fns:getAdminPath()}"/>
 
 <c:set var="ctxStatic" value="${pageContext.request.contextPath}/static"/>
 
@@ -32,8 +35,8 @@
 	<title>密码重置申请管理</title>
 	<meta name="decorator" content="default"/>
 	<style type="text/css">
-      html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}.form-resetPass-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:36px;margin-bottom:20px;color:#0663a2;}
-      .form-resetPass{margin:auto;position:absolute;text-align:left;width:500px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
+      html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}.form-resetPass-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:30px;margin-bottom:20px;color:#0663a2;}
+      .form-resetPass{margin:auto;position:absolute;text-align:left;width:800px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
         	-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-webkit-box-shadow:0 1px 2px rgba(0,0,0,.05);-moz-box-shadow:0 1px 2px rgba(0,0,0,.05);box-shadow:0 1px 2px rgba(0,0,0,.05);}
       .form-resetPass .checkbox{margin-bottom:10px;color:#0663a2;} .form-resetPass .input-label{font-size:16px;line-height:23px;color:#999;}
       .form-resetPass .input-block-level{font-size:16px;height:auto;margin-bottom:15px;padding:7px;*width:283px;*padding-bottom:0;_padding:7px 7px 9px 7px;}
@@ -80,6 +83,7 @@
 				var attachmentFile = $("#attachmentFile").val();
 				if(attach == "" && attachmentFile == ""){
 					alert("附件不能为空");
+					return;
 				}
 				$("#inputForm").submit();
 				top.$('.jbox-body .jbox-icon').css('top','55px');
@@ -90,9 +94,9 @@
 </head>
 <body id="resetPassBody">
 <br/>
-    <h1 class="form-resetPass-heading">四库数据管理平台密码重置申请</h1>
+    <h1 class="form-resetPass-heading">密码重置申请</h1>
     
-	<form:form id="inputForm" modelAttribute="resetPasswordApply" action="/lib4/b/corp/resetPasswordApply/save" 
+	<form:form id="inputForm" modelAttribute="resetPasswordApply" action="${pageContext.request.contextPath}${fns:getFrontPath()}/corp/resetPasswordApply/save" 
 	method="post" class="form-resetPass" ENCTYPE="multipart/form-data">
 		<sys:message content="${message}"/>	
 		<form:hidden path="id"/>
@@ -100,7 +104,7 @@
 		<div class="control-group">
 			<label class="control-label">统一社会信用代码：</label>
 			<div class="controls">
-				<form:input path="entityCode" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
+				<form:input path="entityCode" htmlEscape="false" minlength="18" maxlength="18" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>

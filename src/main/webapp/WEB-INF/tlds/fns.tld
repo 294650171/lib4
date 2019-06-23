@@ -251,5 +251,12 @@
     <example>${fns:toJson(object)}</example>  
   </function>
 
-    
+  <function>
+    <description>获取行政区域列表</description>
+    <name>getRegionList</name>
+    <function-class>cn.wuxi.js.lib4.modules.base.utils.RegionUtils</function-class>
+    <function-signature>java.util.List getRegionList(java.lang.String, java.lang.String)</function-signature>
+    <example>${fns:getRegionList(level, parentId)}</example>  
+  </function>
+      
 </taglib>

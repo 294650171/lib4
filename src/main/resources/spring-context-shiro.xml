@@ -22,7 +22,9 @@
 				${adminPath}/** = user
 				/act/editor/** = user
 				/ReportServer/** = user
-				/b/corp/resetPasswordApply/** = anon
+				${frontPath}/base/region/** = anon
+				${frontPath}/corp/resetPasswordApply/** = anon
+				${frontPath}/corp/corpRegisterApplication/** = anon
 			</value>
 		</constructor-arg>
 	</bean>

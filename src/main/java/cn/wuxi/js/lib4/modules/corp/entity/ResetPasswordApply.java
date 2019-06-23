@@ -9,6 +9,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import cn.wuxi.js.lib4.common.persistence.ActEntity;
 import cn.wuxi.js.lib4.common.persistence.DataEntity;
 
 /**
@@ -16,11 +17,7 @@ import cn.wuxi.js.lib4.common.persistence.DataEntity;
  * @author GLQ
  * @version 2019-06-15
  */
-public class ResetPasswordApply extends DataEntity<ResetPasswordApply> {
-	
-	public static final String STATUS_REJECTED = "0";
-	public static final String STATUS_POST = "1";
-	public static final String STATUS_APPROVED = "2";
+public class ResetPasswordApply extends ActEntity<ResetPasswordApply> {
 	
 	private static final long serialVersionUID = 1L;
 	private String entityCode;		// entity_code
@@ -34,6 +31,8 @@ public class ResetPasswordApply extends DataEntity<ResetPasswordApply> {
 	private String status;		// approve_status
 	
 	private CommonsMultipartFile attachmentFile;
+	
+	private String procInsId;		// proc_ins_id
 	
 	public ResetPasswordApply() {
 		super();
@@ -130,5 +129,15 @@ public class ResetPasswordApply extends DataEntity<ResetPasswordApply> {
 	public void setAttachmentFile(CommonsMultipartFile attachmentFile) {
 		this.attachmentFile = attachmentFile;
 	}
+
+	public String getProcInsId() {
+		return procInsId;
+	}
+
+	public void setProcInsId(String procInsId) {
+		this.procInsId = procInsId;
+	}
+	
+	
 	
 }

@@ -17,4 +17,10 @@ public interface ResetPasswordApplyDao extends CrudDao<ResetPasswordApply> {
 	
 	public void approve(ResetPasswordApply entity);
 	
+	void updateStatus(ResetPasswordApply entity);
+	
+	void updateProcInsId(ResetPasswordApply entity);
+	
+	void updateOpinion(ResetPasswordApply entity);
+	
 }

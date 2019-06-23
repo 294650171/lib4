@@ -1,12 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="org.apache.shiro.web.filter.authc.FormAuthenticationFilter"%>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+
 <html>
 <head>
 	<title>${fns:getConfig('productName')} 登录</title>
 	<meta name="decorator" content="blank"/>
 	<style type="text/css">
-      html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}.form-signin-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:36px;margin-bottom:20px;color:#0663a2;}
+      html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}
+      .form-signin-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:32px;margin-bottom:20px;color:#0663a2;}
+      .form-signin-heading2{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:26px;margin-bottom:20px;color:#0663a2;}
       .form-signin{position:relative;text-align:left;width:300px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
         	-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-webkit-box-shadow:0 1px 2px rgba(0,0,0,.05);-moz-box-shadow:0 1px 2px rgba(0,0,0,.05);box-shadow:0 1px 2px rgba(0,0,0,.05);}
       .form-signin .checkbox{margin-bottom:10px;color:#0663a2;} .form-signin .input-label{font-size:16px;line-height:23px;color:#999;}
@@ -61,12 +64,10 @@
 		</div>
 	</div>
 	<h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>
+	<h2 class="form-signin-heading2">（企业版）</h2>
 
+    <strong>用户登录</strong>
 	<form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/login?type=admin"><strong>用户登录</strong></a></li>
-		<!--<li><a href="${ctx}/login?type=corp"><strong>企业登录</strong></a></li>-->
-	</ul>
 
 	    <input type="hidden" id="type" name="type" value="admin">
 
@@ -83,9 +84,14 @@
 		<label for="rememberMe" title="下次不需要再登录">
 		<input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/lib4/b/corp/resetPasswordApply/form" target="_blank">忘记密码?</a>
         </div>
 		<input class="btn btn-large btn-primary btn-block" type="submit" value="登 录"/>&nbsp;&nbsp;
+		
+        <div style="height:32px;">
+        <a href="${pageContext.request.contextPath}${fns:getFrontPath()}/corp/resetPasswordApply/form" target="_blank">忘记密码?</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="${pageContext.request.contextPath}${fns:getFrontPath()}/corp/corpRegisterApplication/form" target="_blank">企业注册</a>
+        </div>		
 		<!--<input class="btn btn-large btn-success btn-block" type="button" value="注 册" id="registerBtn"/>&nbsp;&nbsp;-->
         <!--
 		<div id="themeSwitch" class="dropdown">
@@ -97,7 +103,7 @@
 		<!--</div>-->
 	</form>
 	<div class="footer">
-		<a href="" target="_blank"></a>&nbsp;提供技术支持 ${fns:getConfig('version')}
+		<a href="" target="_blank"></a>&nbsp;无锡千里目软件有限公司&nbsp;提供技术支持 ${fns:getConfig('version')}
 	</div>
 	<script src="${ctxStatic}/flash/zoom.min.js" type="text/javascript"></script>
 </body>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.base.dao.RegionDao">
+    
+	<sql id="regionColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.level AS "level",
+		a.parent_id AS "parent.id"
+	</sql>
+	
+	<sql id="regionJoins">
+	</sql>
+    
+	<select id="get" resultType="Region">
+		SELECT 
+			<include refid="regionColumns"/>
+		FROM WJSJZX.dbo.tbregion a
+		<include refid="regionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Region">
+		SELECT 
+			<include refid="regionColumns"/>
+		FROM WJSJZX.dbo.tbregion a
+		<include refid="regionJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="level != null and level != ''">
+				AND a.level = #{level}
+			</if>
+			<if test="parent != null and parent.id != null and parent.id != ''">
+				AND a.parent_id = #{parent.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY a.id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Region">
+		SELECT 
+			<include refid="regionColumns"/>
+		FROM WJSJZX.dbo.tbregion a
+		<include refid="regionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY a.id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO WJSJZX.dbo.tbregion(
+			id,
+			name,
+			level,
+			parent_id
+		) VALUES (
+			#{id},
+			#{name},
+			#{level},
+			#{parent.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE WJSJZX.dbo.tbregion SET 	
+			name = #{name},
+			level = #{level},
+			parent_id = #{parent.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM WJSJZX.dbo.tbregion
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

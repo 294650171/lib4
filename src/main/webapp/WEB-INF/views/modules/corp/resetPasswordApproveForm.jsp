@@ -24,7 +24,8 @@
 			});
 			
 			$("#btnApprove").click(function(){
-				$("#status").val("2");
+				$("#status").val("1");
+				$(document.getElementById('act.flag')).val("true");
 				$("#inputForm").submit();
 				top.$('.jbox-body .jbox-icon').css('top','55px');
 			});	
@@ -38,7 +39,8 @@
 				
 	    		top.$.jBox.confirm("确认要退回吗？","系统提示",function(v,h,f){
 	    			if(v=="ok"){
-	    				$("#status").val("0");
+	    				$("#status").val("2");
+	    				$(document.getElementById('act.flag')).val("false");
 	    				$("#inputForm").submit();
 	    			}
 	    		},{buttonsFocus:1});
@@ -49,13 +51,17 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/corp/resetPasswordApprove/approveList">密码重置申请列表</a></li>
-		<li class="active"><a href="${ctx}/corp/resetPasswordApprove/approveForm?id=${resetPasswordApply.id}">密码重置申请审核</a></li>
-	</ul><br/>
+    <legend>密码重置审核</legend>
+	<br/>
 	<form:form id="inputForm" modelAttribute="resetPasswordApply" action="${ctx}/corp/resetPasswordApprove/approve" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<form:hidden path="status"/>
+		
+		<form:hidden path="act.taskId"/>
+		<form:hidden path="act.procInsId"/>
+		
+		<form:hidden path="act.flag"/>
+		
 		<sys:message content="${message}"/>		
 		<div class="control-group">
 			<label class="control-label">统一社会信用代码：</label>
@@ -121,13 +127,13 @@
 		<div class="control-group">
 			<label class="control-label">审核意见：</label>
 			<div class="controls">
-				<form:input path="approveOpinion" htmlEscape="false" maxlength="100" class="input-xlarge "/>
+				<form:input path="act.comment" htmlEscape="false" maxlength="100" class="input-xlarge "/>
 			</div>
 		</div>		
 		<div class="form-actions">
-		  <c:if test="${resetPasswordApply.status eq '1' }">
-			<shiro:hasPermission name="corp:resetPasswordApply:edit"><input id="btnApprove" class="btn btn-primary" type="button" value="审核通过"/>&nbsp;&nbsp;
-			<input id="btnReject" class="btn btn-warning" type="button" value="审核退回"/>&nbsp;&nbsp;</shiro:hasPermission>
+		  <c:if test="${resetPasswordApply.status eq '0' }">
+			<input id="btnApprove" class="btn btn-primary" type="button" value="审核通过"/>&nbsp;&nbsp;
+			<input id="btnReject" class="btn btn-warning" type="button" value="审核退回"/>&nbsp;&nbsp;
 		  </c:if>			
 		</div>
 	</form:form>

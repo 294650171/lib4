@@ -26,6 +26,7 @@ import cn.wuxi.js.lib4.common.persistence.Page;
 import cn.wuxi.js.lib4.common.web.BaseController;
 import cn.wuxi.js.lib4.common.utils.FileUtils;
 import cn.wuxi.js.lib4.common.utils.StringUtils;
+import cn.wuxi.js.lib4.common.utils.Util;
 import cn.wuxi.js.lib4.modules.corp.entity.ResetPasswordApply;
 import cn.wuxi.js.lib4.modules.corp.entity.UeppQyjbxx;
 import cn.wuxi.js.lib4.modules.corp.service.ResetPasswordApplyService;
@@ -37,7 +38,7 @@ import cn.wuxi.js.lib4.modules.corp.service.UeppQyjbxxService;
  * @version 2019-06-15
  */
 @Controller
-@RequestMapping(value = "/b/corp/resetPasswordApply")
+@RequestMapping(value = "${frontPath}/corp/resetPasswordApply")
 public class ResetPasswordApplyController extends BaseController {
 
 	@Autowired
@@ -77,7 +78,19 @@ public class ResetPasswordApplyController extends BaseController {
 			return form(resetPasswordApply, model);
 		}
 		
-		final String destPage = "redirect:"+"/b/corp/resetPasswordApply/form?repage";
+		final String destPage = "redirect:"+Global.getFrontPath()+"/corp/resetPasswordApply/form";
+		
+		if(!Util.isMobile(resetPasswordApply.getMobile())){
+			addMessage(redirectAttributes, "注册失败，无效的手机号。");
+			model.addAttribute("resetPasswordApply", resetPasswordApply);
+			return destPage;
+		}
+		
+		if(!Util.isEmail(resetPasswordApply.getEmail())){
+			addMessage(redirectAttributes, "注册失败，无效的电子邮箱。");
+			model.addAttribute("resetPasswordApply", resetPasswordApply);
+			return destPage;
+		}
 		
 		String rootDirectory = Global.getConfig("userfiles.basedir");
 		
@@ -117,7 +130,7 @@ public class ResetPasswordApplyController extends BaseController {
 		}
 		
 		resetPasswordApply.setApplyDate(new Date());
-		resetPasswordApply.setStatus(ResetPasswordApply.STATUS_POST);
+		resetPasswordApply.setStatus(Global.STATUS_POST);
 		resetPasswordApplyService.save(resetPasswordApply);
 		addMessage(redirectAttributes, "密码重置申请成功,申请被审核后，重置后的随机密码会发送到指定的手机号码。");
 		return destPage;
@@ -128,7 +141,7 @@ public class ResetPasswordApplyController extends BaseController {
 	public String delete(ResetPasswordApply resetPasswordApply, RedirectAttributes redirectAttributes) {
 		resetPasswordApplyService.delete(resetPasswordApply);
 		addMessage(redirectAttributes, "删除密码重置申请成功");
-		return "redirect:"+"/b/corp/resetPasswordApply/?repage";
+		return "redirect:"+Global.getFrontPath()+"/corp/resetPasswordApply/?repage";
 	}
 
 }
