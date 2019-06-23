@@ -18,11 +18,11 @@
 		a.sylxid AS "sylxid",
 		a.sylx AS "sylx",
 		a.provinceid AS "provinceid",
-		a.province AS "province",
+		r1.name AS "province",
 		a.cityid AS "cityid",
-		a.city AS "city",
+		r2.name AS "city",
 		a.countyid AS "countyid",
-		a.county AS "county",
+		r3.name AS "county",
 		a.zcdd AS "zcdd",
 		a.jjxzid AS "jjxzid",
 		a.jjxz AS "jjxz",
@@ -57,10 +57,15 @@
 		a.zjy AS "zjy",
 		a.sgy AS "sgy",
 		a.tyshxydm AS "tyshxydm",
-		a.proc_ins_id AS "procInsId"
+		a.proc_ins_id AS "procInsId",
+		a.photo AS "photo",
+		a.approve_opinion AS "approveOpinion"
 	</sql>
 	
 	<sql id="corpBasicInfoApplicationJoins">
+	    LEFT JOIN WJSJZX.dbo.TBREGION r1 on r1.id = a.provinceid
+	    LEFT JOIN WJSJZX.dbo.TBREGION r2 on r2.id = a.cityid
+	    LEFT JOIN WJSJZX.dbo.TBREGION r3 on r3.id = a.countyid
 	</sql>
     
 	<select id="get" resultType="CorpBasicInfoApplication">
@@ -83,6 +88,9 @@
 			<if test="qyid != null and qyid != ''">
 				AND a.qyID= #{qyid}
 			</if>
+			<if test="type != null and type != ''">
+				AND a.type= #{type}
+			</if>			
 			<if test="procInsId != null and procInsId != ''">
 				AND a.proc_ins_id= #{procInsId}
 			</if>
@@ -170,7 +178,8 @@
 			zjy,
 			sgy,
 			tyshxydm,
-			proc_ins_id
+			proc_ins_id,
+			photo
 		) VALUES (
 			#{qyid},
 			#{qymc},
@@ -224,7 +233,8 @@
 			#{zjy},
 			#{sgy},
 			#{tyshxydm},
-			#{procInsId}
+			#{procInsId},
+			#{photo}
 		)
 	</insert>
 	
@@ -281,7 +291,8 @@
 			zjy = #{zjy},
 			sgy = #{sgy},
 			tyshxydm = #{tyshxydm},
-			proc_ins_id = #{procInsId}
+			proc_ins_id = #{procInsId},
+			photo = #{photo}
 		WHERE id = #{id}
 	</update>
 	
@@ -300,5 +311,16 @@
 		WHERE id = #{id}
 	</update>
 
+	<update id="updateProcInsId">
+		UPDATE WJSJZX.dbo.corp_basic_info_application SET
+		proc_ins_id = #{procInsId}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateOpinion">
+		UPDATE WJSJZX.dbo.corp_basic_info_application SET
+		approve_opinion = #{approveOpinion}
+		WHERE id = #{id}
+	</update>
 
 </mapper>

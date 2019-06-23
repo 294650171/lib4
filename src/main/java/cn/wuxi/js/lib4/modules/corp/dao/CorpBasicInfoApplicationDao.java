@@ -17,4 +17,8 @@ import org.apache.ibatis.annotations.Param;
 public interface CorpBasicInfoApplicationDao extends CrudDao<CorpBasicInfoApplication> {
 	void deleteByProcInsId(@Param("qyid") String qyid, @Param("procInsId")  String procInsId);
 	void updateStatus(@Param("id") String id, @Param("datastate") String datastate);
+	void updateProcInsId(CorpBasicInfoApplication entity);
+	
+	void updateOpinion(CorpBasicInfoApplication entity);
+	
 }

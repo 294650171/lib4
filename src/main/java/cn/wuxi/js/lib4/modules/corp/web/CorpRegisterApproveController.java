@@ -6,7 +6,6 @@ package cn.wuxi.js.lib4.modules.corp.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,13 +22,13 @@ import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicInfoApplication;
 import cn.wuxi.js.lib4.modules.corp.service.CorpBasicInfoApplicationService;
 
 /**
- * 企业基本信息修改申请表Controller
- * @author aaronhuang
+ * 企业注册审核Controller
+ * @author GLQ
  * @version 2019-01-31
  */
 @Controller
-@RequestMapping(value = "${adminPath}/corp/corpBasicInfoApplication")
-public class CorpBasicInfoApplicationController extends BaseController {
+@RequestMapping(value = "${adminPath}/corp/corpRegisterApprove")
+public class CorpRegisterApproveController extends BaseController {
 
 	@Autowired
 	private CorpBasicInfoApplicationService corpBasicInfoApplicationService;
@@ -46,7 +45,6 @@ public class CorpBasicInfoApplicationController extends BaseController {
 		return entity;
 	}
 	
-	@RequiresPermissions("corp:corpBasicInfoApplication:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(CorpBasicInfoApplication corpBasicInfoApplication, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<CorpBasicInfoApplication> page = corpBasicInfoApplicationService.findPage(new Page<CorpBasicInfoApplication>(request, response), corpBasicInfoApplication); 
@@ -54,33 +52,30 @@ public class CorpBasicInfoApplicationController extends BaseController {
 		return "modules/corp/corpBasicInfoApplicationList";
 	}
 
-	@RequiresPermissions("corp:corpBasicInfoApplication:view")
 	@RequestMapping(value = "form")
-	public String form(CorpBasicInfoApplication corpBasicInfoApplication, Model model) {
-		model.addAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
-		return "modules/corp/corpBasicInfoApplicationForm";
+	public String form(CorpBasicInfoApplication entity, Model model) {
+		
+		logger.debug("act:", entity.getAct().toString());
+		
+		model.addAttribute("corpBasicInfoApplication", entity);
+		return "modules/corp/corpRegisterApproveForm";
 	}
 
-	@RequiresPermissions("corp:corpBasicInfoApplication:edit")
-	@RequestMapping(value = "save")
-	public String save(CorpBasicInfoApplication corpBasicInfoApplication, Model model, RedirectAttributes redirectAttributes) {
-		if (!beanValidator(model, corpBasicInfoApplication)){
-			return form(corpBasicInfoApplication, model);
-		}
-		if(StringUtils.isEmpty(corpBasicInfoApplication.getType())){
-			corpBasicInfoApplication.setType("");
-		}
-		corpBasicInfoApplicationService.save(corpBasicInfoApplication);
-		addMessage(redirectAttributes, "保存企业基本信息修改申请表成功");
-		return "redirect:"+Global.getAdminPath()+"/corp/corpBasicInfoApplication/?repage";
+	@RequestMapping(value = "approve")
+	public String approve(CorpBasicInfoApplication corpBasicInfoApplication, Model model, RedirectAttributes redirectAttributes) {
+		
+		corpBasicInfoApplicationService.corpRegisterApprove(corpBasicInfoApplication);
+		
+		addMessage(redirectAttributes, "注册申请处理成功");
+
+		return "redirect:" + adminPath + "/act/task/todo/";
 	}
 	
-	@RequiresPermissions("corp:corpBasicInfoApplication:edit")
 	@RequestMapping(value = "delete")
 	public String delete(CorpBasicInfoApplication corpBasicInfoApplication, RedirectAttributes redirectAttributes) {
 		corpBasicInfoApplicationService.delete(corpBasicInfoApplication);
 		addMessage(redirectAttributes, "删除企业基本信息修改申请表成功");
-		return "redirect:"+Global.getAdminPath()+"/corp/corpBasicInfoApplication/?repage";
+		return "redirect:"+Global.getFrontPath()+"/corp/corpBasicInfoApplication/?repage";
 	}
 
 }

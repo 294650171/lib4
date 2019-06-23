@@ -85,7 +85,7 @@
 				AND a.yyzzzch = #{yyzzzch}
 			</if>			
 			<if test="qymc != null and qymc != ''">
-				AND a.qymc = #{qymc}
+				AND a.qymc like '%'+#{qymc}+'%'
 			</if>
 		</where>
 		<choose>

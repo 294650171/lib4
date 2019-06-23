@@ -5,6 +5,8 @@ package cn.wuxi.js.lib4.modules.corp.entity;
 
 import cn.wuxi.js.lib4.common.persistence.ActEntity;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -22,6 +24,9 @@ public class CorpBasicInfoApplication extends ActEntity<CorpBasicInfoApplication
 	public static final String DATASTATE_TODO = "0";//待审核
 	public static final String DATASTATE_PASS = "1";//通过
 	public static final String DATASTATE_REJECT = "2"; //驳回
+	
+	public static final String TYPE_EDIT = "1";//修改
+	public static final String TYPE_REGISTER = "2";//注册
 
 	private String qyid;		// qyid
 	private String userid;		// userid
@@ -76,10 +81,16 @@ public class CorpBasicInfoApplication extends ActEntity<CorpBasicInfoApplication
 	private String zjy;		// zjy
 	private String sgy;		// sgy
 	private String tyshxydm;		// 统一社会信用代码
+	private String type;		// 申请类型：1 修改 2 注册
 	private String procInsId;		// proc_ins_id
 
 
 	private String photo;
+	
+	private String approveOpinion;
+	
+	//临时属性
+	private CommonsMultipartFile attachmentFile;
 
 	public CorpBasicInfoApplication() {
 		super();
@@ -571,5 +582,29 @@ public class CorpBasicInfoApplication extends ActEntity<CorpBasicInfoApplication
 
 	public void setPhoto(String photo) {
 		this.photo = photo;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public CommonsMultipartFile getAttachmentFile() {
+		return attachmentFile;
+	}
+
+	public void setAttachmentFile(CommonsMultipartFile attachmentFile) {
+		this.attachmentFile = attachmentFile;
+	}
+
+	public String getApproveOpinion() {
+		return approveOpinion;
+	}
+
+	public void setApproveOpinion(String approveOpinion) {
+		this.approveOpinion = approveOpinion;
 	}
 }

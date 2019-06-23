@@ -29,7 +29,45 @@
 										}
 									}
 								});
+				
+				$("#province").change(function(){	
+					
+					var parentId = $("#province").val();
+					var sltCity=document.inputForm.city;			
+					sltCity.length = 1;
+					
+			    	$.get("${ctx}/base/region/treeData?level=&parentId="+parentId,
+			    		{},
+			    		function(data){
+			    			var count=data.length;
+			    			for(var i=0;i<count;i++){
+			    				sltCity[i+1] = new Option(data[i].name, data[i].id);
+			    			}
+			    	    }
+			    	); 			
+					
+				});
+				
+				$("#city").change(function(){
+					
+					var parentId = $("#city").val();
+					var county=document.inputForm.county;
+					county.length = 1;
+					
+			    	$.get("${ctx}/base/region/treeData?level=&parentId="+parentId,
+			    		{},
+			    		function(data){
+			    			var count=data.length;
+			    			for(var i=0;i<count;i++){
+			    				county[i+1] = new Option(data[i].name, data[i].id);
+			    			}
+			    	    }
+			    	); 			
+					
+				});
+				
 			});
+	
 </script>
 </head>
 <body>
@@ -41,7 +79,7 @@
 				<shiro:lacksPermission name="corp:ueppQyjbxx:edit">查看</shiro:lacksPermission></a></li>
 	</ul>
 	<br />
-	<form:form id="inputForm" modelAttribute="ueppQyjbxx"
+	<form:form id="inputForm" name="inputForm" modelAttribute="ueppQyjbxx"
 		action="${ctx}/corp/ueppQyjbxx/save" method="post"
 		class="form-horizontal">
 		<form:hidden path="qyid" />
@@ -98,41 +136,46 @@
 
 		<div class="container-fluid">
 			<div class="row-fluid">
-				<div class="span6">
+				<div class="span4">
 					<div class="control-group">
 						<label class="control-label">省：</label>
 						<div class="controls">
-							<form:input path="province" htmlEscape="false" maxlength="20"
-								class="input-xlarge " />
+							<form:select path="province" class="input-large">
+							  <form:option value="0" label="请选择所在省份"/>
+							  <form:options items="${fns:getRegionList('1','')}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+							</form:select>
 						</div>
 					</div>
 				</div>
 
-				<div class="span6">
+				<div class="span4">
 					<div class="control-group">
 						<label class="control-label">市：</label>
 						<div class="controls">
-							<form:input path="city" htmlEscape="false" maxlength="20"
-								class="input-xlarge " />
+							<form:select path="city" class="input-large">
+							  <form:option value="0" label="请选择所在城市"/>
+							</form:select>					
 						</div>
 					</div>
 				</div>
+				
+				<div class="span4">
+					<div class="control-group">
+						<label class="control-label">区/县：</label>
+						<div class="controls">
+							<form:select path="county" class="input-large">
+							  <form:option value="0" label="请选择所在区/县"/>
+							</form:select>												
+						</div>
+					</div>
+				</div>				
 			</div>
 		</div>
 
 		<div class="container-fluid">
 			<div class="row-fluid">
-				<div class="span6">
-					<div class="control-group">
-						<label class="control-label">区/县：</label>
-						<div class="controls">
-							<form:input path="county" htmlEscape="false" maxlength="20"
-								class="input-xlarge " />
-						</div>
-					</div>
-				</div>
 
-				<div class="span6">
+				<div class="span12">
 					<div class="control-group">
 						<label class="control-label">详细地点：</label>
 						<div class="controls">

@@ -44,13 +44,20 @@
 		WHERE a.id = #{id}
 	</select>
 	
+	<select id="getMaxUserId" resultType="Integer">
+		SELECT max(UserId) as id
+		FROM WJSJZX.dbo.g_user
+	</select>	
+	
 	<select id="findList" resultType="GUser">
 		SELECT 
 			<include refid="gUserColumns"/>
 		FROM WJSJZX.dbo.g_user a
 		<include refid="gUserJoins"/>
 		<where>
-			
+			<if test="loginname != null and loginname != ''">
+				AND a.loginname= #{loginname}
+			</if>				
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

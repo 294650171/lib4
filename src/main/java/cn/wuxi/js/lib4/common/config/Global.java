@@ -54,6 +54,11 @@ public class Global {
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
 	
+	
+	public static final String STATUS_POST = "0";
+	public static final String STATUS_APPROVED = "1";
+	public static final String STATUS_REJECTED = "2";
+	
 	/**
 	 * 上传文件基础虚拟路径
 	 */
