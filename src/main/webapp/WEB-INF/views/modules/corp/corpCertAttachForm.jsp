@@ -28,7 +28,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/corp/corpCertAttach/">企业证照列表</a></li>
-		<li class="active"><a href="${ctx}/corp/corpCertAttach/form?id=${corpCertAttach.id}">企业证照<shiro:hasPermission name="corp:corpCertAttach:edit">${not empty corpCertAttach.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="corp:corpCertAttach:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/corp/corpCertAttach/form?id=${corpCertAttach.id}">企业证照查看</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="corpCertAttach" action="${ctx}/corp/corpCertAttach/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
@@ -72,7 +72,9 @@
 			</div>
 		</div>
 		<div class="form-actions">
+		<!--  
 			<shiro:hasPermission name="corp:corpCertAttach:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			-->
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
