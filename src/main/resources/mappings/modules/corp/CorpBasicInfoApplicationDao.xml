@@ -59,6 +59,7 @@
 		a.tyshxydm AS "tyshxydm",
 		a.proc_ins_id AS "procInsId",
 		a.photo AS "photo",
+		a.password AS "password",
 		a.approve_opinion AS "approveOpinion"
 	</sql>
 	
@@ -179,7 +180,8 @@
 			sgy,
 			tyshxydm,
 			proc_ins_id,
-			photo
+			photo,
+			password
 		) VALUES (
 			#{qyid},
 			#{qymc},
@@ -234,7 +236,8 @@
 			#{sgy},
 			#{tyshxydm},
 			#{procInsId},
-			#{photo}
+			#{photo},
+			#{password}
 		)
 	</insert>
 	
@@ -292,7 +295,8 @@
 			sgy = #{sgy},
 			tyshxydm = #{tyshxydm},
 			proc_ins_id = #{procInsId},
-			photo = #{photo}
+			photo = #{photo},
+			password = #{password}
 		WHERE id = #{id}
 	</update>
 	

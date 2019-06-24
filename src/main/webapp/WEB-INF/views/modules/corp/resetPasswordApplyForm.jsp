@@ -36,13 +36,13 @@
 	<meta name="decorator" content="default"/>
 	<style type="text/css">
       html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}.form-resetPass-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:30px;margin-bottom:20px;color:#0663a2;}
-      .form-resetPass{margin:auto;position:absolute;text-align:left;width:800px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
+      .form-resetPass{margin:auto;position:absolute;text-align:left;width:800px;height:600px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
         	-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-webkit-box-shadow:0 1px 2px rgba(0,0,0,.05);-moz-box-shadow:0 1px 2px rgba(0,0,0,.05);box-shadow:0 1px 2px rgba(0,0,0,.05);}
       .form-resetPass .checkbox{margin-bottom:10px;color:#0663a2;} .form-resetPass .input-label{font-size:16px;line-height:23px;color:#999;}
       .form-resetPass .input-block-level{font-size:16px;height:auto;margin-bottom:15px;padding:7px;*width:283px;*padding-bottom:0;_padding:7px 7px 9px 7px;}
       .form-resetPass .btn.btn-large{font-size:16px;} .form-resetPass #themeSwitch{position:absolute;right:15px;bottom:10px;}
       .form-resetPass div.validateCode {padding-bottom:15px;} .mid{vertical-align:middle;}
-	  .form-resetPass {margin:auto;position: absolute; top: 100px; left: 0; bottom: 50px; right: 0;} 
+	  .form-resetPass {margin:auto;position: absolute; top: 100px; left: 0; bottom: 0px; right: 0;} 
 	  .form-resetPass .control-group {margin-bottom:8px;}
 	  .form-resetPass .control-label {padding-top:3px;} .form-resetPass .controls {text-align:left;overflow-x:auto;overflow-y:hidden;}
 	  .form-resetPass .controls label.error {background-position:0 2px;}      
@@ -52,7 +52,6 @@
       label.error{background:none;width:270px;font-weight:normal;color:inherit;margin:0;}
 
       body{
-          background:#fff url("${ctxStatic}/images/loginback.jpg") no-repeat left top;
           background-size:100%;
           height:100%;
       }
@@ -129,13 +128,14 @@
 			<label class="control-label">联系人手机号：</label>
 			<div class="controls">
 				<form:input path="mobile" htmlEscape="false" minlength="11" maxlength="11" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> 用于接收新密码，请填写正确。</span>
+				<span class="help-inline"><font color="red">*</font> 用于接收重置密码，请填写正确。</span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">电子邮箱：</label>
 			<div class="controls">
-				<form:input path="email" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="email" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> 用于接收重置密码，请填写正确。</span>
 			</div>
 		</div>
 		<div class="control-group">
@@ -158,9 +158,13 @@
 			</div>
 		</div>		
 		</c:if>
-		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="button" value="提 交"/>&nbsp;&nbsp;
+		<div class="control-group">
+			<label class="control-label"></label>
+			<div class="controls">
+				<input id="btnSubmit" class="btn btn-primary" type="button" value="提 交"/>&nbsp;&nbsp;
+			</div>
 		</div>
+		<BR><BR>
 	</form:form>
 	<BR><BR>
 </body>

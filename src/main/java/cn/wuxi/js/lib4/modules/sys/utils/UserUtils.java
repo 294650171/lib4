@@ -5,8 +5,6 @@ package cn.wuxi.js.lib4.modules.sys.utils;
 
 import java.util.List;
 
-import cn.wuxi.js.lib4.modules.corp.dao.CorpBasicAccountDao;
-import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccount;
 import cn.wuxi.js.lib4.modules.sys.security.UsernamePasswordToken;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
@@ -21,11 +19,13 @@ import cn.wuxi.js.lib4.common.utils.CacheUtils;
 import cn.wuxi.js.lib4.common.utils.SpringContextHolder;
 
 import cn.wuxi.js.lib4.modules.sys.dao.AreaDao;
+import cn.wuxi.js.lib4.modules.sys.dao.GUserDao;
 import cn.wuxi.js.lib4.modules.sys.dao.MenuDao;
 import cn.wuxi.js.lib4.modules.sys.dao.OfficeDao;
 import cn.wuxi.js.lib4.modules.sys.dao.RoleDao;
 import cn.wuxi.js.lib4.modules.sys.dao.UserDao;
 import cn.wuxi.js.lib4.modules.sys.entity.Area;
+import cn.wuxi.js.lib4.modules.sys.entity.GUser;
 import cn.wuxi.js.lib4.modules.sys.entity.Menu;
 import cn.wuxi.js.lib4.modules.sys.entity.Office;
 import cn.wuxi.js.lib4.modules.sys.entity.Role;
@@ -46,7 +46,7 @@ public class UserUtils {
 	private static MenuDao menuDao = SpringContextHolder.getBean(MenuDao.class);
 	private static AreaDao areaDao = SpringContextHolder.getBean(AreaDao.class);
 	private static OfficeDao officeDao = SpringContextHolder.getBean(OfficeDao.class);
-	private static CorpBasicAccountDao corpBasicAccoutDao = SpringContextHolder.getBean(CorpBasicAccountDao.class);
+	private static GUserDao guserDao = SpringContextHolder.getBean(GUserDao.class);
 	
 	public static final int EmployeeIDLen = 5;
 
@@ -160,20 +160,19 @@ public class UserUtils {
 	public static User getExistingNoneSysUser(String userName){
 		
 		User user = null;
-		CorpBasicAccount corp = null;
-		if(corp == null){
-			corp = corpBasicAccoutDao.findByTyshxydm(userName);
-		}
-		if(corp!=null){
+		GUser entity = new GUser();
+		entity.setLoginname(userName);
+		GUser guser = guserDao.getByLoginName(entity);
+		if(guser!=null){
 			user = new User();
-			user.setId(corp.getTyshxydm());
-			user.setLoginName(corp.getTyshxydm());
-			user.setPassword(corp.getPassword());
-			user.setNo(corp.getId());
-			user.setName(corp.getName());
+			user.setId(guser.getLoginname());
+			user.setLoginName(guser.getLoginname());
+			user.setPassword(guser.getLoginpassword());
+			user.setNo(guser.getLoginname());
+			user.setName(guser.getUsername());
 			user.setUserType(UsernamePasswordToken.USER_TYPE_CORP);
 			
-			user.setCorpBasicAccount(corp);
+			user.setGuser(guser);
 			
 			user.setIsSysUser("0");
 		}

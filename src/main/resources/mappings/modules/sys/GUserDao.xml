@@ -44,6 +44,14 @@
 		WHERE a.id = #{id}
 	</select>
 	
+	<select id="getByLoginName" resultType="GUser">
+		SELECT 
+			<include refid="gUserColumns"/>
+		FROM WJSJZX.dbo.g_user a
+		<include refid="gUserJoins"/>
+		WHERE a.loginname = #{loginname}
+	</select>	
+	
 	<select id="getMaxUserId" resultType="Integer">
 		SELECT max(UserId) as id
 		FROM WJSJZX.dbo.g_user

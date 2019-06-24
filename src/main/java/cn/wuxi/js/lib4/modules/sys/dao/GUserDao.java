@@ -17,6 +17,8 @@ public interface GUserDao extends CrudDao<GUser> {
 	
 	public int updatePass(GUser entity);
 	
+	public GUser getByLoginName(GUser entity);
+	
 	public int getMaxUserId();
 	
 }

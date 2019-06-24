@@ -67,28 +67,33 @@ public class ResetPasswordApplyController extends BaseController {
 	}
 
 	@RequestMapping(value = "form")
-	public String form(ResetPasswordApply resetPasswordApply, Model model) {
+	public String form(ResetPasswordApply resetPasswordApply, HttpServletRequest request, Model model) {
+		if(resetPasswordApply == null || StringUtils.isEmpty(resetPasswordApply.getEntityCode())){
+			if(request.getSession().getAttribute("resetPasswordApply")!=null){
+				resetPasswordApply = (ResetPasswordApply)request.getSession().getAttribute("resetPasswordApply");
+			}
+		}
 		model.addAttribute("resetPasswordApply", resetPasswordApply);
 		return "modules/corp/resetPasswordApplyForm";
 	}
 
 	@RequestMapping(value = "save")
-	public String save(ResetPasswordApply resetPasswordApply, Model model, RedirectAttributes redirectAttributes) {
+	public String save(ResetPasswordApply resetPasswordApply, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, resetPasswordApply)){
-			return form(resetPasswordApply, model);
+			return form(resetPasswordApply, request, model);
 		}
 		
-		final String destPage = "redirect:"+Global.getFrontPath()+"/corp/resetPasswordApply/form";
+		final String destPage = "redirect:" + Global.getFrontPath() + "/corp/resetPasswordApplyForm";
 		
 		if(!Util.isMobile(resetPasswordApply.getMobile())){
 			addMessage(redirectAttributes, "注册失败，无效的手机号。");
-			model.addAttribute("resetPasswordApply", resetPasswordApply);
+			request.getSession().setAttribute("resetPasswordApply", resetPasswordApply);
 			return destPage;
 		}
 		
 		if(!Util.isEmail(resetPasswordApply.getEmail())){
 			addMessage(redirectAttributes, "注册失败，无效的电子邮箱。");
-			model.addAttribute("resetPasswordApply", resetPasswordApply);
+			request.getSession().setAttribute("resetPasswordApply", resetPasswordApply);
 			return destPage;
 		}
 		
@@ -101,7 +106,7 @@ public class ResetPasswordApplyController extends BaseController {
 		List<UeppQyjbxx> list = ueppQyjbxxService.findList(ueppQyjbxx);
 		if(list.size()==0){
 			addMessage(redirectAttributes, "提交失败，统一社会信用代码不存在。可能原因：1、填写错误；2、企业未注册。");
-			model.addAttribute("resetPasswordApply", resetPasswordApply);
+			request.getSession().setAttribute("resetPasswordApply", resetPasswordApply);
 			return destPage;
 		}
 

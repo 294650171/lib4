@@ -77,6 +77,50 @@ public class MyCorpCertService extends CrudService<MyCorpCertDao, CorpCert> {
 	}
 	
 	@Transactional(readOnly = false)
+	public void updateAttach(CorpCert corpCert) {
+		//处理营业执照
+		CorpCertAttach entity = new CorpCertAttach();
+		entity.setCertType(CorpCertAttach.CERT_TYPE_QUALIFICATION);
+//		entity.setTyshxydm(corpCert.getTyshxydm());
+		entity.setZzjgdm(corpCert.getCorpId());
+		entity.setCertNo(corpCert.getCertNo());
+
+		List<CorpCertAttach> result = this.corpCertAttachDao.findList(entity);
+		CorpCertAttach certAttach = null;
+		if(StringUtils.isNotEmpty(corpCert.getPhoto())){
+			
+			if(result != null && !result.isEmpty()){
+				certAttach = result.get(0);
+				certAttach.setUrl(corpCert.getPhoto());
+				certAttach.setCertNo(corpCert.getCertNo());
+				certAttach.setName(corpCert.getPhoto().substring(corpCert.getPhoto().lastIndexOf("/") + 1));
+				certAttach.setUpdateDate(new Date());
+				this.corpCertAttachDao.update(certAttach);
+			}else {
+				certAttach = new CorpCertAttach();
+				certAttach.setCertType(CorpCertAttach.CERT_TYPE_QUALIFICATION);
+				certAttach.setCertNo(corpCert.getCertNo());
+				certAttach.setTyshxydm(corpCert.getTyshxydm());
+				certAttach.setZzjgdm(corpCert.getCorpId());
+				certAttach.setUrl(corpCert.getPhoto());
+				certAttach.setName(corpCert.getPhoto().substring(corpCert.getPhoto().lastIndexOf("/") + 1));
+				certAttach.setCreateDate(new Date());
+				certAttach.setUpdateDate(new Date());
+				this.corpCertAttachDao.insert(certAttach);
+			}
+		}else{
+			if(result != null && !result.isEmpty()){
+				certAttach = result.get(0);
+				certAttach.setUrl("");
+				certAttach.setCertNo(corpCert.getCertNo());
+				certAttach.setName(corpCert.getPhoto().substring(corpCert.getPhoto().lastIndexOf("/") + 1));
+				certAttach.setUpdateDate(new Date());
+				this.corpCertAttachDao.update(certAttach);
+			}			
+		}
+	}
+	
+	@Transactional(readOnly = false)
 	public void delete(CorpCert corpCert) {
 		super.delete(corpCert);
 	}

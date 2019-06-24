@@ -89,6 +89,8 @@ public class CorpBasicInfoApplication extends ActEntity<CorpBasicInfoApplication
 	
 	private String approveOpinion;
 	
+	private String password; //预设密码
+	
 	//临时属性
 	private CommonsMultipartFile attachmentFile;
 
@@ -607,4 +609,13 @@ public class CorpBasicInfoApplication extends ActEntity<CorpBasicInfoApplication
 	public void setApproveOpinion(String approveOpinion) {
 		this.approveOpinion = approveOpinion;
 	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 }

@@ -7,8 +7,8 @@ import cn.wuxi.js.lib4.common.config.Global;
 import cn.wuxi.js.lib4.common.servlet.ValidateCodeServlet;
 import cn.wuxi.js.lib4.common.utils.SpringContextHolder;
 import cn.wuxi.js.lib4.common.web.Servlets;
-import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccount;
-import cn.wuxi.js.lib4.modules.corp.service.CorpBasicAccountService;
+
+import cn.wuxi.js.lib4.modules.sys.entity.GUser;
 import cn.wuxi.js.lib4.modules.sys.entity.Menu;
 import cn.wuxi.js.lib4.modules.sys.entity.Role;
 import cn.wuxi.js.lib4.modules.sys.entity.User;
@@ -51,9 +51,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	
 	private SystemService systemService;
 
-	@Autowired
-	private CorpBasicAccountService corpBasicAccoutService;
-	//private EmployeeService employeeService;
+
 	
 	public SystemAuthorizingRealm() {
 		this.setCachingEnabled(false);
@@ -81,8 +79,8 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		}
 		if (UsernamePasswordToken.USER_TYPE_CORP.equals(token.getUserType())) {
 			// 校验用户名密码
-			CorpBasicAccount corp = corpBasicAccoutService.findByTyshxydm(token.getUsername());
-			User user = getEnterpriceUser(corp);
+
+			User user = UserUtils.getNoneSysUser(token.getUsername());
 			if (user != null) {
 
 				StringBuffer buffer = new StringBuffer();
@@ -304,17 +302,21 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		return systemService;
 	}
 
-	private User getEnterpriceUser(CorpBasicAccount account){
+	private User getEnterpriceUser(GUser guser){
 		User user = null;
-		if(account != null){
+		if(guser != null){
+			
 			user = new User();
-//			user.setId("b0487beaed0744d9aa33f7efdb6d8a0a");
-			user.setId(account.getTyshxydm());
+			user.setId(guser.getLoginname());
+			user.setLoginName(guser.getLoginname());
+			user.setPassword(guser.getLoginpassword());
+			user.setNo(guser.getLoginname());
+			user.setName(guser.getUsername());
 			user.setUserType(UsernamePasswordToken.USER_TYPE_CORP);
-			user.setLoginName(account.getTyshxydm());
-			user.setName(account.getName());
-			user.setPassword(account.getPassword());
-			user.setCorpBasicAccount(account);
+			
+			user.setGuser(guser);
+			
+			user.setIsSysUser("0");
 		}
 		return user;
 	}

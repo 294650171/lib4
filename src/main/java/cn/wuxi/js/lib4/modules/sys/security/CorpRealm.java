@@ -1,7 +1,5 @@
 package cn.wuxi.js.lib4.modules.sys.security;
 
-import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicAccount;
-import cn.wuxi.js.lib4.modules.corp.service.CorpBasicAccountService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -15,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.wuxi.js.lib4.modules.sys.dao.GUserDao;
+import cn.wuxi.js.lib4.modules.sys.entity.GUser;
+
 import java.io.Serializable;
 
 /**
@@ -24,9 +25,10 @@ import java.io.Serializable;
 public class CorpRealm extends AuthorizingRealm {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-
+    
     @Autowired
-    private CorpBasicAccountService corpBasicAccoutService;
+    private GUserDao guserDao;
+
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -40,7 +42,9 @@ public class CorpRealm extends AuthorizingRealm {
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 
         // 校验用户名密码
-        CorpBasicAccount user = corpBasicAccoutService.findByTyshxydm(token.getUsername());
+        GUser entity = new GUser();
+        entity.setLoginname(token.getUsername());
+        GUser user = guserDao.getByLoginName(entity);
         if (user != null) {
 
             StringBuffer buffer = new StringBuffer();
@@ -49,14 +53,14 @@ public class CorpRealm extends AuthorizingRealm {
             }
 
             logger.debug("user.getId(): {}, user.getLoginName(): {}, user.getPassword(): {}, token.getPassword(): {}",
-                    user.getId(), user.getTyshxydm(),user.getPassword(), buffer.toString());
+                    user.getId(), user.getLoginname(),user.getLoginpassword(), buffer.toString());
 
-            if(!user.getPassword().equals(buffer.toString())){
+            if(!user.getLoginpassword().equals(buffer.toString())){
                 throw new AuthenticationException("msg:密码错误.");
             }
 
             return new SimpleAuthenticationInfo(new Principal(user, token.isMobileLogin()),
-                    user.getPassword(), getName());
+                    user.getLoginpassword(), getName());
         } else {
             return null;
         }
@@ -75,10 +79,10 @@ public class CorpRealm extends AuthorizingRealm {
         private boolean mobileLogin; // 是否手机登录
 
 
-        public Principal(CorpBasicAccount user, boolean mobileLogin) {
+        public Principal(GUser user, boolean mobileLogin) {
             this.id = user.getId();
-            this.tyshxydm = user.getTyshxydm();
-            this.name = user.getName();
+            this.tyshxydm = user.getLoginname();
+            this.name = user.getUsername();
             this.mobileLogin = mobileLogin;
         }
 

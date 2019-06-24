@@ -23,10 +23,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import cn.wuxi.js.lib4.common.config.Global;
 import cn.wuxi.js.lib4.common.persistence.Page;
 import cn.wuxi.js.lib4.common.web.BaseController;
+import cn.wuxi.js.lib4.common.utils.CorpUtils;
 import cn.wuxi.js.lib4.common.utils.FileUtils;
 import cn.wuxi.js.lib4.common.utils.StringUtils;
 import cn.wuxi.js.lib4.common.utils.Util;
-import cn.wuxi.js.lib4.modules.base.utils.CorpCodeUtils;
+
 import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicInfoApplication;
 import cn.wuxi.js.lib4.modules.corp.entity.UeppQyjbxx;
 import cn.wuxi.js.lib4.modules.corp.service.CorpBasicInfoApplicationService;
@@ -72,11 +73,17 @@ public class CorpRegisterApplicationController extends BaseController {
 	}
 
 	@RequestMapping(value = "form")
-	public String form(CorpBasicInfoApplication corpBasicInfoApplication, Model model) {
+	public String form(CorpBasicInfoApplication corpBasicInfoApplication, HttpServletRequest request, Model model) {
 		
 		if(corpBasicInfoApplication.getIsNewRecord()){
 			//corpBasicInfoApplication.setProvinceid("320000");
 			//corpBasicInfoApplication.setCityid("320200");
+		}
+		
+		if(corpBasicInfoApplication == null || StringUtils.isEmpty(corpBasicInfoApplication.getTyshxydm())){
+			if(request.getSession().getAttribute("corpBasicInfoApplication")!=null){
+				corpBasicInfoApplication = (CorpBasicInfoApplication)request.getSession().getAttribute("corpBasicInfoApplication");
+			}
 		}
 		
 		model.addAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
@@ -84,24 +91,24 @@ public class CorpRegisterApplicationController extends BaseController {
 	}
 
 	@RequestMapping(value = "save")
-	public String save(CorpBasicInfoApplication corpBasicInfoApplication, Model model,
+	public String save(CorpBasicInfoApplication corpBasicInfoApplication, HttpServletRequest request, Model model,
 			RedirectAttributes redirectAttributes) {
 		/*
 		if (!beanValidator(model, corpBasicInfoApplication)) {
 			return form(corpBasicInfoApplication, model);
 		}*/
 		
-		final String destPage = "redirect:"+Global.getFrontPath()+"/corp/corpRegisterApplication/form";
+		final String destPage = "redirect:" + Global.getFrontPath() + "/corp/corpRegisterApplication/form";
 		
 		if(!Util.isMobile(corpBasicInfoApplication.getLxdh())){
 			addMessage(redirectAttributes, "注册失败，无效的手机号。");
-			model.addAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
+			request.getSession().setAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
 			return destPage;
 		}
 		
 		if(!Util.isEmail(corpBasicInfoApplication.getEmail())){
 			addMessage(redirectAttributes, "注册失败，无效的电子邮箱。");
-			model.addAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
+			request.getSession().setAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
 			return destPage;
 		}
 		
@@ -111,7 +118,7 @@ public class CorpRegisterApplicationController extends BaseController {
 			corpBasicInfoApplication.setType(CorpBasicInfoApplication.TYPE_REGISTER);
 		}
 		
-		String corpCode = CorpCodeUtils.parseOrgCode(corpBasicInfoApplication.getTyshxydm());
+		String corpCode = CorpUtils.getZzjgdm(corpBasicInfoApplication.getTyshxydm());
 		
 		corpBasicInfoApplication.setQyid(corpCode);
 		corpBasicInfoApplication.setZzjgdm(corpCode);
@@ -125,7 +132,7 @@ public class CorpRegisterApplicationController extends BaseController {
 
 		if (list.size() > 0) {
 			addMessage(redirectAttributes, "注册失败，统一社会信用代码已存在。");
-			model.addAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
+			request.getSession().setAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
 			return destPage;
 		}
 

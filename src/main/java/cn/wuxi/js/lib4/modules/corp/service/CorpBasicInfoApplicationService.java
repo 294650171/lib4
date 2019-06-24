@@ -162,9 +162,9 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 
 		String procInsId = actTaskService.startProcess(ActUtils.PD_REGISTER_CORP_APPLICATION[0], ActUtils.PD_REGISTER_CORP_APPLICATION[1], bean.getId(), title,variables);
 		
-		bean.setProcInsId(procInsId);
+		//bean.setProcInsId(procInsId);
 		
-		dao.updateProcInsId(bean);
+		//dao.updateProcInsId(bean);
 
 	}
 
@@ -213,8 +213,8 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 			guser.setUserid((maxUserId+1)+"");
 			
 			guser.setLoginname(bean.getTyshxydm());
-			String randomPass = Util.getRandomStr(6);
-			guser.setLoginpassword(randomPass);
+
+			guser.setLoginpassword(bean.getPassword());
 			guser.setUsername(bean.getQymc());
 			guser.setUserregtime(new Date());
 			guser.setUsertype("");
@@ -227,7 +227,7 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 			temp = Global.getConfig("registerSuccessMsgNotify");
 			mf = new MessageFormat(temp);
 			String[] msgParams = {
-					randomPass
+					bean.getPassword()
 			};
 			msg = mf.format(msgParams);
 			this.messageNotify(bean, msg);
@@ -237,7 +237,7 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 			mf = new MessageFormat(temp);
 			String[] mailParams = {
 					bean.getQymc(),
-					randomPass
+					bean.getPassword()
 			};
 			msg = mf.format(mailParams);
 			this.mailNotify(bean, msg);

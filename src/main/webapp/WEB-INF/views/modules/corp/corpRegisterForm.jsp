@@ -37,7 +37,7 @@
 	<meta name="decorator" content="default"/>
 	<style type="text/css">
       html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}.form-register-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:30px;margin-bottom:20px;color:#0663a2;}
-      .form-register{margin:auto;position:absolute;text-align:left;width:950px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
+      .form-register{margin:auto;position:absolute;text-align:left;width:950px;height:580px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
         	-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-webkit-box-shadow:0 1px 2px rgba(0,0,0,.05);-moz-box-shadow:0 1px 2px rgba(0,0,0,.05);box-shadow:0 1px 2px rgba(0,0,0,.05);}
       .form-register .checkbox{margin-bottom:10px;color:#0663a2;} .form-register .input-label{font-size:16px;line-height:23px;color:#999;}
       .form-register .input-block-level{font-size:16px;height:auto;margin-bottom:15px;padding:7px;*width:283px;*padding-bottom:0;_padding:7px 7px 9px 7px;}
@@ -53,7 +53,6 @@
       label.error{background:none;width:270px;font-weight:normal;color:inherit;margin:0;}
 
       body{
-          background:#fff url("${ctxStatic}/images/loginback.jpg") no-repeat left top;
           background-size:100%;
           height:100%;
       }
@@ -78,6 +77,17 @@
 					}
 				}
 			});
+			
+			$("#btnSubmit").click(function(){
+				var pass = $("#password").val();
+				var pass1 = $("#password1").val();
+				if(pass != pass1){
+					alert("两次输入密码必须一致！");
+					return;
+				}
+				$("#inputForm").submit();
+				
+			});			
 			
 			$("#provinceid").change(function(){
 				var parentId = $("#provinceid").val();
@@ -120,7 +130,7 @@
 		<form:hidden path="id"/>
 		<form:hidden path="photo"/>
 		
-		<sys:message content="${message}"/>	
+		<sys:message content="${message}"/>	${message}
 		
 		<form:hidden path="type" value="2"/>	
 
@@ -218,7 +228,7 @@
 						<label class="control-label">联系人手机号：</label>
 						<div class="controls">
 							<form:input path="lxdh" htmlEscape="false" minlength="11" maxlength="11" class="input-large required" />
-							<span class="help-inline"><font color="red">*</font> </span>
+							<span class="help-inline"><font color="red">*</font> 用于接收审核结果，请填写正确。</span>
 						</div>
 					</div>
 				</div>
@@ -226,7 +236,8 @@
 					<div class="control-group">
 						<label class="control-label">电子信箱：</label>
 						<div class="controls">
-							<form:input path="email" htmlEscape="false" maxlength="50" class="input-large "/>
+							<form:input path="email" htmlEscape="false" maxlength="50" class="input-large required"/>
+							<span class="help-inline"><font color="red">*</font> 用于接收审核结果，请填写正确。</span>
 						</div>
 					</div>
 				</div>				
@@ -270,9 +281,40 @@
 					</div>
 				</div>
 			</div>
-		</div>		
-		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="提  交 "/>&nbsp;
+		</div>	
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span6">
+					<div class="control-group">
+						<label class="control-label">登录密码：</label>
+						<div class="controls">                          
+						    <input type="password" id="password" name="password" class="input-large required">
+                            <span class="help-inline"><font color="red">*</font> </span>
+						</div>
+					</div>
+				</div>
+				<div class="span6">
+					<div class="control-group">
+						<label class="control-label">再次输入：</label>
+						<div class="controls">      
+						    <input type="password" id="password1" name="password1" class="input-large required">                    
+                            <span class="help-inline"><font color="red">*</font> </span>
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>	
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<div class="control-group">
+						<label class="control-label"></label>
+						<div class="controls">
+						   <input id="btnSubmit" class="btn btn-primary" type="button" value="提  交 "/>&nbsp;
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</form:form>
 </body>

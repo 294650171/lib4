@@ -93,6 +93,17 @@ public class MyCorpCertController extends BaseController {
 	}
 	
 	@RequiresPermissions("mycorp:cert:edit")
+	@RequestMapping(value = "upload")
+	public String upload(CorpCert corpCert, Model model, RedirectAttributes redirectAttributes) {
+		if (!beanValidator(model, corpCert)){
+			return form(corpCert, model);
+		}
+		corpCertService.updateAttach(corpCert);
+		addMessage(redirectAttributes, "保存附件成功");
+		return "redirect:"+Global.getAdminPath()+"/mycorp/cert?repage";
+	}
+	
+	@RequiresPermissions("mycorp:cert:edit")
 	@RequestMapping(value = "delete")
 	public String delete(CorpCert corpCert, RedirectAttributes redirectAttributes) {
 		corpCertService.delete(corpCert);
