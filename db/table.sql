@@ -79,5 +79,6 @@ CREATE TABLE [dbo].[corp_basic_info_application] (
 [proc_ins_id] varchar(50) NULL,
 [photo] varchar(200) NULL ,
 [approve_opinion]  varchar(100) NULL,
-[password] varchar(50) NULL
+[password] varchar(50) NULL,
+Primary key(id)
 );
