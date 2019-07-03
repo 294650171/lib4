@@ -29,7 +29,60 @@
 										}
 									}
 								});
+
+            $("#provinceid").change(function(){
+                $('#cityid').select2('data', null);
+                $('#countyid').select2('data', null);
+                //$("#countyid").select2().empty();
+				getCity();
 			});
+
+			$("#cityid").change(function(){
+				getCounty();
+			});
+			getCity(${bean.cityid},${bean.countyid});
+
+			});
+
+			function getCity(selectedCityId,selectedCountyId){
+                var parentId = $("#provinceid").val();
+				var sltCity=document.inputForm.cityid;
+				sltCity.length = 1;
+				$("#countyid").select2().empty();
+
+		    	$.get("${ctx}/base/region/treeData?level=&parentId="+parentId,
+		    		{},
+		    		function(data){
+		    			var count=data.length;
+		    			for(var i=0;i<count;i++){
+		    				sltCity[i+1] = new Option(data[i].name, data[i].id);
+		    			}
+		    			if(selectedCityId != null){
+		    			    console.log("selectedCityId:" + selectedCityId);
+		    		        $("#cityid").val(selectedCityId).select2();
+		    		        getCounty(selectedCountyId);
+		    			}
+		    	    }
+		    	);
+			}
+
+			function getCounty(selectedCountyId){
+                var parentId = $("#cityid").val();
+				var county=document.inputForm.countyid;
+				county.length = 1;
+
+		    	$.get("${ctx}/base/region/treeData?level=&parentId="+parentId,
+		    		{},
+		    		function(data){
+		    			var count=data.length;
+		    			for(var i=0;i<count;i++){
+		    				county[i+1] = new Option(data[i].name, data[i].id);
+		    			}
+		    			$("#countyid").val(selectedCountyId).select2();
+		    	    }
+		    	);
+			}
+
 </script>
 </head>
 <body>
@@ -38,7 +91,7 @@
 		<li ><a href="${ctx}/mycorp/basicinfo/history">修改历史记录</a></li>
 	</ul>
 	<br />
-	<form:form id="inputForm" modelAttribute="bean"
+	<form:form id="inputForm" name="inputForm" modelAttribute="bean"
 		action="${ctx}/mycorp/basicinfo/save" method="post"
 		class="form-horizontal">
 		<form:hidden path="qyid" />
@@ -91,8 +144,10 @@
 					<div class="control-group">
 						<label class="control-label">省：</label>
 						<div class="controls">
-							<form:input path="province" htmlEscape="false" maxlength="20"
-								class="input-xlarge " />
+                            <form:select path="provinceid" class="input-large">
+							  <form:option value="0" label="请选择所在省份"/>
+							  <form:options items="${fns:getRegionList('1','')}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+							</form:select>
 						</div>
 					</div>
 				</div>
@@ -101,8 +156,9 @@
 					<div class="control-group">
 						<label class="control-label">市：</label>
 						<div class="controls">
-							<form:input path="city" htmlEscape="false" maxlength="20"
-								class="input-xlarge " />
+                            <form:select path="cityid" class="input-large">
+							  <form:option value="0" label="请选择所在城市"/>
+							</form:select>
 						</div>
 					</div>
 				</div>
@@ -115,8 +171,9 @@
 					<div class="control-group">
 						<label class="control-label">区/县：</label>
 						<div class="controls">
-							<form:input path="county" htmlEscape="false" maxlength="20"
-								class="input-xlarge " />
+							<form:select path="countyid" class="input-large">
+							  <form:option value="0" label="请选择所在区/县"/>
+							</form:select>
 						</div>
 					</div>
 				</div>
