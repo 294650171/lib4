@@ -57,11 +57,13 @@
 		a.sgy AS "sgy",
 		a.tyshxydm AS "tyshxydm",
 		a.needupdateflag AS "needupdateflag",
-		b.url AS "photo"
+		b.url AS "photo",
+		u.LoginPassword AS "loginPassword"
 	</sql>
 	
 	<sql id="ueppQyjbxxJoins">
 		LEFT JOIN  WJSJZX.dbo.corp_cert_attach b ON a.qyID = b.zzjgdm and b.cert_type=1
+		LEFT JOIN [WJSJZX].[dbo].[g_User] u ON u.LoginName = a.tyshxydm
 	</sql>
     
 	<select id="get" resultType="UeppQyjbxx">
@@ -71,6 +73,14 @@
 		<include refid="ueppQyjbxxJoins"/>
 		WHERE a.qyid = #{qyid}
 	</select>
+
+	<select id="findByName" resultType="UeppQyjbxx">
+		SELECT TOP 1
+		<include refid="ueppQyjbxxColumns"/>
+		FROM WJSJZX.dbo.uepp_qyjbxx a
+		<include refid="ueppQyjbxxJoins"/>
+		WHERE a.qymc = #{qymc}
+	</select>
 	
 	<select id="findList" resultType="UeppQyjbxx">
 		SELECT 
@@ -79,7 +89,7 @@
 		<include refid="ueppQyjbxxJoins"/>
 		<where>
 			<if test="qyid != null and qyid != ''">
-				AND a.qyid = #{qyid}
+				AND (a.qyid = #{qyid} OR a.tyshxydm = #{qyid})
 			</if>
 			<if test="yyzzzch != null and yyzzzch != ''">
 				AND a.yyzzzch = #{yyzzzch}

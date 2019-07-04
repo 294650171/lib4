@@ -63,6 +63,7 @@
 				<th>单位类型</th>
 				<th>统一社会信用代码</th>
 				<th>属地</th>
+				<shiro:hasRole name="libadmin"><th>密码</th></shiro:hasRole>
 				<shiro:hasPermission name="corp:ueppQyjbxx:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -78,6 +79,7 @@
 				<td>  </td>
 				<td> ${ueppQyjbxx.tyshxydm} </td>
 				<td> ${ueppQyjbxx.province}-${ueppQyjbxx.city}-${ueppQyjbxx.county} </td>
+				<shiro:hasRole name="libadmin"><td> ${ueppQyjbxx.loginPassword} </td></shiro:hasRole>
 				<shiro:hasPermission name="corp:ueppQyjbxx:edit"><td>
 					<a href="#" onclick="synchCert('${ueppQyjbxx.qymc}');">同步资质</a>
     				<a href="${ctx}/corp/ueppQyjbxx/form?qyid=${ueppQyjbxx.qyid}">修改</a>

@@ -74,6 +74,9 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 	private String needupdateflag;		// needupdateflag
 
 	private String photo;
+
+
+	private String loginPassword;
 	
 	public UeppQyjbxx() {
 		super();
@@ -564,5 +567,13 @@ public class UeppQyjbxx extends ActEntity<UeppQyjbxx> {
 
 	public void setPhoto(String photo) {
 		this.photo = photo;
+	}
+
+	public String getLoginPassword() {
+		return loginPassword;
+	}
+
+	public void setLoginPassword(String loginPassword) {
+		this.loginPassword = loginPassword;
 	}
 }

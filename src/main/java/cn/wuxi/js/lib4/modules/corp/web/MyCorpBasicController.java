@@ -133,7 +133,7 @@ public class MyCorpBasicController extends BaseController {
         applyService.save(applyBean);
 
 		applyService.corpInfoChangeApply(applyBean);
-		addMessage(redirectAttributes, "保存企业基本信息成功");
+		addMessage(redirectAttributes, "企业基本信息修改申请提交成功");
 		return "redirect:"+Global.getAdminPath()+"/mycorp/basicinfo/info?repage";
 	}
 
