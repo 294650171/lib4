@@ -112,6 +112,17 @@ public class CorpRegisterApplicationController extends BaseController {
 			return destPage;
 		}
 		
+		//检查是否存在待审核的申请
+		CorpBasicInfoApplication param = new CorpBasicInfoApplication();
+		param.setTyshxydm(corpBasicInfoApplication.getTyshxydm());
+		param.setType(CorpBasicInfoApplication.TYPE_REGISTER);
+		List<CorpBasicInfoApplication> list = corpBasicInfoApplicationService.findList(param);
+		if(list.size()>0){
+			addMessage(redirectAttributes, "注册失败，统一社会信用代码对应的注册信息已存在。");
+			request.getSession().setAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
+			return destPage;			
+		}
+		
 		String rootDirectory = Global.getConfig("userfiles.basedir");
 		
 		if (StringUtils.isEmpty(corpBasicInfoApplication.getType())) {
@@ -128,9 +139,9 @@ public class CorpRegisterApplicationController extends BaseController {
 		GUser guser = new GUser();	
 		guser.setLoginname(code);
 		
-		List<GUser> list = guserDao.findList(guser);
+		List<GUser> userlist = guserDao.findList(guser);
 
-		if (list.size() > 0) {
+		if (userlist.size() > 0) {
 			addMessage(redirectAttributes, "注册失败，统一社会信用代码已存在。");
 			request.getSession().setAttribute("corpBasicInfoApplication", corpBasicInfoApplication);
 			return destPage;
