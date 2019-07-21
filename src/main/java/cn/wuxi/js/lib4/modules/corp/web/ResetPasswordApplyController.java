@@ -83,7 +83,7 @@ public class ResetPasswordApplyController extends BaseController {
 			return form(resetPasswordApply, request, model);
 		}
 		
-		final String destPage = "redirect:" + Global.getFrontPath() + "/corp/resetPasswordApplyForm";
+		final String destPage = "redirect:" + Global.getFrontPath() + "/corp/resetPasswordApply/form";
 		
 		if(!Util.isMobile(resetPasswordApply.getMobile())){
 			addMessage(redirectAttributes, "注册失败，无效的手机号。");
