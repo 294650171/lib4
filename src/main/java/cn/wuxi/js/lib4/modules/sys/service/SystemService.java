@@ -26,9 +26,11 @@ import cn.wuxi.js.lib4.common.utils.CacheUtils;
 import cn.wuxi.js.lib4.common.utils.Encodes;
 import cn.wuxi.js.lib4.common.utils.StringUtils;
 import cn.wuxi.js.lib4.common.web.Servlets;
+import cn.wuxi.js.lib4.modules.sys.dao.GUserDao;
 import cn.wuxi.js.lib4.modules.sys.dao.MenuDao;
 import cn.wuxi.js.lib4.modules.sys.dao.RoleDao;
 import cn.wuxi.js.lib4.modules.sys.dao.UserDao;
+import cn.wuxi.js.lib4.modules.sys.entity.GUser;
 import cn.wuxi.js.lib4.modules.sys.entity.Menu;
 import cn.wuxi.js.lib4.modules.sys.entity.Office;
 import cn.wuxi.js.lib4.modules.sys.entity.Role;
@@ -52,6 +54,8 @@ public class SystemService extends BaseService implements InitializingBean {
 	
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private GUserDao guserDao;
 	@Autowired
 	private RoleDao roleDao;
 	@Autowired
@@ -186,6 +190,13 @@ public class SystemService extends BaseService implements InitializingBean {
 		//user.setPassword(entryptPassword(newPassword));
 		user.setPassword(newPassword);
 		userDao.updatePasswordById(user);
+		
+		//update guser
+		GUser guser = new GUser();
+		guser.setLoginname(loginName);
+		guser.setLoginpassword(newPassword);
+		guserDao.updatePass(guser);
+		
 		// 清除用户缓存
 		user.setLoginName(loginName);
 		UserUtils.clearCache(user);
