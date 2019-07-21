@@ -80,5 +80,8 @@ CREATE TABLE [dbo].[corp_basic_info_application] (
 [photo] varchar(200) NULL ,
 [approve_opinion]  varchar(100) NULL,
 [password] varchar(50) NULL,
+[corp_cert_ids] varchar(200) NULL
 Primary key(id)
 );
+
+ALTER TABLE [WJSJZX].[dbo].[corp_basic_info_application] ADD [corp_cert_ids] VARCHAR(200) NULL;

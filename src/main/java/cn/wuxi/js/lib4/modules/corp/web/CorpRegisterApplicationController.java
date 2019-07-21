@@ -5,10 +5,16 @@ package cn.wuxi.js.lib4.modules.corp.web;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.wuxi.js.lib4.common.utils.*;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpCertType;
+import cn.wuxi.js.lib4.modules.corp.entity.CorpType;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +23,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.wuxi.js.lib4.common.config.Global;
 import cn.wuxi.js.lib4.common.persistence.Page;
 import cn.wuxi.js.lib4.common.web.BaseController;
-import cn.wuxi.js.lib4.common.utils.CorpUtils;
-import cn.wuxi.js.lib4.common.utils.FileUtils;
-import cn.wuxi.js.lib4.common.utils.StringUtils;
-import cn.wuxi.js.lib4.common.utils.Util;
 
 import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicInfoApplication;
 import cn.wuxi.js.lib4.modules.corp.entity.UeppQyjbxx;
@@ -133,6 +136,7 @@ public class CorpRegisterApplicationController extends BaseController {
 		
 		corpBasicInfoApplication.setQyid(corpCode);
 		corpBasicInfoApplication.setZzjgdm(corpCode);
+		corpBasicInfoApplication.setCorpCertIds(Collections3.convertToString(corpBasicInfoApplication.getCorpCertIdList(),","));
 
 		// 检查统一社会信用代码
 		String code = corpBasicInfoApplication.getTyshxydm();
@@ -185,5 +189,64 @@ public class CorpRegisterApplicationController extends BaseController {
 		addMessage(redirectAttributes, "删除企业基本信息修改申请表成功");
 		return "redirect:"+Global.getFrontPath()+"/corp/corpBasicInfoApplication/?repage";
 	}
+
+//	@ResponseBody
+//	@RequestMapping(value = "treeData")
+//	public List<Map<String, Object>> treeData(
+//			@RequestParam(required=false) String workshopId,
+//			HttpServletResponse response) {
+//
+//		String parentId = "0";
+//
+//		List<Map<String, Object>> mapList = Lists.newArrayList();
+//		for(CorpType ct : CorpType.values()){
+//			Map<String, Object> map = Maps.newHashMap();
+//			map.put("id", ct.getValue());
+//			map.put("pId", parentId);
+//			map.put("name", ct.getName());
+//			mapList.add(map);
+//
+//			if(CorpType.BUILD.equals(ct)){
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.FDCKF));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.JSDWQT));
+//			} else if(CorpType.SURVEY.equals(ct)){
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.GCKC));
+//			} else if(CorpType.DESIGN.equals(ct)){
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.YTH));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.GCSJ));
+//			} else if(CorpType.CONSTRUCT.equals(ct)){
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.JZSG));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.YTH));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.YLLH));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.FWCQ));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.AQSCXKZ));
+//			} else if(CorpType.AGENCY.equals(ct)){
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.GCJL));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.ZBDL));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.ZJZX));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.GCJC));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.SGTSC));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.FDCGJ));
+//				mapList.add(generateMap(ct.getValue(), CorpCertType.WYFW));
+//			} else if(CorpType.OTHERS.equals(ct)){
+//				Map<String, Object> otherMap = Maps.newHashMap();
+//				otherMap.put("id", "");
+//				otherMap.put("pId", ct.getValue());
+//				otherMap.put("name", "其他");
+//				mapList.add(otherMap);
+//			}
+//
+//		}
+//
+//		return mapList;
+//	}
+//
+//	private Map<String,Object> generateMap(String pid, CorpCertType corpCertType) {
+//		Map<String, Object> map = Maps.newHashMap();
+//		map.put("id", corpCertType.getIndex());
+//		map.put("pId", pid);
+//		map.put("name", corpCertType.getName());
+//		return map;
+//	}
 
 }
