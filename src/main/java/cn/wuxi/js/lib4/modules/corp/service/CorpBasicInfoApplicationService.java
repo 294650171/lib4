@@ -6,12 +6,14 @@ package cn.wuxi.js.lib4.modules.corp.service;
 import cn.wuxi.js.lib4.common.config.Global;
 import cn.wuxi.js.lib4.common.persistence.Page;
 import cn.wuxi.js.lib4.common.service.CrudService;
+import cn.wuxi.js.lib4.common.utils.CorpUtils;
 import cn.wuxi.js.lib4.common.utils.EmailUtil;
 import cn.wuxi.js.lib4.common.utils.StringUtils;
 import cn.wuxi.js.lib4.common.utils.Util;
 import cn.wuxi.js.lib4.modules.act.service.ActTaskService;
 import cn.wuxi.js.lib4.modules.act.utils.ActUtils;
 import cn.wuxi.js.lib4.modules.corp.dao.CorpBasicInfoApplicationDao;
+import cn.wuxi.js.lib4.modules.corp.dao.CorpCertAttachDao;
 import cn.wuxi.js.lib4.modules.corp.dao.UeppQyjbxxDao;
 import cn.wuxi.js.lib4.modules.corp.entity.*;
 import cn.wuxi.js.lib4.modules.notify.AliyunMessageSender;
@@ -59,6 +61,9 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 
 	@Autowired
 	UeppQyjbxxDao qyjbxxDao;
+
+	@Autowired
+	CorpCertAttachDao corpCertAttachDao;
 	
 	@Autowired
 	GUserDao guserDao;
@@ -149,6 +154,7 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 		qyjbxx.setPhoto(changedBean.getPhoto());
 
 		qyjbxxDao.selfSave(qyjbxx);
+		resolveBusinessLicense(qyjbxx);
 
 	}
 	
@@ -207,6 +213,12 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 			BeanUtils.copyProperties(bean, qyjbxx);
 
 			qyjbxxDao.insert(qyjbxx);
+
+			//处理营业执照
+			if (StringUtils.isNotEmpty(qyjbxx.getPhoto())) {
+				resolveBusinessLicense(qyjbxx);
+			}
+
 
 			//保存企业从事业务类型
 			if(StringUtils.isNotEmpty(bean.getCorpCertIds())){
@@ -315,6 +327,38 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 			}
 		}
 		
+	}
+
+	private void resolveBusinessLicense(UeppQyjbxx qyjbxx) {
+		//处理营业执照
+		if (StringUtils.isNotEmpty(qyjbxx.getPhoto())) {
+			CorpCertAttach entity = new CorpCertAttach();
+			entity.setCertType(CorpCertAttach.CERT_TYPE_BUSYNESS_LICENSE);
+			entity.setTyshxydm(qyjbxx.getTyshxydm());
+			entity.setZzjgdm(qyjbxx.getQyid());
+
+			List<CorpCertAttach> result = this.corpCertAttachDao.findList(entity);
+			CorpCertAttach certAttach = null;
+			if (result != null && !result.isEmpty()) {
+				certAttach = result.get(0);
+				certAttach.setUrl(qyjbxx.getPhoto());
+				certAttach.setName(qyjbxx.getPhoto().substring(qyjbxx.getPhoto().lastIndexOf("/") + 1));
+				certAttach.setCertNo(qyjbxx.getTyshxydm());
+				certAttach.setUpdateDate(new Date());
+				this.corpCertAttachDao.update(certAttach);
+			} else {
+				certAttach = new CorpCertAttach();
+				certAttach.setCertType(CorpCertAttach.CERT_TYPE_BUSYNESS_LICENSE);
+				certAttach.setTyshxydm(qyjbxx.getTyshxydm());
+				certAttach.setZzjgdm(CorpUtils.getZzjgdm(qyjbxx.getTyshxydm()));
+				certAttach.setUrl(qyjbxx.getPhoto());
+				certAttach.setCertNo(qyjbxx.getTyshxydm());
+				certAttach.setName(qyjbxx.getPhoto().substring(qyjbxx.getPhoto().lastIndexOf("/") + 1));
+				certAttach.setCreateDate(new Date());
+				certAttach.setUpdateDate(new Date());
+				this.corpCertAttachDao.insert(certAttach);
+			}
+		}
 	}
 
 }
