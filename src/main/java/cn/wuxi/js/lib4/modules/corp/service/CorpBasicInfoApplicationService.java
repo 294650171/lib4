@@ -131,18 +131,20 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 
 		UeppQyjbxx qyjbxx = qyjbxxDao.get(changedBean.getQyid());
 
-		if(!qyjbxx.getQymc().equals(changedBean.getQymc())){
+		if(StringUtils.isEmpty(qyjbxx.getQymc()) || !qyjbxx.getQymc().equals(changedBean.getQymc())){
 			qyjbxx.setQymc(changedBean.getQymc());
 		}
-		if(!qyjbxx.getProvince().equals(changedBean.getProvince())){
+		if(StringUtils.isEmpty(qyjbxx.getProvince()) || !qyjbxx.getProvince().equals(changedBean.getProvince())){
 			qyjbxx.setProvince(changedBean.getProvince());
 		}
-		if(!qyjbxx.getCity().equals(changedBean.getCity())){
+		if(StringUtils.isEmpty(qyjbxx.getCity()) || !qyjbxx.getCity().equals(changedBean.getCity())){
 			qyjbxx.setCity(changedBean.getCity());
 		}
-		if(!qyjbxx.getCounty().equals(changedBean.getCounty())){
+		if(StringUtils.isEmpty(qyjbxx.getCounty()) || !qyjbxx.getCounty().equals(changedBean.getCounty())){
 			qyjbxx.setCounty(changedBean.getCounty());
 		}
+		
+		qyjbxx.setPhoto(changedBean.getPhoto());
 
 		qyjbxxDao.selfSave(qyjbxx);
 
