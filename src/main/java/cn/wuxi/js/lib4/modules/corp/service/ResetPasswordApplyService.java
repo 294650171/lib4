@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.google.common.collect.Maps;
 
 import cn.wuxi.js.lib4.common.config.Global;
@@ -110,6 +111,7 @@ public class ResetPasswordApplyService extends CrudService<ResetPasswordApplyDao
 		String temp = "";
 		MessageFormat mf;
 		String msg = "";
+		String item = "密码重置申请";
 		if(Global.STATUS_APPROVED.equals(resetPasswordApply.getStatus())){
 			//reset password
 			String randomnPass = Util.getRandomStr(6);
@@ -124,7 +126,8 @@ public class ResetPasswordApplyService extends CrudService<ResetPasswordApplyDao
 					randomnPass
 			};
 			msg = mf.format(msgParams);
-			this.messageNotify(resetPasswordApply, msg);
+			
+			this.messageNotify(resetPasswordApply, item, msg); 
 			
 			//mail
 			temp = Global.getConfig("resetPassSuccessMailNotify");
@@ -146,7 +149,7 @@ public class ResetPasswordApplyService extends CrudService<ResetPasswordApplyDao
 					link
 			};
 			msg = mf.format(msgParams);
-			this.messageNotify(resetPasswordApply, msg);
+			this.messageNotify(resetPasswordApply, item, msg);
 			
 			//mail
 			temp = Global.getConfig("resetPassFailMailNotify");
@@ -161,16 +164,14 @@ public class ResetPasswordApplyService extends CrudService<ResetPasswordApplyDao
 		}
 	}
 	
-	private void messageNotify(ResetPasswordApply resetPasswordApply, String msg){
+	private void messageNotify(ResetPasswordApply resetPasswordApply, String item, String result){
 		//message
 		String phone = resetPasswordApply.getMobile();
 		//MessageSender sender = new DbMessageSender();
 		
-		MessageSender sender = new AliyunMessageSender(); 
-		
 		try {
-			sender.send(phone, msg);
-		} catch (SQLException e) {
+			AliyunMessageSender.sendSms(phone, item, result);
+		} catch (ClientException e) {
 			 logger.error("send message error", e);
 		}
 		

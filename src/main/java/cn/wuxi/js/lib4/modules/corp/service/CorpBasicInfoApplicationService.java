@@ -22,6 +22,7 @@ import cn.wuxi.js.lib4.modules.notify.MessageSender;
 import cn.wuxi.js.lib4.modules.sys.dao.GUserDao;
 import cn.wuxi.js.lib4.modules.sys.entity.GUser;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.google.common.collect.Maps;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.Execution;
@@ -207,6 +208,8 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 		MessageFormat mf;
 		String msg = "";
 		
+		String item = "企业注册申请";
+		
 		if("true".equals(approveFlag)){
 			//保存基本信息
 			UeppQyjbxx qyjbxx = new UeppQyjbxx();
@@ -254,7 +257,7 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 					bean.getPassword()
 			};
 			msg = mf.format(msgParams);
-			this.messageNotify(bean, msg);
+			this.messageNotify(bean, item, msg);
 			
 			//mail
 			temp = Global.getConfig("registerSuccessMailNotify");
@@ -275,7 +278,7 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 					link
 			};
 			msg = mf.format(msgParams);
-			this.messageNotify(bean, msg);
+			this.messageNotify(bean, item, msg);
 			
 			//mail
 			temp = Global.getConfig("registerFailMailNotify");
@@ -301,16 +304,16 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 		qycsywService.saveWithCheck(ueppQycsyw);
 	}
 
-	private void messageNotify(CorpBasicInfoApplication bean, String msg){
+	private void messageNotify(CorpBasicInfoApplication bean, String item, String result){
 		//message
 		String phone = bean.getLxdh();
 		//MessageSender sender = new DbMessageSender();
 		
-		MessageSender sender = new AliyunMessageSender();
+		//AliyunMessageSender sender = new AliyunMessageSender();
 		
 		try {
-			sender.send(phone, msg);
-		} catch (SQLException e) {
+			AliyunMessageSender.sendSms(phone, item, result);
+		} catch (ClientException e) {
 			 logger.error("send message error", e);
 		}
 		

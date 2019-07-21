@@ -1,6 +1,7 @@
 package cn.wuxi.js.lib4.modules.notify;
 
-import java.sql.SQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -10,7 +11,11 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 
+import cn.wuxi.js.lib4.common.config.Global;
+
 public class AliyunMessageSender {
+	
+	protected static Logger logger = LoggerFactory.getLogger(AliyunMessageSender.class);
 	
     //产品名称:云通信短信API产品,开发者无需替换
     static final String product = "Dysmsapi";
@@ -25,6 +30,8 @@ public class AliyunMessageSender {
     
     static final String templateCode = "SMS_171112521";
     
+    static final String msgSystem = Global.getConfig("msgSystem");
+    
     /*
     TemplateParam  {'system':"四库一平台",'item':"事项信息”，'result':‘处理结果信息“}，JSON
     ${system}通知，事项信息：${item}，处理信息：${result}
@@ -36,7 +43,7 @@ public class AliyunMessageSender {
 		// TODO Auto-generated constructor stub
 	}
 	
-    public static SendSmsResponse sendSms(String phone, String message) throws ClientException {
+    public static SendSmsResponse sendSms(String phone, String item,String result) throws ClientException {
 
         //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
@@ -56,16 +63,18 @@ public class AliyunMessageSender {
         //必填:短信模板-可在短信控制台中找到
         request.setTemplateCode(templateCode);
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
-        request.setTemplateParam("{\"name\":\"Tom\", \"code\":\"123\"}");
+        request.setTemplateParam("{\"system\":\""+msgSystem+"\", \"item\":\""+item+"\", \"result\":\""+result+"\"}");
 
         //选填-上行短信扩展码(无特殊需求用户请忽略此字段)
         //request.setSmsUpExtendCode("90997");
 
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
-        request.setOutId("yourOutId");
+        //request.setOutId("yourOutId");
 
         //hint 此处可能会抛出异常，注意catch
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        
+        logger.debug("sms response, code:{}, message:{}",sendSmsResponse.getCode(), sendSmsResponse.getMessage());
 
         return sendSmsResponse;
     }
