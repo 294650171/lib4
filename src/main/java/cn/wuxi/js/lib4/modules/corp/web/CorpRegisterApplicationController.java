@@ -179,7 +179,7 @@ public class CorpRegisterApplicationController extends BaseController {
 
 		corpBasicInfoApplication.setDatastate(CorpBasicInfoApplication.DATASTATE_TODO);
 		corpBasicInfoApplicationService.corpRegisterApply(corpBasicInfoApplication);
-		addMessage(redirectAttributes, "注册申请提交成功");
+		addMessage(redirectAttributes, "注册申请提交成功,审核结果会以短信、邮件通知，请注意查收。");
 		return "redirect:" + Global.getFrontPath() + "/corp/corpRegisterApplication/form?repage";
 	}
 	

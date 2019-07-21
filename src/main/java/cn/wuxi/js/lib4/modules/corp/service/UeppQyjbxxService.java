@@ -31,8 +31,14 @@ public class UeppQyjbxxService extends CrudService<UeppQyjbxxDao, UeppQyjbxx> {
     private CorpCertAttachDao corpCertAttachDao;
 
 
+    @Override
     public UeppQyjbxx get(String id) {
-        return super.get(id);
+        UeppQyjbxx result =  super.get(id);
+        if(result != null){
+            result.setPhoto(getBusinessLicenseUrl(result.getQyid()));
+        }
+
+        return result ;
     }
 
     public List<UeppQyjbxx> findList(UeppQyjbxx ueppQyjbxx) {
@@ -65,6 +71,7 @@ public class UeppQyjbxxService extends CrudService<UeppQyjbxxDao, UeppQyjbxx> {
                 certAttach = result.get(0);
                 certAttach.setUrl(ueppQyjbxx.getPhoto());
                 certAttach.setName(ueppQyjbxx.getPhoto().substring(ueppQyjbxx.getPhoto().lastIndexOf("/") + 1));
+                certAttach.setCertNo(ueppQyjbxx.getTyshxydm());
                 certAttach.setUpdateDate(new Date());
                 this.corpCertAttachDao.update(certAttach);
             } else {
@@ -74,6 +81,7 @@ public class UeppQyjbxxService extends CrudService<UeppQyjbxxDao, UeppQyjbxx> {
                 certAttach.setZzjgdm(CorpUtils.getZzjgdm(ueppQyjbxx.getTyshxydm()));
                 certAttach.setUrl(ueppQyjbxx.getPhoto());
                 certAttach.setName(ueppQyjbxx.getPhoto().substring(ueppQyjbxx.getPhoto().lastIndexOf("/") + 1));
+                certAttach.setCertNo(ueppQyjbxx.getTyshxydm());
                 certAttach.setCreateDate(new Date());
                 certAttach.setUpdateDate(new Date());
                 this.corpCertAttachDao.insert(certAttach);
@@ -95,4 +103,24 @@ public class UeppQyjbxxService extends CrudService<UeppQyjbxxDao, UeppQyjbxx> {
     public void setCorpCertAttachDao(CorpCertAttachDao corpCertAttachDao) {
         this.corpCertAttachDao = corpCertAttachDao;
     }
+
+    public String  getBusinessLicenseUrl(String qyid){
+        logger.info("getBusinessLicenseUrl : " + qyid);
+        CorpCertAttach entity = new CorpCertAttach();
+        entity.setCertType(CorpCertAttach.CERT_TYPE_BUSYNESS_LICENSE);
+        entity.setZzjgdm(qyid);
+
+        List<CorpCertAttach> result = this.corpCertAttachDao.findList(entity);
+        CorpCertAttach certAttach = null;
+        if (result != null && !result.isEmpty()) {
+            certAttach = result.get(0);
+        }
+        if(certAttach != null){
+            return certAttach.getUrl();
+        }else {
+            return "";
+        }
+    }
+
+
 }
