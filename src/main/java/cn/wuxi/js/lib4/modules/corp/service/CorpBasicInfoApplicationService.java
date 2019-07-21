@@ -14,6 +14,7 @@ import cn.wuxi.js.lib4.modules.act.utils.ActUtils;
 import cn.wuxi.js.lib4.modules.corp.dao.CorpBasicInfoApplicationDao;
 import cn.wuxi.js.lib4.modules.corp.dao.UeppQyjbxxDao;
 import cn.wuxi.js.lib4.modules.corp.entity.*;
+import cn.wuxi.js.lib4.modules.notify.AliyunMessageSender;
 import cn.wuxi.js.lib4.modules.notify.DbMessageSender;
 import cn.wuxi.js.lib4.modules.notify.MessageSender;
 import cn.wuxi.js.lib4.modules.sys.dao.GUserDao;
@@ -291,7 +292,9 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 	private void messageNotify(CorpBasicInfoApplication bean, String msg){
 		//message
 		String phone = bean.getLxdh();
-		MessageSender sender = new DbMessageSender();
+		//MessageSender sender = new DbMessageSender();
+		
+		MessageSender sender = new AliyunMessageSender();
 		
 		try {
 			sender.send(phone, msg);

@@ -22,6 +22,7 @@ import cn.wuxi.js.lib4.common.utils.EmailUtil;
 import cn.wuxi.js.lib4.common.utils.StringUtils;
 import cn.wuxi.js.lib4.common.utils.Util;
 import cn.wuxi.js.lib4.modules.corp.entity.ResetPasswordApply;
+import cn.wuxi.js.lib4.modules.notify.AliyunMessageSender;
 import cn.wuxi.js.lib4.modules.notify.DbMessageSender;
 import cn.wuxi.js.lib4.modules.notify.MessageSender;
 import cn.wuxi.js.lib4.modules.sys.dao.GUserDao;
@@ -163,7 +164,9 @@ public class ResetPasswordApplyService extends CrudService<ResetPasswordApplyDao
 	private void messageNotify(ResetPasswordApply resetPasswordApply, String msg){
 		//message
 		String phone = resetPasswordApply.getMobile();
-		MessageSender sender = new DbMessageSender();
+		//MessageSender sender = new DbMessageSender();
+		
+		MessageSender sender = new AliyunMessageSender(); 
 		
 		try {
 			sender.send(phone, msg);
