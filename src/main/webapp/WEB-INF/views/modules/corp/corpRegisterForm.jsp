@@ -34,23 +34,22 @@
 <html>
 <head>
 	<title>企业注册</title>
-	<meta name="decorator" content="default"/>
 	<style type="text/css">
       html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}.form-register-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:30px;margin-bottom:20px;color:#0663a2;}
-      .form-register{margin:auto;position:absolute;text-align:left;width:950px;height:580px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
+      .form-register{margin:auto;position:relative;text-align:left;width:950px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
         	-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-webkit-box-shadow:0 1px 2px rgba(0,0,0,.05);-moz-box-shadow:0 1px 2px rgba(0,0,0,.05);box-shadow:0 1px 2px rgba(0,0,0,.05);}
       .form-register .checkbox{margin-bottom:10px;color:#0663a2;} .form-register .input-label{font-size:16px;line-height:23px;color:#999;}
       .form-register .input-block-level{font-size:16px;height:auto;margin-bottom:15px;padding:7px;*width:283px;*padding-bottom:0;_padding:7px 7px 9px 7px;}
       .form-register .btn.btn-large{font-size:16px;} .form-register #themeSwitch{position:absolute;right:15px;bottom:10px;}
       .form-register div.validateCode {padding-bottom:15px;} .mid{vertical-align:middle;}
-	  .form-register {margin:auto;position: absolute; top: 100px; left: 0; bottom: 0px; right: 0;} 
+	  .form-register {margin:auto;position: relative; left: 0; bottom: 0px; right: 0;}
 	  .form-register .control-group {margin-bottom:8px;}
 	  .form-register .control-label {padding-top:3px;} .form-register .controls {text-align:left;overflow-x:auto;overflow-y:hidden;}
 	  .form-register .controls label.error {background-position:0 2px;}      
 	  .input-xlarge {width:300px;}.input-xxlarge {width:460px;}
       .help-block,.help-inline {color:#aaaaaa;} .alert {margin-bottom:10px;}
       .header{height:80px;padding-top:20px;} .alert{position:relative;width:300px;margin:0 auto;*padding-bottom:0px;}
-      label.error{background:none;width:270px;font-weight:normal;color:inherit;margin:0;}
+      label.error{background:none;width:270px;font-weight:normal;margin:0;}
 
       body{
           background-size:100%;
@@ -66,6 +65,11 @@
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
 					form.submit();
+				},
+				rules:{
+                    corpCertIdList:{
+                        required:true
+                    }
 				},
 				errorContainer: "#messageBox",
 				errorPlacement: function(error, element) {
@@ -132,8 +136,52 @@
 		
 		<sys:message content="${message}"/>	${message}
 		
-		<form:hidden path="type" value="2"/>	
+		<form:hidden path="type" value="2"/>
 
+        <div class="container-fluid">
+			<div class="row-fluid">
+                <div class="control-group">
+						<label class="control-label">企业资质类别：<span class="help-inline"><font color="red">*</font> </span></label>
+						<div class="controls">
+                            <ul class="nav nav-pills nav-stacked">
+                              <li class="list-group-item">
+                              建设单位&nbsp;&nbsp;
+                              <label><input name="corpCertIdList" type="checkbox" value="11" />房地产开发企业</label>
+                              <label><input name="corpCertIdList" type="checkbox" value="12" />其他建设单位</label>
+                              </li>
+                              <li class="list-group-item">
+                              勘察单位&nbsp;&nbsp;
+                              <label><input name="corpCertIdList" type="checkbox" value="5" />工程勘察</label>
+                              </li>
+                              <li class="list-group-item">
+                              设计单位&nbsp;&nbsp;
+                              <!--<label><input name="corpCertIdList" type="checkbox" value="2" />设计与施工一体化</label>-->
+                              <label><input name="corpCertIdList" type="checkbox" value="6" />工程设计</label>
+                              </li>
+                              <li class="list-group-item">
+                              施工单位&nbsp;&nbsp;
+                              <label><input name="corpCertIdList" type="checkbox" value="1" />建筑施工</label>
+                              <!--<label><input name="corpCertIdList" type="checkbox" value="2" />设计与施工一体化</label>
+                              <label><input name="corpCertIdList" type="checkbox" value="3" />园林绿化</label>
+                              <label><input name="corpCertIdList" type="checkbox" value="13" />房屋拆迁</label>
+                              <label><input name="corpCertIdList" type="checkbox" value="14" />安全生产许可证</label>-->
+                              </li>
+                            <li class="list-group-item">
+                              中介机构&nbsp;&nbsp;
+                              <label><input name="corpCertIdList" type="checkbox" value="4" />工程监理</label>
+                              <label><input name="corpCertIdList" type="checkbox" value="7" />招标代理</label>
+                              <label><input name="corpCertIdList" type="checkbox" value="8" />造价咨询</label>
+                              <label><input name="corpCertIdList" type="checkbox" value="9" />工程检测</label>
+                              <!--<label><input name="corpCertIdList" type="checkbox" value="15" />施工图审查</label>-->
+                              <label><input name="corpCertIdList" type="checkbox" value="16" />房地产估价</label>
+                              <label><input name="corpCertIdList" type="checkbox" value="17" />物业服务</label>
+                              </li>
+                            </ul>
+
+						</div>
+					</div>
+			</div>
+		</div>
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span6">
