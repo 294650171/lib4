@@ -13,9 +13,7 @@ import cn.wuxi.js.lib4.modules.act.service.ActTaskService;
 import cn.wuxi.js.lib4.modules.act.utils.ActUtils;
 import cn.wuxi.js.lib4.modules.corp.dao.CorpBasicInfoApplicationDao;
 import cn.wuxi.js.lib4.modules.corp.dao.UeppQyjbxxDao;
-import cn.wuxi.js.lib4.modules.corp.entity.CorpBasicInfoApplication;
-import cn.wuxi.js.lib4.modules.corp.entity.ResetPasswordApply;
-import cn.wuxi.js.lib4.modules.corp.entity.UeppQyjbxx;
+import cn.wuxi.js.lib4.modules.corp.entity.*;
 import cn.wuxi.js.lib4.modules.notify.DbMessageSender;
 import cn.wuxi.js.lib4.modules.notify.MessageSender;
 import cn.wuxi.js.lib4.modules.sys.dao.GUserDao;
@@ -51,6 +49,9 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 
 	@Autowired
 	private ActTaskService actTaskService;
+
+	@Autowired
+	UeppQycsywService qycsywService;
 
 	@Autowired
 	RuntimeService runService;
@@ -206,6 +207,14 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 
 			qyjbxxDao.insert(qyjbxx);
 
+			//保存企业从事业务类型
+			if(StringUtils.isNotEmpty(bean.getCorpCertIds())){
+				String[] corpCertIds = bean.getCorpCertIds().split(",");
+				for(String corpCertId : corpCertIds){
+					createQycsyw(bean.getQyid(), corpCertId);
+				}
+			}
+
 			//保存账户信息
 			
 			int maxUserId = guserDao.getMaxUserId();
@@ -268,7 +277,17 @@ public class CorpBasicInfoApplicationService extends CrudService<CorpBasicInfoAp
 		}
 
 	}
-	
+
+	private void createQycsyw(String qyid, String corpCertId) {
+		UeppQycsyw ueppQycsyw = new UeppQycsyw();
+		UeppQyjbxx qyjbxx = new UeppQyjbxx();
+		qyjbxx.setQyid(qyid);
+		ueppQycsyw.setQyjbxx(qyjbxx);
+		ueppQycsyw.setCsywlxid(Integer.valueOf(corpCertId));
+		ueppQycsyw.setCsywlx(CorpCertType.getName(Integer.parseInt(corpCertId)));
+		qycsywService.saveWithCheck(ueppQycsyw);
+	}
+
 	private void messageNotify(CorpBasicInfoApplication bean, String msg){
 		//message
 		String phone = bean.getLxdh();

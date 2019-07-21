@@ -47,6 +47,12 @@
 			<if test="corpId != null and corpId != ''">
 				AND a.corp_id = #{corpId}
 			</if>
+			<if test="certNo != null and certNo != ''">
+				AND a.cert_no = #{certNo}
+			</if>
+			<if test="certName != null and certName != ''">
+				AND a.cert_name = #{certName}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -115,8 +121,8 @@
 			#{tag}
 		)
 	</insert>
-	
-	<!--  
+
+	<!--
 	<update id="update">
 		UPDATE WJSJZX.dbo.corp_cert SET 	
 			corp_id = #{corpId},
@@ -144,6 +150,7 @@
 	<update id="update">
 		UPDATE WJSJZX.dbo.corp_cert SET 	
 			corp_id = #{corpId},
+			cert_type_id = #{certTypeId},
 			cert_type = #{certType},
 			cert_no = #{certNo},
 			cert_name = #{certName},
@@ -152,7 +159,9 @@
 			issue_authority = #{issueAuthority},
 			cert_level = #{certLevel},
 			status = #{status},
+			trade_type_id = #{tradeTypeId},
 			trade_type = #{tradeType},
+			major_type_id = #{majorTypeId},
 			major_type = #{majorType},
 			statuslabel = #{statuslabel},
 			update_time = getdate(),

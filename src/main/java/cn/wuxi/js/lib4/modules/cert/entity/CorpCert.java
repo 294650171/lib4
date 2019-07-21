@@ -28,6 +28,7 @@ public class CorpCert extends DataEntity<CorpCert> {
 	private String certName;		// cert_name
 	private Date issueDate;		// issue_date
 	private Date validDate;		// valid_date
+	private Date validDateStart; //  证书有效期起
 	private String issueAuthority;		// issue_authority
 	private String certLevel;		// cert_level
 	private String status;		// status
@@ -216,6 +217,14 @@ public class CorpCert extends DataEntity<CorpCert> {
 
 	public void setTyshxydm(String tyshxydm) {
 		this.tyshxydm = tyshxydm;
+	}
+
+	public Date getValidDateStart() {
+		return validDateStart;
+	}
+
+	public void setValidDateStart(Date validDateStart) {
+		this.validDateStart = validDateStart;
 	}
 
 	public String getPhoto() {

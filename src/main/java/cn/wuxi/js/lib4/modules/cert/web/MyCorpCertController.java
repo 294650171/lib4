@@ -87,8 +87,8 @@ public class MyCorpCertController extends BaseController {
 		if (!beanValidator(model, corpCert)){
 			return form(corpCert, model);
 		}
-		corpCertService.save(corpCert);
-		addMessage(redirectAttributes, "保存corp_cert成功");
+		String result = corpCertService.saveWithCheck(corpCert);
+		addMessage(redirectAttributes, result);
 		return "redirect:"+Global.getAdminPath()+"/mycorp/cert?repage";
 	}
 	
@@ -98,7 +98,7 @@ public class MyCorpCertController extends BaseController {
 		if (!beanValidator(model, corpCert)){
 			return form(corpCert, model);
 		}
-		corpCertService.updateAttach(corpCert);
+		corpCertService.saveWithCheck(corpCert);
 		addMessage(redirectAttributes, "保存附件成功");
 		return "redirect:"+Global.getAdminPath()+"/mycorp/cert?repage";
 	}

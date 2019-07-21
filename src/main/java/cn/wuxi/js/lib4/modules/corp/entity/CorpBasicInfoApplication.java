@@ -4,13 +4,15 @@
 package cn.wuxi.js.lib4.modules.corp.entity;
 
 import cn.wuxi.js.lib4.common.persistence.ActEntity;
+import cn.wuxi.js.lib4.common.utils.Collections3;
+import cn.wuxi.js.lib4.common.utils.StringUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.collect.Lists;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import cn.wuxi.js.lib4.common.persistence.DataEntity;
+import java.util.List;
 
 /**
  * 企业基本信息修改申请表Entity
@@ -90,7 +92,12 @@ public class CorpBasicInfoApplication extends ActEntity<CorpBasicInfoApplication
 	private String approveOpinion;
 	
 	private String password; //预设密码
-	
+
+	private String corpCertIds;
+
+	private List<String> corpCertIdList = Lists.newArrayList(); // 企业资质类别列表
+
+
 	//临时属性
 	private CommonsMultipartFile attachmentFile;
 
@@ -617,5 +624,20 @@ public class CorpBasicInfoApplication extends ActEntity<CorpBasicInfoApplication
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
+	public String getCorpCertIds() {
+		return corpCertIds;
+	}
+
+	public void setCorpCertIds(String corpCertIds) {
+		this.corpCertIds = corpCertIds;
+	}
+
+	public List<String> getCorpCertIdList() {
+		return corpCertIdList;
+	}
+
+	public void setCorpCertIdList(List<String> corpCertIdList) {
+		this.corpCertIdList = corpCertIdList;
+	}
 }

@@ -60,7 +60,8 @@
 		a.proc_ins_id AS "procInsId",
 		a.photo AS "photo",
 		a.password AS "password",
-		a.approve_opinion AS "approveOpinion"
+		a.approve_opinion AS "approveOpinion",
+		a.corp_cert_ids AS "corpCertIds"
 	</sql>
 	
 	<sql id="corpBasicInfoApplicationJoins">
@@ -181,7 +182,8 @@
 			tyshxydm,
 			proc_ins_id,
 			photo,
-			password
+			password,
+			corp_cert_ids
 		) VALUES (
 			#{qyid},
 			#{qymc},
@@ -237,7 +239,8 @@
 			#{tyshxydm},
 			#{procInsId},
 			#{photo},
-			#{password}
+			#{password},
+			#{corpCertIds}
 		)
 	</insert>
 	
@@ -296,7 +299,8 @@
 			tyshxydm = #{tyshxydm},
 			proc_ins_id = #{procInsId},
 			photo = #{photo},
-			password = #{password}
+			password = #{password},
+			corp_cert_ids = #{corpCertIds}
 		WHERE id = #{id}
 	</update>
 	

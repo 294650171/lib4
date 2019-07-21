@@ -17,4 +17,6 @@ import org.apache.ibatis.annotations.Param;
 public interface UeppQyjbxxDao extends CrudDao<UeppQyjbxx> {
 	void selfSave(UeppQyjbxx bean);
 
+	UeppQyjbxx findByName(@Param("qymc") String name);
+
 }

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.base.dao.UeppQyryDao">
+    
+	<sql id="ueppQyryColumns">
+		a.ID AS "id",
+		a.qyid AS "qyid",
+		a.ryid AS "ryid",
+		a.ryzyzglxid AS "ryzyzglxid",
+		a.ryzyzglx AS "ryzyzglx",
+		a.tag AS "tag",
+		a.xgr AS "xgr",
+		a.xgrqsj AS "xgrqsj",
+		a.datastate AS "datastate"
+	</sql>
+	
+	<sql id="ueppQyryJoins">
+		LEFT JOIN WJSJZX.dbo.uepp_ryjbxx b ON b.ryID = a.ryid
+	</sql>
+    
+	<select id="get" resultType="UeppQyry">
+		SELECT 
+			<include refid="ueppQyryColumns"/>
+		FROM WJSJZX.dbo.uepp_qyry a
+		<include refid="ueppQyryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="UeppQyry" useCache="false">
+		SELECT 
+			<include refid="ueppQyryColumns"/>
+		FROM WJSJZX.dbo.uepp_qyry a
+		<include refid="ueppQyryJoins"/>
+		<where>
+			
+			<if test="ryid != null and ryid != ''">
+				AND a.ryid = #{ryid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findListByRyidAndType" resultType="UeppQyry" useCache="false">
+		SELECT
+		<include refid="ueppQyryColumns"/>
+		FROM WJSJZX.dbo.uepp_qyry a
+		<include refid="ueppQyryJoins"/>
+		<where>
+			(a.DataState = 0 OR a.DataState IS NULL)
+			<if test="ryid != null and ryid.ryid != null and ryid.ryid != ''">
+				AND a.ryid = #{ryid.ryid}
+			</if>
+			<if test="ryzyzglxid != null and ryzyzglxid != ''">
+				AND a.ryzyzglxid = #{ryzyzglxid}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findAllList" resultType="UeppQyry">
+		SELECT 
+			<include refid="ueppQyryColumns"/>
+		FROM WJSJZX.dbo.uepp_qyry a
+		<include refid="ueppQyryJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO WJSJZX.dbo.uepp_qyry(
+			qyid,
+			ryid,
+			ryzyzglxid,
+			ryzyzglx,
+			tag,
+			xgr,
+			xgrqsj,
+			datastate
+		) VALUES (
+			#{qyid},
+			#{ryid.ryid},
+			#{ryzyzglxid},
+			#{ryzyzglx},
+			#{tag},
+			#{xgr},
+			#{xgrqsj},
+			#{datastate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE WJSJZX.dbo.uepp_qyry SET
+			qyid = #{qyid},
+			ryid = #{ryid.ryid},
+			ryzyzglxid = #{ryzyzglxid},
+			ryzyzglx = #{ryzyzglx},
+			tag = #{tag},
+			xgr = #{xgr},
+			xgrqsj = #{xgrqsj},
+			datastate = #{datastate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM WJSJZX.dbo.uepp_qyry
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE ryid = #{ryid}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.base.dao.UeppRyjbxxDao">
+    
+	<sql id="ueppRyjbxxColumns">
+		a.ryid AS "ryid",
+		a.userid AS "userid",
+		a.xm AS "xm",
+		a.zjlxid AS "zjlxid",
+		a.zjlx AS "zjlx",
+		a.zjhm AS "zjhm",
+		a.xb AS "xb",
+		a.csrq AS "csrq",
+		a.mz AS "mz",
+		a.xlid AS "xlid",
+		a.xl AS "xl",
+		a.sxzy AS "sxzy",
+		a.byyx AS "byyx",
+		a.byny AS "byny",
+		a.zcid AS "zcid",
+		a.zc AS "zc",
+		a.zczh AS "zczh",
+		a.zcjbid AS "zcjbid",
+		a.zcjb AS "zcjb",
+		a.zczyid AS "zczyid",
+		a.zczy AS "zczy",
+		a.zwid AS "zwid",
+		a.zw AS "zw",
+		a.csgzjsnx AS "csgzjsnx",
+		a.lxdh AS "lxdh",
+		a.yddh AS "yddh",
+		a.gzjl AS "gzjl",
+		a.bz AS "bz",
+		a.datastate AS "datastate",
+		a.tag AS "tag",
+		a.xgr AS "xgr",
+		a.xgrqsj AS "xgrqsj",
+		a.sfzsmj AS "sfzsmj",
+		a.ryzz AS "ryzz",
+		a.fzjg AS "fzjg",
+		a.sfzyxqs AS "sfzyxqs",
+		a.sfzyxqz AS "sfzyxqz",
+		a.aj_isrefuse AS "ajIsrefuse",
+		a.aj_existinidcards AS "ajExistinidcards",
+		a.updatetime AS "updatetime"
+	</sql>
+	
+	<sql id="ueppRyjbxxJoins">
+	</sql>
+    
+	<select id="get" resultType="UeppRyjbxx">
+		SELECT 
+			<include refid="ueppRyjbxxColumns"/>
+		FROM WJSJZX.dbo.uepp_ryjbxx a
+		<include refid="ueppRyjbxxJoins"/>
+		WHERE a.ryID = #{id}
+	</select>
+	
+	<select id="findList" resultType="UeppRyjbxx">
+		SELECT 
+			<include refid="ueppRyjbxxColumns"/>
+		FROM WJSJZX.dbo.UEPP_Ryjbxx a
+		<include refid="ueppRyjbxxJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UeppRyjbxx">
+		SELECT 
+			<include refid="ueppRyjbxxColumns"/>
+		FROM WJSJZX.dbo.UEPP_Ryjbxx a
+		<include refid="ueppRyjbxxJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO WJSJZX.dbo.UEPP_Ryjbxx(
+			ryid,
+			xm,
+			zjlxid,
+			zjlx,
+			zjhm,
+			xb,
+			csrq,
+			tag,
+			xgr,
+			xgrqsj
+		) VALUES (
+			#{ryid},
+			#{xm},
+			#{zjlxid},
+			#{zjlx},
+			#{zjhm},
+			#{xb},
+			#{csrq},
+			#{tag},
+			#{xgr},
+			#{xgrqsj}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE WJSJZX.dbo.UEPP_Ryjbxx SET
+			xm = #{xm},
+			zjlxid = #{zjlxid},
+			zjlx = #{zjlx},
+			zjhm = #{zjhm},
+			xb = #{xb},
+			csrq = #{csrq},
+			tag = #{tag},
+			xgr = #{xgr},
+			xgrqsj = #{xgrqsj}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM WJSJZX.dbo.UEPP_Ryjbxx
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

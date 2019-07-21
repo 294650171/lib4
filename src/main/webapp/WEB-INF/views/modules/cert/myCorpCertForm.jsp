@@ -28,99 +28,87 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/mycorp/cert/">资质列表</a></li>
-		<li class="active"><a href="${ctx}/mycorp/cert/form?id=${corpCert.id}">企业资质修改</a></li>
+		<li class="active"><a href="${ctx}/mycorp/cert/cert?id=${corpCert.id}">企业资质<shiro:hasPermission name="mycorp:cert:edit">${not empty corpCert.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="mycorp:cert:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="corpCert" action="${ctx}/mycorp/cert/upload" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<form:hidden path="corpId"/>
 		<form:hidden path="tyshxydm"/>
 		
-		<form:hidden path="certNo"/>
-		
 		<sys:message content="${message}"/>
-		<div class="control-group">
+        <div class="control-group">
 			<label class="control-label">资质类别：</label>
 			<div class="controls">
-			<!--
-				<form:input path="certType" htmlEscape="false" maxlength="50" class="input-xlarge "/>
-				-->
-				${corpCert.certType }
+                <form:select path="certTypeId" class="input-xlarge required">
+					<form:options items="${fns:getDictList('corp_cert_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">资质证书号：</label>
+			<label class="control-label">证书编号：</label>
 			<div class="controls">
-			<!--
-				<form:input path="certNo" htmlEscape="false" maxlength="50" class="input-xlarge "/>
-				-->
-				${corpCert.certNo }
+				<form:input path="certNo" htmlEscape="false" maxlength="50" class="input-xlarge required "/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">资质名称：</label>
 			<div class="controls">
-			<!--
 				<form:input path="certName" htmlEscape="false" maxlength="200" class="input-xlarge "/>
-				-->
-				${corpCert.certName }
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">发证日期：</label>
 			<div class="controls">
-			<!--
-				<input name="issueDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
+				<input name="issueDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
 					value="<fmt:formatDate value="${corpCert.issueDate}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
-					-->
-				<fmt:formatDate value="${corpCert.issueDate}" pattern="yyyy-MM-dd"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">证书有效期：</label>
+			<label class="control-label">证书有效期起：</label>
 			<div class="controls">
-			<!--
-				<input name="validDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
+				<input name="validDateStart" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
 					value="<fmt:formatDate value="${corpCert.validDate}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
-					-->
-				<fmt:formatDate value="${corpCert.validDate}" pattern="yyyy-MM-dd"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+				如证书上无此项，可以填发证日期
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">证书有效期止：</label>
+			<div class="controls">
+				<input name="validDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
+					value="<fmt:formatDate value="${corpCert.validDate}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">发证机关：</label>
 			<div class="controls">
-			<!--
-				<form:input path="issueAuthority" htmlEscape="false" maxlength="100" class="input-xlarge "/>
-				-->
-				${corpCert.issueAuthority }
+				<form:input path="issueAuthority" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">资质等级：</label>
 			<div class="controls">
-			<!--
 				<form:input path="certLevel" htmlEscape="false" maxlength="50" class="input-xlarge "/>
-				-->
-				${corpCert.certLevel }
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">业务类型：</label>
+			<label class="control-label">序列名称：</label>
 			<div class="controls">
-			<!-- 
 				<form:input path="tradeType" htmlEscape="false" maxlength="50" class="input-xlarge "/>
-				-->
-				${corpCert.tradeType }
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">专业种类：</label>
+			<label class="control-label">专业名称：</label>
 			<div class="controls">
-			    <!--  
 				<form:input path="majorType" htmlEscape="false" maxlength="50" class="input-xlarge "/>
-				-->
-				${corpCert.majorType }
 			</div>
 		</div>
         <div class="control-group" id="photoDiv">
