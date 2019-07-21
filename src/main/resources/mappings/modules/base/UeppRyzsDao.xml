@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.base.dao.UeppRyzsDao">
+    
+	<sql id="ueppRyzsColumns">
+		a.zsjlid AS "zsjlid",
+		a.ryID AS "ry.ryid",
+		a.ryzyzglxid AS "ryzyzglxid",
+		a.ryzyzglx AS "ryzyzglx",
+		a.ryzslxid AS "ryzslxid",
+		a.ryzslx AS "ryzslx",
+		a.sfzzz AS "sfzzz",
+		a.zsbh AS "zsbh",
+		a.zsyxqrq AS "zsyxqrq",
+		a.zsyxzrq AS "zsyxzrq",
+		a.fzdw AS "fzdw",
+		a.fzrq AS "fzrq",
+		a.bz AS "bz",
+		a.tag AS "tag",
+		a.xgr AS "xgr",
+		a.xgrqsj AS "xgrqsj",
+		a.datastate AS "datastate",
+		a.status AS "status",
+		a.qualissuedate AS "qualissuedate",
+		a.stampno AS "stampno",
+		a.regno AS "regno",
+		a.updatetime AS "updatetime"
+	</sql>
+	
+	<sql id="ueppRyzsJoins">
+		LEFT JOIN WJSJZX.dbo.uepp_ryjbxx b ON b.ryID = a.ryID
+	</sql>
+    
+	<select id="get" resultType="UeppRyzs">
+		SELECT 
+			<include refid="ueppRyzsColumns"/>
+		FROM WJSJZX.dbo.uepp_ryzs a
+		<include refid="ueppRyzsJoins"/>
+		WHERE a.ryID = #{ry.ryid}
+	</select>
+	
+	<select id="findList" resultType="UeppRyzs"  useCache="false">
+		SELECT 
+			<include refid="ueppRyzsColumns"/>
+		FROM WJSJZX.dbo.uepp_ryzs a
+		<include refid="ueppRyzsJoins"/>
+		<where>
+		  	a.DataState is NULL OR a.DataState = 0
+			<if test="ry != null and ry.ryid != null and ry.ryid != ''">
+				AND a.ryID = #{ry.ryid}
+			</if>
+			<if test="ryzyzglxid != null and ryzyzglxid != ''">
+				AND a.ryzyzglxid = #{ryzyzglxid}
+			</if>
+			<if test="ryzslxid != null and ryzslxid != ''">
+				AND a.ryzslxid = #{ryzslxid}
+			</if>
+			<if test="zsbh != null and zsbh != ''">
+				AND a.zsbh = #{zsbh}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UeppRyzs">
+		SELECT 
+			<include refid="ueppRyzsColumns"/>
+		FROM WJSJZX.dbo.uepp_ryzs a
+		<include refid="ueppRyzsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO WJSJZX.dbo.uepp_ryzs(
+			zsjlid,
+			ryID,
+			ryzyzglxid,
+			ryzyzglx,
+			ryzslxid,
+			ryzslx,
+			sfzzz,
+			zsbh,
+			zsyxqrq,
+			zsyxzrq,
+			fzdw,
+			fzrq,
+			bz,
+			tag,
+			xgr,
+			xgrqsj,
+			datastate,
+			status,
+			qualissuedate,
+			stampno,
+			regno,
+			updatetime
+		) VALUES (
+			( SELECT ISNULL(MAX(CONVERT(INT, zsjlId)), 0) + 1 FROM WJSJZX.dbo.UEPP_Ryzs ),
+			#{ry.ryid},
+			#{ryzyzglxid},
+			#{ryzyzglx},
+			#{ryzslxid},
+			#{ryzslx},
+			#{sfzzz},
+			#{zsbh},
+			#{zsyxqrq},
+			#{zsyxzrq},
+			#{fzdw},
+			#{fzrq},
+			#{bz},
+			#{tag},
+			#{xgr},
+			#{xgrqsj},
+			#{datastate},
+			#{status},
+			#{qualissuedate},
+			#{stampno},
+			#{regno},
+			#{updatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE WJSJZX.dbo.uepp_ryzs SET
+			zsjlid = #{zsjlid},
+			ryID = #{ry.ryid},
+			ryzyzglxid = #{ryzyzglxid},
+			ryzyzglx = #{ryzyzglx},
+			ryzslxid = #{ryzslxid},
+			ryzslx = #{ryzslx},
+			sfzzz = #{sfzzz},
+			zsbh = #{zsbh},
+			zsyxqrq = #{zsyxqrq},
+			zsyxzrq = #{zsyxzrq},
+			fzdw = #{fzdw},
+			fzrq = #{fzrq},
+			bz = #{bz},
+			tag = #{tag},
+			xgr = #{xgr},
+			xgrqsj = #{xgrqsj},
+			datastate = #{datastate},
+			status = #{status},
+			qualissuedate = #{qualissuedate},
+			stampno = #{stampno},
+			regno = #{regno},
+			updatetime = #{updatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM WJSJZX.dbo.uepp_ryzs
+		<choose>
+			<when test="zsjlid !=null and zsjlid != ''">
+				WHERE zsjlid = #{zsjlid},
+			</when>
+			<otherwise>
+				WHERE ryid = #{ryid}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

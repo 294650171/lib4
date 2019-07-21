@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import cn.wuxi.js.lib4.modules.base.entity.ImportPersonCert;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -273,7 +274,7 @@ public class ImportExcel {
 		//log.debug("Import column count:"+annotationList.size());
 		// Get excel data
 		List<E> dataList = Lists.newArrayList();
-		for (int i = this.getDataRowNum(); i < this.getLastDataRowNum(); i++) {
+		for (int i = this.getDataRowNum(); i <= this.getLastDataRowNum(); i++) {
 			E e = (E)cls.newInstance();
 			int column = 0;
 			Row row = this.getRow(i);
@@ -349,13 +350,22 @@ public class ImportExcel {
 		return dataList;
 	}
 
-//	/**
-//	 * 导入测试
-//	 */
-//	public static void main(String[] args) throws Throwable {
-//		
-//		ImportExcel ei = new ImportExcel("target/export.xlsx", 1);
-//		
+	/**
+	 * 导入测试
+	 */
+	public static void main(String[] args) throws Throwable {
+
+//		ImportExcel ei = new ImportExcel("E:\\2017\\四库维护\\见证取样\\见证取样1.11-证书.xls", 0);
+//
+//
+//		List<ImportPersonCert> dataList = ei.getDataList(ImportPersonCert.class);
+//
+//		for(ImportPersonCert item : dataList){
+//			System.out.println("---------" + item.toString());
+//			//
+//		}
+
+
 //		for (int i = ei.getDataRowNum(); i < ei.getLastDataRowNum(); i++) {
 //			Row row = ei.getRow(i);
 //			for (int j = 0; j < ei.getLastCellNum(); j++) {
@@ -364,7 +374,7 @@ public class ImportExcel {
 //			}
 //			System.out.print("\n");
 //		}
-//		
-//	}
+
+	}
 
 }
