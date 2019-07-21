@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.corp.dao.UeppQyzsDao">
+    
+	<sql id="ueppQyzsColumns">
+		a.zsjlid AS "zsjlid",
+		a.qyid AS "qyid",
+		a.csywlxid AS "csywlxid",
+		a.csywlx AS "csywlx",
+		a.zslxid AS "zslxid",
+		a.zslx AS "zslx",
+		a.sfzzz AS "sfzzz",
+		a.zsbh AS "zsbh",
+		a.zsyxqrq AS "zsyxqrq",
+		a.zsyxzrq AS "zsyxzrq",
+		a.fzdw AS "fzdw",
+		a.fzrq AS "fzrq",
+		a.bz AS "bz",
+		a.tag AS "tag",
+		a.xgr AS "xgr",
+		a.xgrqsj AS "xgrqsj",
+		a.datastate AS "datastate",
+		a.printno AS "printno"
+	</sql>
+	
+	<sql id="ueppQyzsJoins">
+	</sql>
+    
+	<select id="get" resultType="UeppQyzs">
+		SELECT 
+			<include refid="ueppQyzsColumns"/>
+		FROM uepp_qyzs a
+		<include refid="ueppQyzsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="UeppQyzs">
+		SELECT 
+			<include refid="ueppQyzsColumns"/>
+		FROM WJSJZX.dbo.uepp_qyzs a
+		<include refid="ueppQyzsJoins"/>
+		<where>
+			(a.DataState IS NULL OR a.DataState = 0)
+			<if test="qyid != null and qyid != ''">
+				AND a.qyID = #{qyid}
+			</if>
+			<if test="zsbh != null and zsbh != ''">
+				AND a.zsbh = #{zsbh}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UeppQyzs">
+		SELECT 
+			<include refid="ueppQyzsColumns"/>
+		FROM WJSJZX.dbo.uepp_qyzs a
+		<include refid="ueppQyzsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO WJSJZX.dbo.uepp_qyzs(
+			zsjlid,
+			qyid,
+			csywlxid,
+			csywlx,
+			zslxid,
+			zslx,
+			sfzzz,
+			zsbh,
+			zsyxqrq,
+			zsyxzrq,
+			fzdw,
+			fzrq,
+			bz,
+			tag,
+			xgr,
+			xgrqsj,
+			datastate,
+			printno
+		) VALUES (
+			(select ISNULL(MAX(CONVERT(int ,zsjlId)),0)+1 from  WJSJZX.dbo.UEPP_Qyzs),
+			#{qyid},
+			#{csywlxid},
+			#{csywlx},
+			#{zslxid},
+			#{zslx},
+			#{sfzzz},
+			#{zsbh},
+			#{zsyxqrq},
+			#{zsyxzrq},
+			#{fzdw},
+			#{fzrq},
+			#{bz},
+			#{tag},
+			#{xgr},
+			#{xgrqsj},
+			#{datastate},
+			#{printno}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE WJSJZX.dbo.uepp_qyzs SET
+			qyid = #{qyid},
+			csywlxid = #{csywlxid},
+			csywlx = #{csywlx},
+			zslxid = #{zslxid},
+			zslx = #{zslx},
+			sfzzz = #{sfzzz},
+			zsbh = #{zsbh},
+			zsyxqrq = #{zsyxqrq},
+			zsyxzrq = #{zsyxzrq},
+			fzdw = #{fzdw},
+			fzrq = #{fzrq},
+			bz = #{bz},
+			tag = #{tag},
+			xgr = #{xgr},
+			xgrqsj = #{xgrqsj},
+			datastate = #{datastate},
+			printno = #{printno}
+		WHERE zsjlid = #{zsjlid}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM WJSJZX.dbo.uepp_qyzs
+		WHERE zsjlid = #{zsjlid}
+	</update>
+	
+</mapper>

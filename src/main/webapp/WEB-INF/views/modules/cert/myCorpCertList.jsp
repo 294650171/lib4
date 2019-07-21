@@ -34,9 +34,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/mycorp/cert/">资质列表</a></li>
-		<!--  
 		<shiro:hasPermission name="mycorp:cert:edit"><li><a href="${ctx}/mycorp/cert/form">资质添加</a></li></shiro:hasPermission>
-		-->
 	</ul>
 	<form:form id="searchForm" modelAttribute="corpCert" action="${ctx}/cert/corpCert/" method="post" class="breadcrumb form-search" style="display:none;">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -55,14 +53,14 @@
 			<tr>
 			    <th>编号</th>
 				<th>资质类别</th>
-				<th>资质证书号</th>
+				<th>证书编号</th>
 				<th>资质名称</th>
 				<th>证照</th>
 				<th>发证日期</th>
 				<th>证书有效期</th>
 				<th>资质等级</th>
-				<th>业务类型</th>
-				<th>专业种类</th>
+				<th>序列名称</th>
+				<th>专业名称</th>
 				<th>来源</th>
 				<shiro:hasPermission name="mycorp:cert:edit"><th>操作</th></shiro:hasPermission>
 			</tr>

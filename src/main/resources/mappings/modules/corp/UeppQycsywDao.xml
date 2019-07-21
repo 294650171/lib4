@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wuxi.js.lib4.modules.corp.dao.UeppQycsywDao">
+    
+	<sql id="ueppQycsywColumns">
+		a.id AS "id",
+		a.qyid AS "qyjbxx.qyid",
+		a.csywlxid AS "csywlxid",
+		a.csywlx AS "csywlx",
+		a.balxid AS "balxid",
+		a.balx AS "balx",
+		a.datastate AS "datastate",
+		a.tag AS "tag",
+		a.xgr AS "xgr",
+		a.xgrqsj AS "xgrqsj"
+	</sql>
+	
+	<sql id="ueppQycsywJoins">
+	</sql>
+    
+	<select id="get" resultType="UeppQycsyw">
+		SELECT 
+			<include refid="ueppQycsywColumns"/>
+		FROM WJSJZX.dbo.UEPP_Qycsyw a
+		<include refid="ueppQycsywJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="UeppQycsyw">
+		SELECT 
+			<include refid="ueppQycsywColumns"/>
+		FROM WJSJZX.dbo.UEPP_Qycsyw a
+		<include refid="ueppQycsywJoins"/>
+		<where>
+			<if test="qyjbxx != null and qyjbxx.qyid != null and  qyjbxx.qyid != ''">
+				AND qyid =#{qyjbxx.qyid}
+			</if>
+			<if test="csywlxid != null and  csywlxid != ''">
+				AND csywlxID =#{csywlxid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UeppQycsyw">
+		SELECT 
+			<include refid="ueppQycsywColumns"/>
+		FROM WJSJZX.dbo.UEPP_Qycsyw a
+		<include refid="ueppQycsywJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO WJSJZX.dbo.UEPP_Qycsyw(
+			qyid,
+			csywlxid,
+			csywlx,
+			balxid,
+			balx,
+			datastate,
+			tag,
+			xgr,
+			xgrqsj
+		) VALUES (
+			#{qyjbxx.qyid},
+			#{csywlxid},
+			#{csywlx},
+			#{balxid},
+			#{balx},
+			#{datastate},
+			#{tag},
+			#{xgr},
+			#{xgrqsj}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE WJSJZX.dbo.UEPP_Qycsyw SET
+			qyid = #{qyjbxx.qyid},
+			csywlxid = #{csywlxid},
+			csywlx = #{csywlx},
+			balxid = #{balxid},
+			balx = #{balx},
+			datastate = #{datastate},
+			tag = #{tag},
+			xgr = #{xgr},
+			xgrqsj = #{xgrqsj}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE WJSJZX.dbo.UEPP_Qycsyw SET DataState = -1
+		WHERE qyid = #{qyjbxx.qyid}
+		<if test="id != null and id != ''">
+			AND id =#{id}
+		</if>
+		<if test="csywlxid != null and csywlxid != ''">
+			AND csywlxid =#{csywlxid}
+		</if>
+	</update>
+	
+</mapper>

@@ -63,7 +63,7 @@
 	
 	<sql id="ueppQyjbxxJoins">
 		LEFT JOIN  WJSJZX.dbo.corp_cert_attach b ON a.qyID = b.zzjgdm and b.cert_type=1
-		LEFT JOIN [WJSJZX].[dbo].[g_User] u ON u.LoginName = a.tyshxydm
+		LEFT JOIN [WJSJZX].[dbo].[g_User] u ON u.LoginName = a.tyshxydm AND u.UserState != '删除用户'
 	</sql>
     
 	<select id="get" resultType="UeppQyjbxx">
@@ -82,7 +82,7 @@
 		WHERE a.qymc = #{qymc}
 	</select>
 	
-	<select id="findList" resultType="UeppQyjbxx">
+	<select id="findList" resultType="UeppQyjbxx" useCache="false">
 		SELECT 
 			<include refid="ueppQyjbxxColumns"/>
 		FROM WJSJZX.dbo.uepp_qyjbxx a
